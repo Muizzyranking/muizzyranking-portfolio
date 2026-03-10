@@ -10,16 +10,36 @@ export const metadata: Metadata = {
   },
   description:
     "Backend engineer building systems that have to be correct. Python, Django, distributed systems, and a Neovim config that's never finished.",
-  keywords: ["backend engineer", "Python", "Django", "API", "systems programming"],
+  keywords: [
+    "backend engineer",
+    "Python",
+    "Django",
+    "FastAPI",
+    "PostgreSQL",
+    "Redis",
+    "API development",
+    "Lagos",
+    "Nigeria",
+    "software engineer",
+  ],
   authors: [{ name: "Muiz Oyebowale" }],
   creator: "Muiz Oyebowale",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
   openGraph: {
     type: "website",
     locale: "en_US",
     url: "https://muizzyranking.dev",
     title: "Muizzyranking — Backend Engineer",
-    description:
-      "Backend engineer building systems that have to be correct.",
+    description: "Backend engineer building systems that have to be correct.",
     siteName: "Muizzyranking",
   },
   twitter: {
@@ -27,6 +47,9 @@ export const metadata: Metadata = {
     title: "Muizzyranking — Backend Engineer",
     description: "Backend engineer building systems that have to be correct.",
     creator: "@muizzyranking",
+  },
+  alternates: {
+    canonical: "https://muizzyranking.dev",
   },
 };
 
