@@ -1,0 +1,58 @@
+- company: "Taskingdom"
+  role: "Backend Developer"
+  type: "Contract"
+  location: "Remote"
+  period:
+    start: "Jul 2025"
+    end: "Jan 2026"
+  summary: "Backend developer on a task-based gaming platform where users complete tasks and earn real-money rewards."
+  highlights:
+    - "Built backend systems supporting ~1,000 users with multiple roles (Regular, VIP, Business, Influencer) and strict permission boundaries."
+    - "Co-designed core database models including user, task, and reward schemas to support the platform’s task execution and payout flow."
+    - "Implemented secure task execution and validation logic using server-side state tracking and execution limits to prevent abuse and reward farming."
+    - "Built reward tracking infrastructure linking third-party game outcomes to internal user accounts."
+    - "Implemented Google OAuth authentication alongside token-based access control for API security."
+    - "Used Celery and Redis to move heavy operations to background workers, improving responsiveness of user-facing endpoints."
+    - "Improved image storage and delivery by introducing optimized storage and controlled serving, reducing bandwidth usage."
+    - "Worked closely with frontend engineers to align APIs with real product usage and evolving requirements."
+  stack: [Python, Django, Django Ninja, PostgreSQL, Redis, Celery, Docker]
+
+- company: "Meerge Africa"
+  role: "Backend Engineer"
+  type: "Contract"
+  location: "Remote"
+  period:
+    start: "Dec 2024"
+    end: "Jul 2025"
+  summary: "Backend engineer at a startup building a multi-service food commerce platform connecting vendors, suppliers, and delivery operations."
+  highlights:
+    - "Designed and led development of the Supplier service from scratch, supporting 500+ suppliers during pilot operations."
+    - "Built APIs and data models for supplier onboarding, verification, approval workflows, and lifecycle management."
+    - "Improved API responsiveness by moving heavy operations (image uploads, email notifications) to Celery background workers."
+    - "Refactored fragile error-handling logic into structured flows, significantly reducing silent failures and debugging time."
+    - "Introduced caching strategies with proper invalidation using Redis, reducing repeated database queries across frequently used endpoints."
+    - "Designed secure service-to-service communication using signed tokens to support interaction between independent microservices."
+    - "Co-developed backend logic for the Delivery service including order creation, assignment workflows, and real-time order status updates."
+    - "Built internal admin tools used by operations teams for monitoring suppliers, orders, and system activity."
+    - "Stepped in as acting backend lead when the engineering lead left, reviewing PRs, guiding architecture decisions, and mentoring junior engineers."
+  stack: [Python, Django, Django REST Framework, PostgreSQL, Redis, Celery, Docker, Nginx, Cloudinary]
+
+
+- company: "HNG Internship"
+  role: "Backend Engineer (Finalist)"
+  type: "Internship"
+  location: "Remote"
+  period:
+    start: "Oct 2025"
+    end: "Dec 2025"
+  summary: "Finalist in a global engineering internship program while contributing to the backend of a website analysis platform."
+  highlights:
+    - "Selected as a finalist among 22,000+ applicants (<500 finalists) in a competitive global internship program."
+    - "Contributed backend systems for Sitelytics, a website analysis platform for non-technical users."
+    - "Implemented the platform notification system including retrieval, deletion, and email delivery through external providers."
+    - "Owned the Admin system, implementing role-based access control, user monitoring, scan tracking, and admin-managed content."
+    - "Built helper utilities that standardized notification delivery across the platform."
+    - "Contributed to async website scanning pipelines using background workers and Server-Sent Events (SSE) for real-time progress updates."
+    - "Served as a frequent code reviewer across a ~20 engineer team, helping maintain code quality and consistency."
+    - "Acted as temporary team lead for one week, coordinating work and unblocking contributors."
+  stack: [Python, FastAPI, PostgreSQL, Redis, SSE]
