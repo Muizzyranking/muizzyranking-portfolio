@@ -1,5 +1,5 @@
-import { getAllExperience } from "@/lib/experience";
 import ExperienceList from "@/components/ui/ExperienceList";
+import { getAllExperience } from "@/lib/experience";
 
 export default function Experience() {
   const experiences = getAllExperience();

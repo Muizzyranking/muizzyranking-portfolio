@@ -1,4 +1,3 @@
-import Link from "next/link";
 import AnimatedLink from "@/components/ui/AnimatedLink";
 import BlogCard from "@/components/ui/BlogCard";
 import { getPosts } from "@/lib/hashnode";
