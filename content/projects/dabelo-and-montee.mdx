@@ -1,0 +1,53 @@
+---
+title: "Dabelo & Montee Ecommerce Platform"
+summary: "A full ecommerce platform built for a real client — two café and bakery brands running on shared infrastructure, with a custom image service, async order processing, and a production Docker deployment."
+status: "complete"
+year: "2026"
+stack: [Python, Django, PostgreSQL, Redis, Celery, Docker, Gunicorn, Nginx, TailwindCSS]
+repo: "https://github.com/Muizzyranking/dabelo_and_montee"
+live: ""
+featured: false
+cover: ""
+---
+
+## Overview
+
+Dabelo & Montee is a client ecommerce platform built for two related brands — Dabelo, a café, and Montee, a bakery. Both operate under the same backend infrastructure while maintaining distinct brand identities on the frontend.
+
+Customers can browse a combined shop pulling products from both brands, or navigate to brand-specific pages with their own product listings and messaging. The cart is brand-agnostic by design — a customer can add a Dabelo coffee and a Montee cake to the same cart and check out once. Both storefronts share the same cart and checkout flow, which was the right call for the client's use case.
+
+The platform was built with a production deployment stack from the start — Django backend, server-rendered templates with TailwindCSS, and a full Docker setup with Nginx, Gunicorn, Redis, and PostgreSQL. It has been handed off to the client and is pending their go-live decision.
+
+## Challenges
+
+### Modeling two brands without duplicating infrastructure
+
+Each product belongs to a `Brand` model. Brand-specific pages filter by that relationship. The combined shop pulls from both. URL namespaces keep routing clean — brand pages live under their own namespace while shared pages like the main shop are separate views over the same data, rendered with brand-specific context.
+
+The cart deliberately ignores brand boundaries. A customer shopping across both brands completes one checkout, not two. This was a conscious design decision — forcing separate carts per brand would have added complexity that served no real user need for this client.
+
+### Building a production-ready image service
+
+Product images needed compression, watermarking, and storage flexibility — the same requirements that later shaped the image service in Shopifyte. Models store only a reference to the image. A storage service handles compression, watermarks the image to protect the client's product photos, and writes to the configured backend. An internal serving endpoint resolves references at request time.
+
+The abstraction means the storage backend — currently local — can be swapped for S3 or Cloudinary when the client is ready to scale, without touching application code.
+
+### Handling order processing asynchronously
+
+Order confirmations, email receipts, and image processing all ran synchronously in the first version. On slower connections this made the checkout flow feel unresponsive.
+
+All three moved to Celery workers backed by Redis. The request acknowledges immediately. Order confirmation emails, customer receipts, and any image processing queue in the background. The main request-response cycle stays fast regardless of what the workers are doing.
+
+### Deploying with a full production Docker stack
+
+This was my first time configuring a complete containerized production environment. The stack runs four containers — Nginx as the reverse proxy, Gunicorn serving the Django application, PostgreSQL for the database, and Redis for the Celery broker — all orchestrated with Docker Compose.
+
+Getting the inter-container networking right, managing environment variables across services, and configuring Nginx to proxy correctly to Gunicorn required working through the Docker mental model properly rather than copying configs. By the end I understood what each layer was doing and why — which paid off directly when deploying later projects.
+
+## What I Learned
+
+This was my first client project and my first production deployment. Both raised the stakes in ways that personal projects do not. A personal project can be restarted. A client handoff cannot.
+
+The Docker setup was where I spent the most unexpected time. The concepts — containers, networks, volumes, compose services — are not complicated individually. Getting them to work correctly together in a production configuration required understanding how they interact, not just what each one does. That understanding has made every deployment since faster and less stressful.
+
+The image service pattern I developed here later became the foundation for the same system in Shopifyte — refined but recognizably the same idea. That kind of reuse across projects is something I now think about deliberately when solving problems.

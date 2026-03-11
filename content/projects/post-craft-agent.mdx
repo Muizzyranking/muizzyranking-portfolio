@@ -1,0 +1,43 @@
+---
+title: "PostCraft Agent"
+summary: "A Telex integration that converts any blog URL into a Twitter thread and LinkedIn post using Google Gemini — built to the JSON-RPC 2.0 protocol specification."
+status: "complete"
+year: "2025"
+stack: [Python, FastAPI, Google Gemini, BeautifulSoup]
+repo: "https://github.com/Muizzyranking/telex-post-craft-agent"
+live: ""
+featured: false
+cover: ""
+---
+
+## Overview
+
+PostCraft Agent is a Telex integration that transforms blog posts into ready-to-publish social media content. Submit a blog URL and the agent fetches the article, extracts its content, and generates both a Twitter thread and a LinkedIn post — formatted to the conventions of each platform.
+
+It was built specifically for the Telex platform, which required implementing the JSON-RPC 2.0 protocol rather than standard REST. The agent runs as a FastAPI service that Telex communicates with over JSON-RPC, handling content extraction and AI generation as a single pipeline.
+
+## Challenges
+
+### Implementing JSON-RPC 2.0 from scratch
+
+JSON-RPC 2.0 is not a protocol you run into often in typical API development. Telex required it, which meant learning the spec from the ground up — request structure, response envelopes, error codes, batch handling, and how it maps onto FastAPI's routing model.
+
+The learning curve was steeper than expected. REST maps naturally to HTTP — verbs, status codes, and URLs all carry meaning. JSON-RPC flattens all of that into a single endpoint with method names in the request body. Getting the error handling right required careful reading of the spec, since JSON-RPC has its own error code conventions that differ from HTTP status codes.
+
+### Extracting signal from arbitrary HTML
+
+Blog pages are not structured data — they contain navigation, ads, footers, sidebars, and other noise that would degrade the quality of AI-generated summaries if fed in raw.
+
+The extraction pipeline strips irrelevant elements first — scripts, styles, nav, footer, header, aside — then walks a prioritized list of content selectors: `article`, `.post-content`, `.entry-content`, `.blog-content`, `main`, and several others. The first match wins. If nothing matches, it falls back to the body. The result is then cleaned before being passed to Gemini. This approach handles the majority of blog platforms without needing site-specific rules.
+
+### Generating content that fits each platform
+
+Twitter threads and LinkedIn posts are structurally and tonally different. A single prompt asking for "social media content" produces output that fits neither well.
+
+Two separate Gemini calls are made — one per platform, each with a prompt engineered specifically for that format. The Twitter prompt targets a 3–5 tweet thread with logical progression between tweets. The LinkedIn prompt targets a 300–800 word professional post. Each call is wrapped in its own error handler so a failure on one platform does not block the other — if Gemini fails for Twitter, the LinkedIn post still returns.
+
+## What I Learned
+
+This was my first time integrating a large language model into a production API and my first time working with JSON-RPC 2.0. Both required reading actual specifications rather than following familiar patterns — which is a different kind of learning than building on top of well-documented frameworks.
+
+The content extraction problem was a good reminder that real-world data is messy. A clean pipeline only stays clean if you handle the edges — missing containers, unexpected markup, pages that do not follow any convention. The fallback chain in the extractor exists because the first version without it failed on roughly a third of test URLs.

@@ -1,6 +1,6 @@
 ---
 title: "Wallet Service"
-summary: "A backend wallet service supporting deposits via Paystack, wallet transfers, API key access, and secure transaction handling."
+summary: "A production-ready wallet backend with Paystack deposits, internal transfers, and a dual authentication system supporting both user sessions and scoped API keys."
 status: "complete"
 year: "2025"
 stack: [Python, Django, Django Ninja, PostgreSQL, JWT, OAuth]
@@ -12,36 +12,32 @@ cover: ""
 
 ## Overview
 
-This project is a backend wallet system that allows users to deposit funds, transfer money to other users, and track their transaction history. Deposits are handled through Paystack, while transfers occur internally between wallet accounts using wallet numbers.
+A backend wallet system built for real financial operations — deposits via Paystack, internal transfers between wallet accounts, and full transaction history. The kind of system where correctness is not optional.
 
-The system supports two authentication modes: user authentication through Google OAuth with JWT tokens, and service-to-service authentication using API keys with granular permissions. API keys can be restricted to specific capabilities like deposits, transfers, or balance checks, making the system usable by external services.
-
-Security and financial safety were major considerations while building the system. Transfers are atomic, webhook events are validated using Paystack signatures, and idempotency checks ensure that duplicate events cannot credit the wallet multiple times.
+What makes it more than a basic wallet is the authentication layer. It supports two distinct modes: users authenticate via Google OAuth with JWT tokens, while external services use scoped API keys with granular permissions — deposit-only, transfer-only, or read access. This makes the system composable, usable as a standalone service or embedded into a larger product.
 
 ## Challenges
 
 ### Preventing duplicate webhook payments
 
-Payment gateways can retry webhook events if they don’t receive a response in time. Without protection, this could lead to a wallet being credited multiple times for the same payment.
+Paystack retries webhook delivery if it doesn't receive a timely response — a normal behavior that becomes dangerous in a financial system. Without protection, a single payment could credit a wallet two or three times.
 
-To solve this, webhook events are checked against existing transaction records before creating new entries. If a matching record already exists, the system updates the existing record instead of creating a new one. This ensures deposits remain idempotent even if the same webhook is delivered multiple times.
+The fix was idempotency at the transaction level. Each transaction is created with a unique reference generated upfront. Before processing any webhook, the system checks whether a transaction with that reference already exists. If it does, the existing record is updated rather than a new one created. The wallet balance never changes twice for the same event, regardless of how many times Paystack delivers it. Incoming webhooks are also validated against a Paystack HMAC signature before any processing begins — unauthenticated requests are rejected immediately.
 
-### Ensuring safe wallet transfers
+### Keeping transfers atomic
 
-Wallet transfers must never leave the system in a partially completed state. If one part of the transfer fails after the sender’s balance is deducted, funds could be lost.
+A transfer involves at least four writes — debiting the sender, crediting the recipient, and creating transaction records for both. If anything fails midway, the system could lose funds or create phantom balances.
 
-Transfers are executed inside database transactions so that either all operations succeed or none of them are applied. Both wallet balances and transaction records are created within the same atomic operation, guaranteeing consistency even under failures.
+All four operations run inside a single database transaction. Either everything commits or nothing does. Django's `atomic()` block handles this cleanly, but the real design decision was making sure transaction records and balance updates lived in the same atomic scope — not separate operations that could succeed independently.
 
-### Designing a flexible API key system
+### Building a scoped API key system
 
-External services sometimes need to interact with the wallet without using a user login flow.
+Not every integration needs full wallet access. A reporting service should be able to check balances without being able to initiate transfers. Building this as a binary on/off would have been easier but wrong.
 
-To support this safely, I implemented API keys that can be created by users and restricted with specific permissions such as deposit, transfer, or read-only access. Keys are stored as hashes in the database and can expire after configurable durations.
-
-This approach allows secure service-to-service integration while limiting the damage if a key is compromised.
+API keys are created per-user and carry an explicit permission set drawn from three capabilities — deposit, transfer, and read. Keys are passed via request headers, stored as hashes, never in plaintext, and can expire after configurable durations. A compromised read-only key cannot move money. A compromised transfer key cannot read transaction history it was not granted access to.
 
 ## What I Learned
 
-Working on this project changed how I think about financial systems. Even relatively small wallet services require careful handling of idempotency, transaction safety, and external integrations.
+Financial systems have a way of exposing every assumption you made about data consistency. I went in knowing about database transactions conceptually — I came out understanding exactly where the boundaries need to be and why getting them wrong is silent and expensive.
 
-It also reinforced the importance of designing APIs with multiple authentication methods. Supporting both user-based and service-based authentication made the system significantly more flexible for integrations.
+The API key system was the more interesting design problem. Building access control that is both flexible and safe requires thinking about the threat model upfront, not as an afterthought. Scoping permissions to the minimum needed for each integration is a principle I now apply by default.

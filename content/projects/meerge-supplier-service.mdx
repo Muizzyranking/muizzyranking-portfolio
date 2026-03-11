@@ -1,0 +1,47 @@
+---
+title: "Meerge Supplier Service"
+summary: "Supplier onboarding, verification, and operations backend for a food commerce platform — designed from scratch as an independent microservice supporting 500+ suppliers in pilot."
+status: "complete"
+year: "2025"
+stack: [Python, Django, Django REST Framework, PostgreSQL, Redis, Celery, Docker]
+repo: ""
+live: "https://kittchens.com/"
+featured: true
+cover: ""
+---
+
+## Overview
+
+The Supplier Service is the backend powering the supplier side of Meerge — a food commerce platform connecting vendors, suppliers, and delivery operations. I designed and built it from scratch as an independent microservice within a larger ecosystem that also included vendor and delivery services.
+
+The service handles the full supplier lifecycle: registration, business verification, admin approval, product catalog management, and incoming order handling. During pilot operations, the platform onboarded between 500 and 1,000 suppliers through this system, each managing an average of around 50 products.
+
+What made this interesting was the constraint of building it as a standalone service that needed to communicate securely with the rest of the platform — without sharing a database or tight-coupling to other services.
+
+## Challenges
+
+### Designing a supplier lifecycle that operations could actually manage
+
+The supplier state machine went through four explicit states: pending, approved, rejected, and suspended. Pending serves as the review state — suppliers register and sit there until an administrator acts. From pending, a supplier can be approved or rejected. Approved suppliers can later be suspended without losing their data.
+
+Every transition was modeled explicitly with validation rules — a suspended supplier cannot receive new orders, a rejected supplier cannot reapply with the same credentials, and every state change is logged for audit purposes. Getting the transitions wrong would mean either letting unverified suppliers onto the platform or locking out legitimate ones with no recovery path.
+
+### Secure service-to-service communication
+
+The supplier service needed to receive and send data to the vendor and delivery services without exposing internal APIs publicly. Basic API keys would have worked but created a flat trust model — any service with a key could do anything.
+
+The solution was JWT tokens scoped to specific service identities. Each inter-service request carries a token that identifies the calling service and its permitted operations, signed with a shared secret. The supplier service validates the token and checks the embedded permissions before processing the request. A token issued to the delivery service cannot be used to modify supplier data.
+
+### Moving slow operations off the request path
+
+Image uploads and email notifications were blocking API responses. On a slow connection, uploading a product image could hold the request open for several seconds — unacceptable for a supplier managing a catalog of dozens of products.
+
+Both operations moved to Celery background workers. The API acknowledges the request immediately and queues the heavy work. Images are processed and stored asynchronously. Notifications are delivered without the user waiting. The tradeoff was eventual consistency — a supplier might not see their image immediately after upload — which required clear feedback in the API response so the frontend could handle it gracefully.
+
+## What I Learned
+
+Designing from scratch is a different problem than working in an existing codebase. Every decision you make becomes the constraint the next decision has to work around. I learned to think further ahead — not just "does this work now" but "what does this make harder in three months."
+
+The service-to-service authentication problem was the one I found most interesting. It forced me to think about trust boundaries seriously — who should be able to call what, and what is the blast radius if something is compromised. That kind of thinking did not come naturally at first. It does now.
+
+I also stepped into an acting lead role for roughly 8 weeks when the engineering lead left mid-project — reviewing PRs, making architecture calls, and coordinating a team of about 7 engineers while still shipping my own work. It was a different kind of hard. I am glad it happened early.

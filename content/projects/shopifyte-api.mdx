@@ -1,0 +1,51 @@
+---
+title: "Shopifyte API"
+summary: "A multi-vendor ecommerce backend where each vendor operates an independent store — with a custom image service, scoped permissions, and APIs designed to support web and mobile frontends."
+status: "in-progress"
+year: "2025"
+stack: [Python, Django, PostgreSQL, Redis, Docker]
+repo: "https://github.com/Muizzyranking/shopifyte-api"
+live: ""
+featured: true
+cover: ""
+---
+
+## Overview
+
+Shopifyte is a multi-vendor ecommerce backend where vendors create independent stores within a shared platform. Each store operates in isolation — its own products, inventory, orders, and configuration — while running on the same underlying infrastructure.
+
+The platform currently supports account creation, shop setup, product management with a custom image service, and cart handling. Order processing and checkout are in active development.
+
+A Next.js frontend is in development alongside the API, which has already influenced several API design decisions — a deliberate choice to build the backend and frontend in parallel rather than treating the API as a finished contract.
+
+## Challenges
+
+### Building a vendor-scoped permission system
+
+In a multi-vendor system, every resource belongs to a specific shop. A vendor should never be able to read, modify, or delete another vendor's products or orders — even if they know the resource ID.
+
+Rather than handling this check ad-hoc across individual views, I built custom permission handlers that enforce shop-scoped access at the request level. Every authenticated request is validated against the vendor's own shop before any data is returned or modified. Attempts to access resources from other shops are rejected cleanly. The custom router — extended from Django Ninja — applies these permission checks consistently across all endpoints, along with standardized error responses and 404 schemas, so no endpoint accidentally skips the check.
+
+### Designing an image service that protects vendor assets
+
+The standard approach — storing images directly in a model field and serving them from storage — works but leaves vendor product images exposed and unprotected. For a platform where vendors are building businesses, that is not acceptable.
+
+Instead, models store only a reference to the image, not the image itself. When an image is uploaded, a dedicated image service compresses it, watermarks it to protect against theft, and stores it in the configured storage backend. The server resolves the reference at request time and serves the image. The storage backend — currently local — is abstracted behind an interface that can be swapped for S3 or Cloudinary without changing application code. Watermarking and compression logic stays in one place regardless of where images end up living.
+
+### Keeping product listing performance consistent
+
+Product listing endpoints are the most frequently hit in any ecommerce system and the first to degrade as catalogs grow. Without caching, every request hits the database even when nothing has changed.
+
+Serialized responses for product listings and shop information are cached in Redis. Cache invalidation is tied directly to data mutations — a product being added, updated, or deleted clears the relevant cache immediately. The result is consistent response times regardless of catalog size, without serving stale data after changes.
+
+### Evolving APIs alongside a real frontend
+
+Building the Next.js frontend in parallel with the API created a feedback loop that a purely API-first approach would have missed. Login responses were restructured to return full user data so the frontend could store it locally and avoid redundant queries. Several request bodies were reshaped based on how the frontend actually consumed them.
+
+This was not a flaw in the original design — it was the design working correctly. APIs built in isolation from their consumers tend to be technically correct but practically awkward. Building both sides together produced endpoints that are easier to consume without being tightly coupled to a specific UI.
+
+## What I Learned
+
+The image service was the most satisfying part of this project to design. It forced a clean separation between what the model knows about — a reference — and what the service knows about — compression, watermarking, storage. That separation means the storage backend can change without touching the model, and the watermarking logic can change without touching either. I find myself thinking about that kind of boundary more deliberately now.
+
+The custom router and permission system also taught me something about building for consistency rather than correctness. Individual views can be correct while the system as a whole is inconsistent — different error formats, missing permission checks, undocumented response schemas. Centralizing those concerns in the router meant the entire API behaved predictably, not just individual endpoints.
