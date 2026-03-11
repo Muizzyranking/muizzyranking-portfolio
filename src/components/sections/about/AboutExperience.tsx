@@ -1,5 +1,5 @@
 "use client";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import SectionWrapper from "@/components/ui/SectionWrapper";
 import type { Experience } from "@/lib/experience";
 
@@ -37,7 +37,7 @@ export default function AboutExperience({ experiences }: { experiences: Experien
 
           <div style={{ display: "flex", flexDirection: "column", gap: "3rem" }}>
             {experiences.map((exp, i) => (
-              <motion.div
+              <m.div
                 key={exp.company}
                 initial={{ opacity: 0, x: -12 }}
                 whileInView={{ opacity: 1, x: 0 }}
@@ -122,7 +122,7 @@ export default function AboutExperience({ experiences }: { experiences: Experien
                     {exp.summary}
                   </p>
                 </div>
-              </motion.div>
+              </m.div>
             ))}
           </div>
         </div>

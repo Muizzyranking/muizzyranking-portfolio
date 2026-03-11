@@ -1,5 +1,5 @@
 "use client";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import SectionWrapper from "@/components/ui/SectionWrapper";
 
 export default function AboutOpening() {
@@ -12,7 +12,7 @@ export default function AboutOpening() {
       }}>
 
         {/* Horizontal rule — mirrors hero */}
-        <motion.div
+        <m.div
           initial={{ scaleX: 0, opacity: 0 }}
           animate={{ scaleX: 1, opacity: 1 }}
           transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
@@ -25,7 +25,7 @@ export default function AboutOpening() {
         />
 
         {/* Eyebrow */}
-        <motion.p
+        <m.p
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
@@ -45,10 +45,10 @@ export default function AboutOpening() {
           About
           <span style={{ display: "inline-block", width: "32px", height: "1px", background: "var(--color-border)", verticalAlign: "middle" }} />
           Muiz Oyebowale
-        </motion.p>
+        </m.p>
 
         {/* Heading */}
-        <motion.h1
+        <m.h1
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
@@ -62,7 +62,7 @@ export default function AboutOpening() {
         >
           <span style={{ color: "var(--color-accent)", display: "block" }}>I build the parts</span>
           <span style={{ color: "var(--color-text-primary)", display: "block" }}>nobody sees.</span>
-        </motion.h1>
+        </m.h1>
 
         {/* Body + metadata — two column */}
         <div style={{
@@ -71,7 +71,7 @@ export default function AboutOpening() {
           gap: "3rem",
           alignItems: "start",
         }}>
-          <motion.p
+          <m.p
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
@@ -87,10 +87,10 @@ export default function AboutOpening() {
             Backend engineer. I care about systems that handle real users,
             real money, and real failure modes —
             <span style={{ color: "var(--color-text-secondary)", fontWeight: 400 }}> the kind of work that has to be correct, not just functional.</span>
-          </motion.p>
+          </m.p>
 
           {/* Right metadata — mirrors hero sidebar */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0, x: 16 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.5, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
@@ -116,7 +116,7 @@ export default function AboutOpening() {
                 </p>
               </div>
             ))}
-          </motion.div>
+          </m.div>
         </div>
 
         {/* Bottom divider */}

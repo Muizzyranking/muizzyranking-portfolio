@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { useState } from "react";
 import type { HashnodePost } from "@/lib/hashnode";
 
@@ -21,7 +21,7 @@ export default function BlogCard({ post, index }: Props) {
   const [hovered, setHovered] = useState(false);
 
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-40px" }}
@@ -41,7 +41,7 @@ export default function BlogCard({ post, index }: Props) {
             backgroundColor: "var(--color-border-subtle)",
           }}
         />
-        <motion.div
+        <m.div
           animate={{ scaleX: hovered ? 1 : 0 }}
           initial={{ scaleX: 0 }}
           transition={{ duration: 0.35, ease: [0.25, 0.1, 0.25, 1] }}
@@ -74,7 +74,7 @@ export default function BlogCard({ post, index }: Props) {
         }}
       >
         {/* Index */}
-        <motion.span
+        <m.span
           animate={{
             color: hovered ? "var(--color-accent)" : "var(--color-text-muted)",
           }}
@@ -87,11 +87,11 @@ export default function BlogCard({ post, index }: Props) {
           }}
         >
           {String(index + 1).padStart(2, "0")}
-        </motion.span>
+        </m.span>
 
         {/* Content */}
         <div style={{ minWidth: 0 }}>
-          <motion.h3
+          <m.h3
             animate={{
               color: hovered
                 ? "var(--color-accent)"
@@ -107,7 +107,7 @@ export default function BlogCard({ post, index }: Props) {
             }}
           >
             {post.title}
-          </motion.h3>
+          </m.h3>
 
           <p
             style={{
@@ -188,7 +188,7 @@ export default function BlogCard({ post, index }: Props) {
             {post.readTimeInMinutes} min read
           </span>
 
-          <motion.span
+          <m.span
             animate={{
               x: hovered ? 4 : 0,
               opacity: hovered ? 1 : 0.25,
@@ -200,7 +200,7 @@ export default function BlogCard({ post, index }: Props) {
             style={{ fontSize: "0.85rem" }}
           >
             →
-          </motion.span>
+          </m.span>
         </div>
       </a>
 
@@ -213,7 +213,7 @@ export default function BlogCard({ post, index }: Props) {
             backgroundColor: "var(--color-border-subtle)",
           }}
         />
-        <motion.div
+        <m.div
           animate={{ scaleX: hovered ? 1 : 0 }}
           initial={{ scaleX: 0 }}
           transition={{ duration: 0.35, ease: [0.25, 0.1, 0.25, 1] }}
@@ -225,6 +225,6 @@ export default function BlogCard({ post, index }: Props) {
           }}
         />
       </div>
-    </motion.div>
+    </m.div>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import Link from "next/link";
 import { useState } from "react";
 import type { Project } from "@/lib/projects";
@@ -14,7 +14,7 @@ export default function ProjectCard({ project, index }: Props) {
   const [hovered, setHovered] = useState(false);
 
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-40px" }}
@@ -49,7 +49,7 @@ export default function ProjectCard({ project, index }: Props) {
         }}
       >
         {/* Left accent bar */}
-        <motion.div
+        <m.div
           animate={{ scaleY: hovered ? 1 : 0, opacity: hovered ? 1 : 0 }}
           initial={{ scaleY: 0, opacity: 0 }}
           transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
@@ -67,7 +67,7 @@ export default function ProjectCard({ project, index }: Props) {
 
         {/* Index — bigger, more architectural */}
         <div style={{ paddingTop: "0.15rem" }}>
-          <motion.span
+          <m.span
             animate={{
               color: hovered ? "var(--color-accent)" : "var(--color-border)",
             }}
@@ -83,7 +83,7 @@ export default function ProjectCard({ project, index }: Props) {
             }}
           >
             {String(index + 1).padStart(2, "0")}
-          </motion.span>
+          </m.span>
         </div>
 
         {/* Content */}
@@ -99,7 +99,7 @@ export default function ProjectCard({ project, index }: Props) {
               gap: "1rem",
             }}
           >
-            <motion.h3
+            <m.h3
               animate={{
                 color: hovered
                   ? "var(--color-accent)"
@@ -115,7 +115,7 @@ export default function ProjectCard({ project, index }: Props) {
               }}
             >
               {project.title}
-            </motion.h3>
+            </m.h3>
 
             <div
               style={{
@@ -137,7 +137,7 @@ export default function ProjectCard({ project, index }: Props) {
                 {project.year}
               </span>
 
-              <motion.span
+              <m.span
                 animate={{
                   x: hovered ? 5 : 0,
                   opacity: hovered ? 1 : 0.2,
@@ -149,12 +149,12 @@ export default function ProjectCard({ project, index }: Props) {
                 style={{ fontSize: "1rem", display: "block" }}
               >
                 →
-              </motion.span>
+              </m.span>
             </div>
           </div>
 
           {/* Summary */}
-          <motion.p
+          <m.p
             animate={{
               color: hovered
                 ? "var(--color-text-primary)"
@@ -170,12 +170,12 @@ export default function ProjectCard({ project, index }: Props) {
             }}
           >
             {project.summary}
-          </motion.p>
+          </m.p>
 
           {/* Stack tags */}
           <div style={{ display: "flex", flexWrap: "wrap", gap: "0.4rem" }}>
             {project.stack.map((tech, i) => (
-              <motion.span
+              <m.span
                 key={tech}
                 animate={{
                   color: hovered
@@ -200,7 +200,7 @@ export default function ProjectCard({ project, index }: Props) {
                 }}
               >
                 {tech}
-              </motion.span>
+              </m.span>
             ))}
           </div>
         </div>
@@ -215,7 +215,7 @@ export default function ProjectCard({ project, index }: Props) {
             backgroundColor: "var(--color-border-subtle)",
           }}
         />
-        <motion.div
+        <m.div
           animate={{ scaleX: hovered ? 1 : 0 }}
           initial={{ scaleX: 0 }}
           transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
@@ -227,6 +227,6 @@ export default function ProjectCard({ project, index }: Props) {
           }}
         />
       </div>
-    </motion.div>
+    </m.div>
   );
 }

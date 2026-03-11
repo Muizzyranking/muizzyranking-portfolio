@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -37,7 +37,7 @@ export default function Navbar() {
   return (
     <AnimatePresence>
       {visible && (
-        <motion.header
+        <m.header
           initial={{ y: -100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: -100, opacity: 0 }}
@@ -152,7 +152,7 @@ export default function Navbar() {
                       >
                         {link.label}
                         {isActive && (
-                          <motion.span
+                          <m.span
                             layoutId="nav-underline"
                             style={{
                               position: "absolute",
@@ -176,7 +176,7 @@ export default function Navbar() {
               </ul>
             </div>
           </nav>
-        </motion.header>
+        </m.header>
       )}
     </AnimatePresence>
   );

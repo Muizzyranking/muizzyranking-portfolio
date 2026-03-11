@@ -26,10 +26,10 @@ export default function AboutPage() {
       <div className="container-main">
         <AboutOpening />
         <AboutThinking />
-                <AboutCraft />
-                <AboutExperience experiences={experiences} />
-                <AboutDirection />
-                <AboutHuman/>
+        <AboutCraft />
+        <AboutExperience experiences={experiences} />
+        <AboutDirection />
+        <AboutHuman />
       </div>
       <Contact />
     </div>

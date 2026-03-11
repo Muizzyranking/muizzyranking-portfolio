@@ -1,17 +1,17 @@
 "use client";
 
-import { motion, type Variants } from "framer-motion";
+import { m, type Variants } from "framer-motion";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 20 },
+  hidden: { opacity: 0, y: 12 },
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
     transition: {
-      delay: i * 0.12,
-      duration: 0.7,
+      delay: i * 0.08,
+      duration: 0.5,
       ease: [0.22, 1, 0.36, 1],
     },
   }),
@@ -57,6 +57,7 @@ export default function Hero() {
         overflow: "hidden",
         paddingTop: "clamp(5rem, 12vw, 8rem)",
         paddingBottom: "clamp(5rem, 12vw, 8rem)",
+        contentVisibility: "auto",
       }}
     >
       {/* Ambient mouse glow */}
@@ -90,7 +91,7 @@ export default function Hero() {
       />
 
       {/* Horizontal rule — architectural top anchor */}
-      <motion.div
+      <m.div
         initial={{ scaleX: 0, opacity: 0 }}
         animate={{ scaleX: 1, opacity: 1 }}
         transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
@@ -123,7 +124,7 @@ export default function Hero() {
           {/* LEFT — main content */}
           <div style={{ maxWidth: "820px" }}>
             {/* Eyebrow with bracket notation */}
-            <motion.p
+            <m.p
               custom={0}
               initial="hidden"
               animate="visible"
@@ -160,10 +161,10 @@ export default function Hero() {
                   verticalAlign: "middle",
                 }}
               />
-            </motion.p>
+            </m.p>
 
             {/* Name — accent on first name, secondary on last */}
-            <motion.h1
+            <m.h1
               custom={1}
               initial="hidden"
               animate="visible"
@@ -185,10 +186,10 @@ export default function Hero() {
               >
                 Oyebowale
               </span>
-            </motion.h1>
+            </m.h1>
 
             {/* One-liner — bigger, bolder */}
-            <motion.p
+            <m.p
               custom={2}
               initial="hidden"
               animate="visible"
@@ -212,10 +213,10 @@ export default function Hero() {
               >
                 and I&apos;m fine with that.
               </span>
-            </motion.p>
+            </m.p>
 
             {/* Typewriter dry humor */}
-            <motion.div
+            <m.div
               custom={3}
               initial="hidden"
               animate="visible"
@@ -238,7 +239,7 @@ export default function Hero() {
                   $
                 </span>
                 {LINES.slice(0, lineIndex + 1).join(" ")}
-                <motion.span
+                <m.span
                   animate={{ opacity: [1, 0, 1] }}
                   transition={{
                     repeat: Infinity,
@@ -248,12 +249,12 @@ export default function Hero() {
                   style={{ marginLeft: "2px" }}
                 >
                   ▋
-                </motion.span>
+                </m.span>
               </span>
-            </motion.div>
+            </m.div>
 
             {/* CTAs */}
-            <motion.div
+            <m.div
               custom={4}
               initial="hidden"
               animate="visible"
@@ -327,11 +328,11 @@ export default function Hero() {
               >
                 who&apos;s behind this →
               </Link>
-            </motion.div>
+            </m.div>
           </div>
 
           {/* RIGHT — vertical metadata column */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0, x: 16 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.9, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
@@ -375,12 +376,12 @@ export default function Hero() {
                 </p>
               </div>
             ))}
-          </motion.div>
+          </m.div>
         </div>
       </div>
 
       {/* Scroll indicator — labeled */}
-      <motion.div
+      <m.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.4, duration: 0.8 }}
@@ -406,7 +407,7 @@ export default function Hero() {
         >
           scroll
         </span>
-        <motion.div
+        <m.div
           animate={{ y: [0, 8, 0] }}
           transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
           style={{
@@ -416,7 +417,7 @@ export default function Hero() {
               "linear-gradient(to bottom, var(--color-accent), transparent)",
           }}
         />
-      </motion.div>
+      </m.div>
     </section>
   );
 }

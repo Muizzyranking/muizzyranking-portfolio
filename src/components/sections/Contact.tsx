@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { useState } from "react";
 
 const links = [
@@ -47,7 +47,7 @@ function ContactLink({
             backgroundColor: "var(--color-border-subtle)",
           }}
         />
-        <motion.div
+        <m.div
           animate={{ scaleX: hovered ? 1 : 0 }}
           initial={{ scaleX: 0 }}
           transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
@@ -97,7 +97,7 @@ function ContactLink({
         </span>
 
         {/* Mono value */}
-        <motion.span
+        <m.span
           animate={{
             color: hovered
               ? "var(--color-accent)"
@@ -113,10 +113,10 @@ function ContactLink({
           }}
         >
           {link.mono}
-        </motion.span>
+        </m.span>
 
         {/* Arrow */}
-        <motion.span
+        <m.span
           animate={{
             x: hovered ? 5 : 0,
             opacity: hovered ? 1 : 0.2,
@@ -126,7 +126,7 @@ function ContactLink({
           style={{ fontSize: "1rem", flexShrink: 0 }}
         >
           →
-        </motion.span>
+        </m.span>
       </a>
 
       {/* Bottom border on last item */}
@@ -139,7 +139,7 @@ function ContactLink({
               backgroundColor: "var(--color-border-subtle)",
             }}
           />
-          <motion.div
+          <m.div
             animate={{ scaleX: hovered ? 1 : 0 }}
             initial={{ scaleX: 0 }}
             transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
@@ -162,7 +162,7 @@ export default function Contact() {
       <div className="container-main">
         <div className="contact-grid">
           {/* Left — heading + blurb */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-60px" }}
@@ -259,10 +259,10 @@ export default function Contact() {
             >
               ↓ Download Resume
             </a>
-          </motion.div>
+          </m.div>
 
           {/* Right — links */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-60px" }}
@@ -281,7 +281,7 @@ export default function Contact() {
                 isLast={i === links.length - 1}
               />
             ))}
-          </motion.div>
+          </m.div>
         </div>
       </div>
     </section>

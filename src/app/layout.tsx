@@ -2,6 +2,7 @@ import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 import type { Metadata } from "next";
 import "./globals.css";
+import { domAnimation, LazyMotion } from "framer-motion";
 import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
 
@@ -63,8 +64,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`}>
       <body className="antialiased">
-        <Navbar />
-        {children}
+        <LazyMotion features={domAnimation} strict>
+          <Navbar />
+          {children}
+        </LazyMotion>
         <Footer />
       </body>
     </html>

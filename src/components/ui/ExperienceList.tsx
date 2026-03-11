@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import { useState } from "react";
 import type { Experience } from "@/lib/experience";
 
@@ -18,7 +18,7 @@ function ExperienceRow({
   last: boolean;
 }) {
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, y: 12 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-40px" }}
@@ -31,8 +31,14 @@ function ExperienceRow({
     >
       {/* Top line */}
       <div style={{ position: "relative", height: "1px" }}>
-        <div style={{ position: "absolute", inset: 0, backgroundColor: "var(--color-border-subtle)" }} />
-        <motion.div
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            backgroundColor: "var(--color-border-subtle)",
+          }}
+        />
+        <m.div
           animate={{ scaleX: isOpen ? 1 : 0 }}
           initial={{ scaleX: 0 }}
           transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
@@ -68,12 +74,14 @@ function ExperienceRow({
             backgroundColor: isOpen
               ? "color-mix(in srgb, var(--color-accent) 4%, var(--color-surface))"
               : "transparent",
-            borderRadius: isOpen ? "var(--radius-md) var(--radius-md) 0 0" : "0",
+            borderRadius: isOpen
+              ? "var(--radius-md) var(--radius-md) 0 0"
+              : "0",
             transition: "background-color 0.3s ease",
           }}
         >
           {/* Index — large, architectural */}
-          <motion.span
+          <m.span
             animate={{
               color: isOpen ? "var(--color-accent)" : "var(--color-border)",
             }}
@@ -89,7 +97,7 @@ function ExperienceRow({
             }}
           >
             {String(index + 1).padStart(2, "0")}
-          </motion.span>
+          </m.span>
 
           {/* Company + role */}
           <div>
@@ -102,9 +110,11 @@ function ExperienceRow({
                 marginBlockEnd: "0.35rem",
               }}
             >
-              <motion.span
+              <m.span
                 animate={{
-                  color: isOpen ? "var(--color-accent)" : "var(--color-text-primary)",
+                  color: isOpen
+                    ? "var(--color-accent)"
+                    : "var(--color-text-primary)",
                 }}
                 transition={{ duration: 0.25 }}
                 style={{
@@ -114,7 +124,7 @@ function ExperienceRow({
                 }}
               >
                 {exp.company}
-              </motion.span>
+              </m.span>
 
               <span
                 style={{
@@ -168,7 +178,7 @@ function ExperienceRow({
             </span>
 
             {/* Toggle icon */}
-            <motion.div
+            <m.div
               animate={{ rotate: isOpen ? 45 : 0 }}
               transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
               style={{
@@ -187,7 +197,9 @@ function ExperienceRow({
                   fontFamily: "var(--font-mono)",
                   fontSize: "0.9rem",
                   lineHeight: 1,
-                  color: isOpen ? "var(--color-accent)" : "var(--color-text-muted)",
+                  color: isOpen
+                    ? "var(--color-accent)"
+                    : "var(--color-text-muted)",
                   transition: "color 0.25s ease",
                   display: "block",
                   marginTop: "-1px",
@@ -195,7 +207,7 @@ function ExperienceRow({
               >
                 +
               </span>
-            </motion.div>
+            </m.div>
           </div>
         </div>
       </button>
@@ -203,7 +215,7 @@ function ExperienceRow({
       {/* Expandable content */}
       <AnimatePresence initial={false}>
         {isOpen && (
-          <motion.div
+          <m.div
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
@@ -215,7 +227,8 @@ function ExperienceRow({
                 paddingInline: "1rem",
                 paddingBlockEnd: "2rem",
                 paddingBlockStart: "0.25rem",
-                backgroundColor: "color-mix(in srgb, var(--color-accent) 4%, var(--color-surface))",
+                backgroundColor:
+                  "color-mix(in srgb, var(--color-accent) 4%, var(--color-surface))",
                 borderRadius: "0 0 var(--radius-md) var(--radius-md)",
               }}
             >
@@ -223,7 +236,8 @@ function ExperienceRow({
               <div
                 style={{
                   height: "1px",
-                  background: "linear-gradient(to right, var(--color-accent-dim), var(--color-border-subtle), transparent)",
+                  background:
+                    "linear-gradient(to right, var(--color-accent-dim), var(--color-border-subtle), transparent)",
                   marginBlockEnd: "1.75rem",
                 }}
               />
@@ -253,11 +267,15 @@ function ExperienceRow({
                     }}
                   >
                     {exp.highlights.map((highlight, i) => (
-                      <motion.li
+                      <m.li
                         key={i}
                         initial={{ opacity: 0, x: -8 }}
                         animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: i * 0.06, duration: 0.3, ease: "easeOut" }}
+                        transition={{
+                          delay: i * 0.06,
+                          duration: 0.3,
+                          ease: "easeOut",
+                        }}
                         style={{
                           display: "grid",
                           gridTemplateColumns: "1rem 1fr",
@@ -279,16 +297,21 @@ function ExperienceRow({
                           ↳
                         </span>
                         {highlight}
-                      </motion.li>
+                      </m.li>
                     ))}
                   </ul>
 
-                  <p className="mono-label" style={{ marginBlockEnd: "0.75rem" }}>
+                  <p
+                    className="mono-label"
+                    style={{ marginBlockEnd: "0.75rem" }}
+                  >
                     Stack
                   </p>
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: "0.4rem" }}>
+                  <div
+                    style={{ display: "flex", flexWrap: "wrap", gap: "0.4rem" }}
+                  >
                     {exp.stack.map((tech, i) => (
-                      <motion.span
+                      <m.span
                         key={tech}
                         initial={{ opacity: 0, y: 4 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -306,25 +329,34 @@ function ExperienceRow({
                         }}
                       >
                         {tech}
-                      </motion.span>
+                      </m.span>
                     ))}
                   </div>
                 </div>
               </div>
             </div>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
 
       {/* Bottom line — last item only */}
       {last && (
-        <div style={{ height: "1px", backgroundColor: "var(--color-border-subtle)" }} />
+        <div
+          style={{
+            height: "1px",
+            backgroundColor: "var(--color-border-subtle)",
+          }}
+        />
       )}
-    </motion.div>
+    </m.div>
   );
 }
 
-export default function ExperienceList({ experiences }: { experiences: Experience[] }) {
+export default function ExperienceList({
+  experiences,
+}: {
+  experiences: Experience[];
+}) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const toggle = (i: number) => setOpenIndex(openIndex === i ? null : i);
 

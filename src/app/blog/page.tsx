@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import BlogCard from "@/components/ui/BlogCard";
-import { getPosts } from "@/lib/hashnode";
 import HashnodeLink from "@/components/ui/HasnodeLink";
+import { getPosts } from "@/lib/hashnode";
 
 export const metadata: Metadata = {
   title: "Blog",
