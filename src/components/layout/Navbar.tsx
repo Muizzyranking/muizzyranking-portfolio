@@ -20,9 +20,7 @@ export default function Navbar() {
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-
       setScrolled(currentScrollY > 20);
-
       if (currentScrollY < 20) {
         setVisible(true);
       } else if (currentScrollY > lastScrollY + 8) {
@@ -30,10 +28,8 @@ export default function Navbar() {
       } else if (currentScrollY < lastScrollY - 8) {
         setVisible(true);
       }
-
       setLastScrollY(currentScrollY);
     };
-
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
@@ -71,67 +67,88 @@ export default function Navbar() {
                 paddingBlock: "1.25rem",
               }}
             >
+              {/* Logo */}
               <Link
                 href="/"
                 style={{
                   fontFamily: "var(--font-mono)",
-                  fontSize: "0.95rem",
+                  fontSize: "0.88rem",
                   fontWeight: 600,
                   letterSpacing: "-0.01em",
                   color: "var(--color-text-primary)",
                   transition: "color 0.2s ease",
+                  textDecoration: "none",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0",
                 }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.color = "var(--color-accent)")
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.color = "var(--color-text-primary)")
-                }
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = "var(--color-accent)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = "var(--color-text-primary)";
+                }}
               >
                 muizzyranking
                 <span style={{ color: "var(--color-accent)" }}>.</span>
               </Link>
 
+              {/* Nav links */}
               <ul
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  gap: "2.5rem",
+                  gap: "0",
                   listStyle: "none",
                   margin: 0,
                   padding: 0,
                 }}
               >
-                {navLinks.map((link) => {
-                  const isActive =
-                    link.href === "/"
-                      ? pathname === "/"
-                      : pathname.startsWith(link.href);
-
+                {navLinks.map((link, i) => {
+                  const isActive = pathname.startsWith(link.href);
                   return (
-                    <li key={link.href}>
+                    <li
+                      key={link.href}
+                      style={{ display: "flex", alignItems: "center" }}
+                    >
+                      {/* Separator */}
+                      {i > 0 && (
+                        <span
+                          style={{
+                            fontFamily: "var(--font-mono)",
+                            fontSize: "0.65rem",
+                            color: "var(--color-border)",
+                            paddingInline: "0.75rem",
+                            userSelect: "none",
+                          }}
+                        >
+                          /
+                        </span>
+                      )}
                       <Link
                         href={link.href}
                         style={{
                           position: "relative",
-                          fontSize: "0.875rem",
-                          fontWeight: 400,
-                          letterSpacing: "0.01em",
+                          fontFamily: "var(--font-mono)",
+                          fontSize: "0.75rem",
+                          letterSpacing: "0.06em",
+                          textTransform: "uppercase",
                           color: isActive
                             ? "var(--color-text-primary)"
-                            : "var(--color-text-muted)",
+                            : "var(--color-text-secondary)",
                           transition: "color 0.2s ease",
+                          textDecoration: "none",
                           paddingBottom: "2px",
                         }}
-                        onMouseEnter={(e) =>
-                          (e.currentTarget.style.color =
-                            "var(--color-text-primary)")
-                        }
-                        onMouseLeave={(e) =>
-                          (e.currentTarget.style.color = isActive
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.color =
+                            "var(--color-text-primary)";
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.color = isActive
                             ? "var(--color-text-primary)"
-                            : "var(--color-text-muted)")
-                        }
+                            : "var(--color-text-secondary)";
+                        }}
                       >
                         {link.label}
                         {isActive && (

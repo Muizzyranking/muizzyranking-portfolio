@@ -2,12 +2,16 @@ import AnimatedLink from "@/components/ui/AnimatedLink";
 import BlogCard from "@/components/ui/BlogCard";
 import { getPosts } from "@/lib/hashnode";
 
+const MAX_BLOG_POSTS = 3;
+
 export default async function BlogTeaser() {
-  const posts = await getPosts(3);
+  const posts = await getPosts(MAX_BLOG_POSTS);
 
   return (
     <section className="section">
       <div className="container-main">
+
+        {/* Section header */}
         <div
           style={{
             display: "flex",
@@ -17,7 +21,16 @@ export default async function BlogTeaser() {
           }}
         >
           <div>
-            <p className="mono-label" style={{ marginBlockEnd: "0.5rem" }}>
+            <p
+              className="mono-label"
+              style={{
+                marginBlockEnd: "0.5rem",
+                display: "flex",
+                alignItems: "center",
+                gap: "0.75rem",
+              }}
+            >
+              <span style={{ color: "var(--color-accent)", opacity: 0.6, whiteSpace: "nowrap" }}>[ 05 ]</span>
               Writing
             </p>
             <h2 style={{ margin: 0 }}>Blog</h2>
@@ -39,21 +52,27 @@ export default async function BlogTeaser() {
           </AnimatedLink>
         </div>
 
+        {/* Posts */}
         {posts.length === 0 ? (
-          <p style={{ color: "var(--color-text-muted)" }}>No posts yet.</p>
+          <p style={{
+            color: "var(--color-text-muted)",
+            fontFamily: "var(--font-mono)",
+            fontSize: "0.85rem",
+          }}>
+            <span style={{ color: "var(--color-accent)" }}>$</span> no posts yet.
+          </p>
         ) : (
           <div>
             {posts.map((post, i) => (
               <BlogCard key={post.id} post={post} index={i} />
             ))}
-            <div
-              style={{
-                height: "1px",
-                backgroundColor: "var(--color-border-subtle)",
-              }}
-            />
+            <div style={{
+              height: "1px",
+              background: "linear-gradient(to right, var(--color-accent), var(--color-border-subtle), transparent)",
+            }} />
           </div>
         )}
+
       </div>
     </section>
   );

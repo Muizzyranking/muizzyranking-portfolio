@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import { motion } from "framer-motion";
+import Link from "next/link";
 import { useState } from "react";
 import type { Project } from "@/lib/projects";
 
@@ -20,12 +20,12 @@ export default function ProjectCard({ project, index }: Props) {
       viewport={{ once: true, margin: "-40px" }}
       transition={{
         delay: index * 0.08,
-        duration: 0.5,
-        ease: [0.25, 0.1, 0.25, 1],
+        duration: 0.55,
+        ease: [0.22, 1, 0.36, 1],
       }}
       style={{ position: "relative" }}
     >
-      {/* Top border line */}
+      {/* Top border */}
       <div style={{ height: "1px", backgroundColor: "var(--color-border-subtle)" }} />
 
       <Link
@@ -34,20 +34,25 @@ export default function ProjectCard({ project, index }: Props) {
         onMouseLeave={() => setHovered(false)}
         style={{
           display: "grid",
-          gridTemplateColumns: "3rem 1fr",
+          gridTemplateColumns: "4rem 1fr",
           gap: "1.5rem",
           paddingBlock: "2rem",
           paddingInline: "1rem",
           position: "relative",
           textDecoration: "none",
           cursor: "pointer",
+          borderRadius: "var(--radius-md)",
+          transition: "background-color 0.3s ease",
+          backgroundColor: hovered
+            ? "color-mix(in srgb, var(--color-accent) 4%, var(--color-surface))"
+            : "transparent",
         }}
       >
-        {/* Left accent bar — grows in on hover */}
+        {/* Left accent bar */}
         <motion.div
           animate={{ scaleY: hovered ? 1 : 0, opacity: hovered ? 1 : 0 }}
           initial={{ scaleY: 0, opacity: 0 }}
-          transition={{ duration: 0.25, ease: "easeOut" }}
+          transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
           style={{
             position: "absolute",
             left: 0,
@@ -60,20 +65,26 @@ export default function ProjectCard({ project, index }: Props) {
           }}
         />
 
-        {/* Index */}
-        <motion.span
-          animate={{ color: hovered ? "var(--color-accent)" : "var(--color-text-muted)" }}
-          transition={{ duration: 0.2 }}
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: "0.7rem",
-            letterSpacing: "0.1em",
-            paddingTop: "0.2rem",
-            userSelect: "none",
-          }}
-        >
-          {String(index + 1).padStart(2, "0")}
-        </motion.span>
+        {/* Index — bigger, more architectural */}
+        <div style={{ paddingTop: "0.15rem" }}>
+          <motion.span
+            animate={{
+              color: hovered ? "var(--color-accent)" : "var(--color-border)",
+            }}
+            transition={{ duration: 0.25 }}
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: "1.6rem",
+              fontWeight: 700,
+              letterSpacing: "-0.04em",
+              lineHeight: 1,
+              userSelect: "none",
+              display: "block",
+            }}
+          >
+            {String(index + 1).padStart(2, "0")}
+          </motion.span>
+        </div>
 
         {/* Content */}
         <div style={{ minWidth: 0 }}>
@@ -82,9 +93,9 @@ export default function ProjectCard({ project, index }: Props) {
           <div
             style={{
               display: "flex",
-              alignItems: "center",
+              alignItems: "flex-start",
               justifyContent: "space-between",
-              marginBlockEnd: "0.6rem",
+              marginBlockEnd: "0.65rem",
               gap: "1rem",
             }}
           >
@@ -96,10 +107,11 @@ export default function ProjectCard({ project, index }: Props) {
               }}
               transition={{ duration: 0.2 }}
               style={{
-                fontSize: "1.1rem",
+                fontSize: "1.15rem",
                 fontWeight: 600,
-                letterSpacing: "-0.01em",
+                letterSpacing: "-0.02em",
                 margin: 0,
+                lineHeight: 1.2,
               }}
             >
               {project.title}
@@ -111,14 +123,15 @@ export default function ProjectCard({ project, index }: Props) {
                 alignItems: "center",
                 gap: "0.75rem",
                 flexShrink: 0,
+                paddingTop: "0.1rem",
               }}
             >
               <span
                 style={{
                   fontFamily: "var(--font-mono)",
-                  fontSize: "0.7rem",
+                  fontSize: "0.68rem",
                   color: "var(--color-text-muted)",
-                  letterSpacing: "0.06em",
+                  letterSpacing: "0.1em",
                 }}
               >
                 {project.year}
@@ -126,35 +139,40 @@ export default function ProjectCard({ project, index }: Props) {
 
               <motion.span
                 animate={{
-                  x: hovered ? 4 : 0,
-                  opacity: hovered ? 1 : 0.25,
+                  x: hovered ? 5 : 0,
+                  opacity: hovered ? 1 : 0.2,
                   color: hovered
                     ? "var(--color-accent)"
                     : "var(--color-text-muted)",
                 }}
-                transition={{ duration: 0.2 }}
-                style={{ fontSize: "0.85rem" }}
+                transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+                style={{ fontSize: "1rem", display: "block" }}
               >
                 →
               </motion.span>
             </div>
           </div>
 
-          {/* Summary — always visible */}
-          <p
+          {/* Summary */}
+          <motion.p
+            animate={{
+              color: hovered
+                ? "var(--color-text-primary)"
+                : "var(--color-text-secondary)",
+            }}
+            transition={{ duration: 0.25 }}
             style={{
-              fontSize: "0.875rem",
-              color: "var(--color-text-secondary)",
+              fontSize: "0.9rem",
               margin: 0,
-              lineHeight: 1.65,
-              marginBlockEnd: "1rem",
-              maxWidth: "64ch",
+              lineHeight: 1.7,
+              marginBlockEnd: "1.1rem",
+              maxWidth: "62ch",
             }}
           >
             {project.summary}
-          </p>
+          </motion.p>
 
-          {/* Stack — always visible, lights up on hover */}
+          {/* Stack tags */}
           <div style={{ display: "flex", flexWrap: "wrap", gap: "0.4rem" }}>
             {project.stack.map((tech, i) => (
               <motion.span
@@ -168,16 +186,17 @@ export default function ProjectCard({ project, index }: Props) {
                     : "var(--color-border-subtle)",
                   backgroundColor: hovered
                     ? "var(--color-accent-subtle)"
-                    : "var(--color-background)",
+                    : "transparent",
                 }}
-                transition={{ duration: 0.15, delay: i * 0.03 }}
+                transition={{ duration: 0.2, delay: i * 0.03 }}
                 style={{
                   fontFamily: "var(--font-mono)",
                   fontSize: "0.65rem",
-                  letterSpacing: "0.06em",
+                  letterSpacing: "0.08em",
                   padding: "0.25rem 0.6rem",
                   borderRadius: "var(--radius-sm)",
                   border: "1px solid var(--color-border-subtle)",
+                  textTransform: "uppercase",
                 }}
               >
                 {tech}
@@ -187,7 +206,7 @@ export default function ProjectCard({ project, index }: Props) {
         </div>
       </Link>
 
-      {/* Bottom reveal line — animates left to right on hover */}
+      {/* Bottom reveal line */}
       <div style={{ position: "relative", height: "1px" }}>
         <div
           style={{
@@ -199,7 +218,7 @@ export default function ProjectCard({ project, index }: Props) {
         <motion.div
           animate={{ scaleX: hovered ? 1 : 0 }}
           initial={{ scaleX: 0 }}
-          transition={{ duration: 0.35, ease: [0.25, 0.1, 0.25, 1] }}
+          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
           style={{
             position: "absolute",
             inset: 0,

@@ -5,95 +5,137 @@ export const contentType = "image/png";
 
 export default function OGImage() {
   return new ImageResponse(
-    <div
-      style={{
-        width: 1200,
-        height: 630,
-        background: "#0e0e0e",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        padding: "80px",
-        position: "relative",
-      }}
-    >
+    <div style={{
+      width: 1200,
+      height: 630,
+      background: "#100d0c",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "space-between",
+      padding: "72px 80px",
+      position: "relative",
+    }}>
       {/* Grid texture */}
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          backgroundImage:
-            "linear-gradient(#1f1f1f 1px, transparent 1px), linear-gradient(90deg, #1f1f1f 1px, transparent 1px)",
-          backgroundSize: "64px 64px",
-          opacity: 0.3,
-        }}
-      />
+      <div style={{
+        position: "absolute",
+        inset: 0,
+        backgroundImage:
+          "linear-gradient(#2a1f18 1px, transparent 1px), linear-gradient(90deg, #2a1f18 1px, transparent 1px)",
+        backgroundSize: "48px 48px",
+        opacity: 0.5,
+        display: "flex",
+      }} />
 
-      {/* Accent glow */}
-      <div
-        style={{
-          position: "absolute",
-          top: -100,
-          left: -100,
-          width: 500,
-          height: 500,
-          background:
-            "radial-gradient(circle, rgba(201,168,76,0.12) 0%, transparent 70%)",
-        }}
-      />
+      {/* Accent glow — top left */}
+      <div style={{
+        position: "absolute",
+        top: -120,
+        left: -80,
+        width: 480,
+        height: 480,
+        background: "radial-gradient(circle, rgba(184,92,69,0.14) 0%, transparent 70%)",
+        display: "flex",
+      }} />
+
+      {/* Top accent line */}
+      <div style={{
+        position: "absolute",
+        top: 0,
+        left: 80,
+        right: 80,
+        height: 1,
+        background: "linear-gradient(to right, #b85c45, #332620, transparent)",
+        display: "flex",
+      }} />
 
       {/* Content */}
-      <div style={{ position: "relative", display: "flex", flexDirection: "column" }}>
-        <span
-          style={{
+      <div style={{ position: "relative", display: "flex", flexDirection: "column", gap: 0 }}>
+
+        {/* Eyebrow */}
+        <div style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 12,
+          marginBottom: 32,
+        }}>
+          <span style={{
             fontFamily: "monospace",
-            fontSize: 14,
-            letterSpacing: "0.15em",
+            fontSize: 13,
+            letterSpacing: "0.2em",
             textTransform: "uppercase",
-            color: "#c9a84c",
-            marginBottom: 24,
-            display: "block",
-          }}
-        >
-          Backend Engineer
-        </span>
-
-        <span
-          style={{
-            fontSize: 72,
-            fontWeight: 700,
-            color: "#f0ece4",
-            letterSpacing: "-3px",
-            lineHeight: 1.05,
-            marginBottom: 24,
-            display: "block",
-          }}
-        >
-          Muiz Oyebowale
-        </span>
-
-        <span
-          style={{
-            fontSize: 22,
-            color: "#b8b0a4",
-            lineHeight: 1.6,
-            maxWidth: 600,
-            display: "block",
-            marginBottom: 48,
-          }}
-        >
-          I build the parts of software nobody sees — and I&apos;m fine with that.
-        </span>
-
-        <span
-          style={{
+            color: "#b85c45",
+            opacity: 0.7,
+          }}>[ dev ]</span>
+          <span style={{
             fontFamily: "monospace",
-            fontSize: 14,
-            color: "#5a5550",
-            display: "block",
-          }}
-        >
+            fontSize: 13,
+            letterSpacing: "0.14em",
+            textTransform: "uppercase",
+            color: "#5c4e43",
+          }}>Backend Engineer</span>
+        </div>
+
+        {/* Name — stacked like hero */}
+        <span style={{
+          fontFamily: "monospace",
+          fontSize: 80,
+          fontWeight: 700,
+          color: "#b85c45",
+          letterSpacing: "-4px",
+          lineHeight: 0.95,
+          display: "block",
+          marginBottom: 4,
+        }}>
+          Muiz
+        </span>
+        <span style={{
+          fontFamily: "monospace",
+          fontSize: 80,
+          fontWeight: 700,
+          color: "#f5f0e8",
+          letterSpacing: "-4px",
+          lineHeight: 0.95,
+          display: "block",
+          marginBottom: 36,
+        }}>
+          Oyebowale
+        </span>
+
+        {/* Tagline */}
+        <span style={{
+          fontSize: 20,
+          color: "#c4ad93",
+          lineHeight: 1.6,
+          maxWidth: 580,
+          display: "block",
+        }}>
+          I build the parts of software nobody sees — and I'm fine with that.
+        </span>
+      </div>
+
+      {/* Bottom — domain */}
+      <div style={{
+        position: "relative",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+      }}>
+        <span style={{
+          fontFamily: "monospace",
+          fontSize: 13,
+          color: "#5c4e43",
+          letterSpacing: "0.08em",
+        }}>
           muizzyranking.dev
+        </span>
+        <span style={{
+          fontFamily: "monospace",
+          fontSize: 13,
+          color: "#b85c45",
+          letterSpacing: "0.08em",
+          opacity: 0.5,
+        }}>
+          :wq
         </span>
       </div>
     </div>,

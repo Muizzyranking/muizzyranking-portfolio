@@ -57,7 +57,7 @@ export default function Skills() {
       <div className="container-main">
         <div style={{ marginBlockEnd: "3rem" }}>
           <p className="mono-label" style={{ marginBlockEnd: "0.5rem" }}>
-            Toolkit
+           <span style={{ color: "var(--color-accent)", opacity: 0.6, whiteSpace: "nowrap"}}>[ 04 ]</span> Toolkit
           </p>
           <h2 style={{ margin: 0 }}>Skills</h2>
         </div>
