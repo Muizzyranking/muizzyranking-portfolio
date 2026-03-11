@@ -54,6 +54,7 @@ function ExperienceRow({
       {/* Row button */}
       <button
         onClick={onToggle}
+        type="button"
         style={{
           width: "100%",
           background: "none",
@@ -268,7 +269,7 @@ function ExperienceRow({
                   >
                     {exp.highlights.map((highlight, i) => (
                       <m.li
-                        key={i}
+                        key={highlight.slice(0, 30)}
                         initial={{ opacity: 0, x: -8 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{
@@ -364,7 +365,7 @@ export default function ExperienceList({
     <div>
       {experiences.map((exp, i) => (
         <ExperienceRow
-          key={i}
+          key={exp.company}
           exp={exp}
           index={i}
           isOpen={openIndex === i}

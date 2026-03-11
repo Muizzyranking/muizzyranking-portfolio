@@ -5,15 +5,15 @@
   period:
     start: "Jul 2025"
     end: "Jan 2026"
-  summary: "Backend developer on a task-based gaming platform where users complete tasks and earn real-money rewards."
+  summary: "Backend developer on a task-based gaming platform where users complete tasks and jobs to earn real-money rewards, with four distinct user roles and strict permission boundaries."
   highlights:
-    - "Built backend systems supporting ~1,000 users with multiple roles (Regular, VIP, Business, Influencer) and strict permission boundaries."
-    - "Co-designed core database models including user, task, and reward schemas to support the platform’s task execution and payout flow."
-    - "Implemented secure task execution and validation logic using server-side state tracking and execution limits to prevent abuse and reward farming."
-    - "Built reward tracking infrastructure linking third-party game outcomes to internal user accounts."
+    - "Built permission and role system supporting four distinct user types — Regular users complete tasks, VIP users access higher-reward tasks, Business accounts create tasks and jobs, and Influencers take jobs to promote businesses."
+    - "Designed abuse prevention logic using a hybrid storage strategy — task completion records stored in Redis with TTL matching task expiry for short-lived tasks, and a join table for longer or non-expiring tasks, preventing users from farming rewards across task resets."
+    - "Built webhook integration linking third-party game outcomes to internal user accounts, triggering reward payouts when game conditions were met."
+    - "Co-designed core database models including user, task, reward, and role schemas to support the platform's task execution and payout flow."
     - "Implemented Google OAuth authentication alongside token-based access control for API security."
-    - "Used Celery and Redis to move heavy operations to background workers, improving responsiveness of user-facing endpoints."
-    - "Improved image storage and delivery by introducing optimized storage and controlled serving, reducing bandwidth usage."
+    - "Moved heavy operations to Celery background workers backed by Redis, improving responsiveness of user-facing endpoints."
+    - "Built a custom image storage and serving system, reducing bandwidth usage and decoupling image delivery from application logic."
     - "Worked closely with frontend engineers to align APIs with real product usage and evolving requirements."
   stack: [Python, Django, Django Ninja, PostgreSQL, Redis, Celery, Docker]
 
@@ -24,19 +24,17 @@
   period:
     start: "Dec 2024"
     end: "Jul 2025"
-  summary: "Backend engineer at a startup building a multi-service food commerce platform connecting vendors, suppliers, and delivery operations."
+  summary: "Backend engineer at a startup building a multi-service food commerce platform connecting vendors, suppliers, and delivery operations across independent microservices."
   highlights:
-    - "Designed and led development of the Supplier service from scratch, supporting 500+ suppliers during pilot operations."
-    - "Built APIs and data models for supplier onboarding, verification, approval workflows, and lifecycle management."
-    - "Improved API responsiveness by moving heavy operations (image uploads, email notifications) to Celery background workers."
-    - "Refactored fragile error-handling logic into structured flows, significantly reducing silent failures and debugging time."
-    - "Introduced caching strategies with proper invalidation using Redis, reducing repeated database queries across frequently used endpoints."
-    - "Designed secure service-to-service communication using signed tokens to support interaction between independent microservices."
-    - "Co-developed backend logic for the Delivery service including order creation, assignment workflows, and real-time order status updates."
-    - "Built internal admin tools used by operations teams for monitoring suppliers, orders, and system activity."
-    - "Stepped in as acting backend lead when the engineering lead left, reviewing PRs, guiding architecture decisions, and mentoring junior engineers."
+    - "Designed and led development of the Supplier service from scratch — the primary service I owned, supporting 500+ suppliers with an average of 50 products each during pilot operations."
+    - "Built supplier lifecycle management with four explicit states (pending, approved, rejected, suspended), full audit logging on every transition, and admin tooling for operations teams to manage the pipeline."
+    - "Designed secure service-to-service communication using JWT tokens scoped to specific service identities, preventing cross-service privilege escalation."
+    - "Refactored bare except blocks and swallowed exceptions into structured error-handling flows with consistent response formats and full logging — significantly reducing silent failures and making issues traceable."
+    - "Introduced Redis caching with explicit invalidation on mutation events, reducing repeated database queries across high-traffic endpoints."
+    - "Co-developed backend logic for the Delivery service including order creation, assignment workflows, and order status polling."
+    - "Reviewed pull requests across all three backend services — Supplier, Delivery, and Kitchens — helping maintain consistency and code quality across the platform."
+    - "Stepped in as acting backend lead for 8 weeks when the engineering lead left, coordinating a team of 7 engineers, reviewing architecture decisions, and unblocking contributors while continuing to ship."
   stack: [Python, Django, Django REST Framework, PostgreSQL, Redis, Celery, Docker, Nginx, Cloudinary]
-
 
 - company: "HNG Internship"
   role: "Backend Engineer (Finalist)"
@@ -45,14 +43,30 @@
   period:
     start: "Oct 2025"
     end: "Dec 2025"
-  summary: "Finalist in a global engineering internship program while contributing to the backend of a website analysis platform."
+  summary: "Finalist in a globally competitive engineering internship program, contributing backend systems for Sitelytics — a website analysis platform for non-technical users."
   highlights:
-    - "Selected as a finalist among 22,000+ applicants (<500 finalists) in a competitive global internship program."
-    - "Contributed backend systems for Sitelytics, a website analysis platform for non-technical users."
-    - "Implemented the platform notification system including retrieval, deletion, and email delivery through external providers."
-    - "Owned the Admin system, implementing role-based access control, user monitoring, scan tracking, and admin-managed content."
-    - "Built helper utilities that standardized notification delivery across the platform."
-    - "Contributed to async website scanning pipelines using background workers and Server-Sent Events (SSE) for real-time progress updates."
-    - "Served as a frequent code reviewer across a ~20 engineer team, helping maintain code quality and consistency."
-    - "Acted as temporary team lead for one week, coordinating work and unblocking contributors."
+    - "Selected as a finalist among 22,000+ applicants — one of roughly 309 finalists globally."
+    - "Built the Admin system from scratch — role-based access control, user monitoring, scan tracking, and admin-managed content — as a sole contributor."
+    - "Built the platform notification system from scratch including retrieval, deletion, and email delivery through external providers."
+    - "Built helper utilities that standardized notification delivery across the platform, eliminating inconsistent notification handling across services."
+    - "Contributed to async website scanning pipelines using background workers and Server-Sent Events for real-time scan progress updates."
+    - "Served as a frequent code reviewer across a 15-engineer backend team, maintaining code quality and consistency."
+    - "Acted as temporary team lead for one week, coordinating contributors and unblocking work across the team."
   stack: [Python, FastAPI, PostgreSQL, Redis, SSE]
+
+- company: "Oshodi-Isolo Cooperative Multipurpose Society"
+  role: "Variation Officer"
+  type: "Full-time"
+  location: "Lagos, Nigeria"
+  period:
+    start: "Jul 2023"
+    end: "Apr 2024"
+  summary: "Financial operations role managing member accounts, loan processing, and transaction records at a cooperative society — where getting numbers wrong had real consequences for real people."
+  highlights:
+    - "Managed sensitive financial records across member accounts including loan processing, withdrawals, and recurring deductions using internal accounting systems."
+    - "Investigated and resolved transaction discrepancies, preventing data inconsistencies and financial reporting errors before they reached members."
+    - "Troubleshot software and data-related issues to maintain system reliability and reduce downtime for internal operations."
+    - "Maintained local server and workstation environments, contributing to daily system availability."
+    - "Worked with accounting and operations teams to improve financial data workflows, reducing manual errors and improving record traceability."
+    - "Handled confidential member data in compliance with internal access controls and data sensitivity policies."
+  stack: []
