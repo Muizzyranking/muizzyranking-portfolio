@@ -1,0 +1,47 @@
+---
+title: "Wallet Service"
+summary: "A backend wallet service supporting deposits via Paystack, wallet transfers, API key access, and secure transaction handling."
+status: "complete"
+year: "2025"
+stack: [Python, Django, Django Ninja, PostgreSQL, JWT, OAuth]
+repo: "https://github.com/Muizzyranking/wallet_service"
+live: ""
+featured: true
+cover: ""
+---
+
+## Overview
+
+This project is a backend wallet system that allows users to deposit funds, transfer money to other users, and track their transaction history. Deposits are handled through Paystack, while transfers occur internally between wallet accounts using wallet numbers.
+
+The system supports two authentication modes: user authentication through Google OAuth with JWT tokens, and service-to-service authentication using API keys with granular permissions. API keys can be restricted to specific capabilities like deposits, transfers, or balance checks, making the system usable by external services.
+
+Security and financial safety were major considerations while building the system. Transfers are atomic, webhook events are validated using Paystack signatures, and idempotency checks ensure that duplicate events cannot credit the wallet multiple times.
+
+## Challenges
+
+### Preventing duplicate webhook payments
+
+Payment gateways can retry webhook events if they don’t receive a response in time. Without protection, this could lead to a wallet being credited multiple times for the same payment.
+
+To solve this, webhook events are checked against existing transaction records before creating new entries. If a matching record already exists, the system updates the existing record instead of creating a new one. This ensures deposits remain idempotent even if the same webhook is delivered multiple times.
+
+### Ensuring safe wallet transfers
+
+Wallet transfers must never leave the system in a partially completed state. If one part of the transfer fails after the sender’s balance is deducted, funds could be lost.
+
+Transfers are executed inside database transactions so that either all operations succeed or none of them are applied. Both wallet balances and transaction records are created within the same atomic operation, guaranteeing consistency even under failures.
+
+### Designing a flexible API key system
+
+External services sometimes need to interact with the wallet without using a user login flow.
+
+To support this safely, I implemented API keys that can be created by users and restricted with specific permissions such as deposit, transfer, or read-only access. Keys are stored as hashes in the database and can expire after configurable durations.
+
+This approach allows secure service-to-service integration while limiting the damage if a key is compromised.
+
+## What I Learned
+
+Working on this project changed how I think about financial systems. Even relatively small wallet services require careful handling of idempotency, transaction safety, and external integrations.
+
+It also reinforced the importance of designing APIs with multiple authentication methods. Supporting both user-based and service-based authentication made the system significantly more flexible for integrations.
