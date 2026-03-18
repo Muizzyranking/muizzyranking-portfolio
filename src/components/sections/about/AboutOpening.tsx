@@ -104,7 +104,7 @@ export default function AboutOpening() {
           >
             {[
               { label: "Role", value: "Backend Eng." },
-              { label: "Stack", value: "Go / Python" },
+              { label: "Stack", value: "Python" },
               { label: "Status", value: "Open" },
             ].map(({ label, value }) => (
               <div key={label}>
