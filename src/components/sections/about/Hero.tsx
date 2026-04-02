@@ -40,8 +40,7 @@ export default function AboutHero() {
           left: "clamp(1.5rem, 5vw, 4rem)",
           right: "clamp(1.5rem, 5vw, 4rem)",
           height: "1px",
-          background:
-            "linear-gradient(to right, var(--color-accent), var(--color-border), transparent)",
+          background: "linear-gradient(to right, var(--color-accent), var(--color-border), transparent)",
           transformOrigin: "left",
           zIndex: 1,
         }}
@@ -58,10 +57,8 @@ export default function AboutHero() {
           backgroundSize: "48px 48px",
           opacity: 0.35,
           pointerEvents: "none",
-          maskImage:
-            "radial-gradient(ellipse 80% 100% at 50% 0%, black 30%, transparent 100%)",
-          WebkitMaskImage:
-            "radial-gradient(ellipse 80% 100% at 50% 0%, black 30%, transparent 100%)",
+          maskImage: "radial-gradient(ellipse 80% 100% at 50% 0%, black 30%, transparent 100%)",
+          WebkitMaskImage: "radial-gradient(ellipse 80% 100% at 50% 0%, black 30%, transparent 100%)",
         }}
       />
 
@@ -122,12 +119,8 @@ export default function AboutHero() {
                 marginBottom: "1.75rem",
               }}
             >
-              <span style={{ color: "var(--color-accent)", display: "block" }}>
-                Muiz
-              </span>
-              <span style={{ color: "var(--color-text-primary)", display: "block", fontStyle: "italic" }}>
-                Oyebowale
-              </span>
+              <span style={{ color: "var(--color-accent)", display: "block" }}>Muiz</span>
+              <span style={{ color: "var(--color-text-primary)", display: "block", fontStyle: "italic" }}>Oyebowale</span>
             </m.h1>
 
             {/* Opening line — personality first */}
@@ -145,21 +138,12 @@ export default function AboutHero() {
                 fontWeight: 400,
               }}
             >
-              Backend engineer. Reluctant perfectionist. Avid consumer of superhero films
-              and bad dad jokes.{" "}
-              <span style={{ color: "var(--color-text-primary)", fontWeight: 500 }}>
-                Currently teaching myself to teach machines.
-              </span>
+              Backend engineer. Reluctant perfectionist. Avid consumer of superhero films and bad dad jokes.{" "}
+              <span style={{ color: "var(--color-text-primary)", fontWeight: 500 }}>Currently teaching myself to teach machines.</span>
             </m.p>
 
             {/* Stat pills */}
-            <m.div
-              custom={3}
-              initial="hidden"
-              animate="visible"
-              variants={fadeUp}
-              style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}
-            >
+            <m.div custom={3} initial="hidden" animate="visible" variants={fadeUp} style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
               {STATS.map(({ label, value }) => (
                 <div
                   key={label}
@@ -199,14 +183,14 @@ export default function AboutHero() {
             </m.div>
           </div>
 
-          {/* RIGHT — avatar placeholder */}
+          {/* RIGHT — avatar */}
           <m.div
             initial={{ opacity: 0, scale: 0.97 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.5, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
             className="about-avatar"
             style={{
-              width: "220px",
+              width: "260px",
               aspectRatio: "1",
               borderRadius: "var(--radius-lg)",
               border: "1px solid var(--color-border)",
@@ -221,8 +205,7 @@ export default function AboutHero() {
               flexShrink: 0,
             }}
           >
-          <Image src="/muizzy.jpeg" alt="Muiz Oyebowale" fill style={{ objectFit: "cover" }} />
-
+            <Image src="/muizzy.jpeg" alt="Muiz Oyebowale" fill sizes="(max-width: 700px) 85vw, 260px" style={{ objectFit: "cover" }} quality={90} />
 
             {[
               { top: "10px", left: "10px", borderTop: "1px solid", borderLeft: "1px solid" },
@@ -264,7 +247,9 @@ export default function AboutHero() {
             grid-template-columns: 1fr !important;
           }
           .about-avatar {
-            width: 140px !important;
+            width: 90% !important;
+            max-width: 320px !important;
+            margin: 0 auto;
           }
         }
       `}</style>
