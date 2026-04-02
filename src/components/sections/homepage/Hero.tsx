@@ -5,15 +5,11 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 12 },
+  hidden: { opacity: 0, y: 14 },
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
-    transition: {
-      delay: i * 0.08,
-      duration: 0.5,
-      ease: [0.22, 1, 0.36, 1],
-    },
+    transition: { delay: i * 0.09, duration: 0.55, ease: [0.22, 1, 0.36, 1] },
   }),
 };
 
@@ -21,31 +17,60 @@ const LINES = [
   "currently rewriting my Neovim config.",
   "it was fine.",
   "it is not fine.",
+  "anyway. welcome.",
+];
+
+const META = [
+  { label: "Status", value: "Open to work", pulse: true },
+  { label: "Pivoting", value: "Backend → AI/ML" },
+  { label: "Editor", value: "Neovim. Always." },
+  { label: "Dad jokes", value: "∞ remaining" },
 ];
 
 export default function Hero() {
   const glowRef = useRef<HTMLDivElement>(null);
-  const [lineIndex, setLineIndex] = useState(0);
+
+  const [displayed, setDisplayed] = useState("");
+  const [lineIdx, setLineIdx] = useState(0);
+  const [charIdx, setCharIdx] = useState(0);
+  const [done, setDone] = useState(false);
+
+  const target = LINES.slice(0, lineIdx + 1).join(" ");
 
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
+    if (done) return;
+    if (charIdx < target.length) {
+      const timeout = setTimeout(
+        () => {
+          setDisplayed(target.slice(0, charIdx + 1));
+          setCharIdx((c) => c + 1);
+        },
+        charIdx < LINES[0].length ? 45 : 38,
+      );
+      return () => clearTimeout(timeout);
+    }
+    if (lineIdx < LINES.length - 1) {
+      const pause = setTimeout(() => {
+        setLineIdx((l) => l + 1);
+      }, 1500 + lineIdx * 350);
+      return () => clearTimeout(pause);
+    }
+    setDone(true);
+  }, [charIdx, lineIdx, target, done]);
+
+  useEffect(() => {
+    const hero = glowRef.current?.parentElement;
+    if (!hero) return;
+    const handleMove = (e: MouseEvent) => {
       if (!glowRef.current) return;
-      const x = (e.clientX / window.innerWidth) * 100;
-      const y = (e.clientY / window.innerHeight) * 100;
-      glowRef.current.style.background = `radial-gradient(700px circle at ${x}% ${y}%, color-mix(in srgb, var(--color-accent) 8%, transparent), transparent 65%)`;
+      const rect = hero.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width) * 100;
+      const y = ((e.clientY - rect.top) / rect.height) * 100;
+      glowRef.current.style.background = `radial-gradient(700px circle at ${x}% ${y}%, color-mix(in srgb, var(--color-accent) 9%, transparent), transparent 65%)`;
     };
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
+    hero.addEventListener("mousemove", handleMove);
+    return () => hero.removeEventListener("mousemove", handleMove);
   }, []);
-
-  useEffect(() => {
-    if (lineIndex >= LINES.length - 1) return;
-    const t = setTimeout(
-      () => setLineIndex((i) => i + 1),
-      1800 + lineIndex * 600,
-    );
-    return () => clearTimeout(t);
-  }, [lineIndex]);
 
   return (
     <section
@@ -57,22 +82,19 @@ export default function Hero() {
         overflow: "hidden",
         paddingTop: "clamp(5rem, 12vw, 8rem)",
         paddingBottom: "clamp(5rem, 12vw, 8rem)",
-        contentVisibility: "auto",
       }}
     >
-      {/* Ambient mouse glow */}
       <div
         ref={glowRef}
         style={{
           position: "absolute",
           inset: 0,
           pointerEvents: "none",
-          transition: "background 0.12s ease",
+          transition: "background 0.15s ease",
           zIndex: 0,
         }}
       />
 
-      {/* Grid — committed, not shy */}
       <div
         style={{
           position: "absolute",
@@ -85,12 +107,12 @@ export default function Hero() {
           opacity: 0.55,
           pointerEvents: "none",
           zIndex: 0,
-          maskImage:
-            "radial-gradient(ellipse 90% 90% at 50% 50%, black 20%, transparent 100%)",
+          maskImage: "radial-gradient(ellipse 90% 90% at 50% 50%, black 20%, transparent 100%)",
+          WebkitMaskImage: "radial-gradient(ellipse 90% 90% at 50% 50%, black 20%, transparent 100%)",
         }}
       />
 
-      {/* Horizontal rule — architectural top anchor */}
+      {/* top rule — slides in from left */}
       <m.div
         initial={{ scaleX: 0, opacity: 0 }}
         animate={{ scaleX: 1, opacity: 1 }}
@@ -101,7 +123,7 @@ export default function Hero() {
           left: "clamp(1.5rem, 5vw, 4rem)",
           right: "clamp(1.5rem, 5vw, 4rem)",
           height: "1px",
-          background: `linear-gradient(to right, var(--color-accent), var(--color-border), transparent)`,
+          background: "linear-gradient(to right, var(--color-accent), var(--color-border), transparent)",
           transformOrigin: "left",
           zIndex: 1,
         }}
@@ -111,19 +133,17 @@ export default function Hero() {
         className="container-main"
         style={{ position: "relative", zIndex: 2, width: "100%" }}
       >
-        {/* Two-column schematic layout */}
         <div
           style={{
             display: "grid",
             gridTemplateColumns: "1fr auto",
-            gridTemplateRows: "auto",
-            gap: "0",
-            alignItems: "start",
+            gap: 0,
+            alignItems: "center",
           }}
+          className="hero-grid"
         >
-          {/* LEFT — main content */}
+          {/* ── LEFT — main content */}
           <div style={{ maxWidth: "820px" }}>
-            {/* Eyebrow with bracket notation */}
             <m.p
               custom={0}
               initial="hidden"
@@ -139,18 +159,9 @@ export default function Hero() {
                 display: "flex",
                 alignItems: "center",
                 gap: "0.75rem",
-                flexWrap: "nowrap",
               }}
             >
-              <span
-                style={{
-                  color: "var(--color-accent)",
-                  opacity: 0.6,
-                  whiteSpace: "nowrap",
-                }}
-              >
-                [ 01 ]
-              </span>
+              <span style={{ color: "var(--color-accent)", opacity: 0.7 }}>[  ]</span>
               Backend Engineer
               <span
                 style={{
@@ -163,7 +174,6 @@ export default function Hero() {
               />
             </m.p>
 
-            {/* Name — accent on first name, secondary on last */}
             <m.h1
               custom={1}
               initial="hidden"
@@ -173,55 +183,50 @@ export default function Hero() {
                 fontSize: "clamp(3.2rem, 9vw, 7rem)",
                 fontWeight: 700,
                 letterSpacing: "-0.04em",
-                lineHeight: 0.95,
+                lineHeight: 0.93,
                 margin: "0 0 2rem",
-                fontFamily: "var(--font-display, inherit)",
               }}
             >
               <span style={{ color: "var(--color-accent)", display: "block" }}>
                 Muiz
               </span>
               <span
-                style={{ color: "var(--color-text-primary)", display: "block" }}
+                style={{
+                  color: "var(--color-text-primary)",
+                  display: "block",
+                  fontStyle: "italic",
+                }}
               >
                 Oyebowale
               </span>
             </m.h1>
-
-            {/* One-liner — bigger, bolder */}
             <m.p
               custom={2}
               initial="hidden"
               animate="visible"
               variants={fadeUp}
               style={{
-                fontSize: "clamp(1.1rem, 2.2vw, 1.35rem)",
+                fontSize: "clamp(1.05rem, 2.2vw, 1.3rem)",
                 color: "var(--color-text-primary)",
                 lineHeight: 1.55,
                 maxWidth: "48ch",
-                margin: "0 0 0.6rem",
+                margin: "0 0 0.5rem",
                 fontWeight: 500,
               }}
             >
-              I build the parts of software nobody sees —
+              I build the systems that hold everything together —
               <br />
-              <span
-                style={{
-                  color: "var(--color-text-secondary)",
-                  fontWeight: 400,
-                }}
-              >
-                and I&apos;m fine with that.
+              <span style={{ color: "var(--color-text-secondary)", fontWeight: 400 }}>
+                now teaching them to think.
               </span>
             </m.p>
 
-            {/* Typewriter dry humor */}
             <m.div
               custom={3}
               initial="hidden"
               animate="visible"
               variants={fadeUp}
-              style={{ margin: "0 0 3rem", minHeight: "1.4rem" }}
+              style={{ margin: "0 0 3rem", minHeight: "1.6rem" }}
             >
               <span
                 style={{
@@ -230,23 +235,12 @@ export default function Hero() {
                   color: "var(--color-text-muted)",
                 }}
               >
-                <span
-                  style={{
-                    color: "var(--color-accent)",
-                    marginRight: "0.5rem",
-                  }}
-                >
-                  $
-                </span>
-                {LINES.slice(0, lineIndex + 1).join(" ")}
+                <span style={{ color: "var(--color-accent)", marginRight: "0.5rem" }}>$</span>
+                {displayed}
                 <m.span
                   animate={{ opacity: [1, 0, 1] }}
-                  transition={{
-                    repeat: Infinity,
-                    duration: 1,
-                    times: [0, 0.5, 0.5],
-                  }}
-                  style={{ marginLeft: "2px" }}
+                  transition={{ repeat: Infinity, duration: 1, times: [0, 0.5, 0.5] }}
+                  style={{ marginLeft: "2px", display: "inline-block" }}
                 >
                   ▋
                 </m.span>
@@ -259,12 +253,7 @@ export default function Hero() {
               initial="hidden"
               animate="visible"
               variants={fadeUp}
-              style={{
-                display: "flex",
-                gap: "0.875rem",
-                flexWrap: "wrap",
-                alignItems: "center",
-              }}
+              style={{ display: "flex", gap: "0.875rem", flexWrap: "wrap", alignItems: "center" }}
             >
               <Link
                 href="/projects"
@@ -279,12 +268,12 @@ export default function Hero() {
                   fontWeight: 600,
                   fontSize: "0.85rem",
                   borderRadius: "var(--radius-md)",
-                  transition: "opacity 0.2s, transform 0.2s",
-                  letterSpacing: "0.02em",
                   textDecoration: "none",
+                  letterSpacing: "0.02em",
+                  transition: "opacity 0.2s, transform 0.2s",
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.opacity = "0.88";
+                  e.currentTarget.style.opacity = "0.85";
                   e.currentTarget.style.transform = "translateY(-2px)";
                 }}
                 onMouseLeave={(e) => {
@@ -292,8 +281,7 @@ export default function Hero() {
                   e.currentTarget.style.transform = "translateY(0)";
                 }}
               >
-                View Projects
-                <span style={{ opacity: 0.7 }}>→</span>
+                View Projects →
               </Link>
 
               <Link
@@ -304,16 +292,15 @@ export default function Hero() {
                   gap: "0.5rem",
                   paddingInline: "1.5rem",
                   paddingBlock: "0.8rem",
-                  backgroundColor: "transparent",
+                  background: "transparent",
                   color: "var(--color-text-secondary)",
-                  fontWeight: 400,
                   fontSize: "0.85rem",
                   borderRadius: "var(--radius-md)",
                   border: "1px solid var(--color-border)",
-                  transition: "border-color 0.2s, color 0.2s, transform 0.2s",
-                  letterSpacing: "0.02em",
                   textDecoration: "none",
+                  letterSpacing: "0.02em",
                   fontFamily: "var(--font-mono)",
+                  transition: "border-color 0.2s, color 0.2s, transform 0.2s",
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.borderColor = "var(--color-accent)";
@@ -331,7 +318,6 @@ export default function Hero() {
             </m.div>
           </div>
 
-          {/* RIGHT — vertical metadata column */}
           <m.div
             initial={{ opacity: 0, x: 16 }}
             animate={{ opacity: 1, x: 0 }}
@@ -340,22 +326,19 @@ export default function Hero() {
               display: "flex",
               flexDirection: "column",
               gap: "2rem",
-              paddingLeft: "3rem",
+              paddingLeft: "3.5rem",
               alignSelf: "stretch",
               justifyContent: "center",
-              minWidth: "140px",
+              minWidth: "155px",
             }}
+            className="hero-meta"
           >
-            {[
-              { label: "Focus", value: "Backend" },
-              { label: "Stack", value: "Py / TS" },
-              { label: "Status", value: "Open" },
-            ].map(({ label, value }) => (
+            {META.map(({ label, value, pulse }) => (
               <div key={label}>
                 <p
                   style={{
                     fontFamily: "var(--font-mono)",
-                    fontSize: "0.65rem",
+                    fontSize: "0.62rem",
                     letterSpacing: "0.16em",
                     textTransform: "uppercase",
                     color: "var(--color-text-muted)",
@@ -367,11 +350,28 @@ export default function Hero() {
                 <p
                   style={{
                     fontFamily: "var(--font-mono)",
-                    fontSize: "0.82rem",
+                    fontSize: "0.78rem",
                     color: "var(--color-text-secondary)",
                     margin: 0,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.4rem",
                   }}
                 >
+                  {pulse && (
+                    <m.span
+                      animate={{ opacity: [1, 0.2, 1] }}
+                      transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+                      style={{
+                        display: "inline-block",
+                        width: "6px",
+                        height: "6px",
+                        borderRadius: "50%",
+                        background: "var(--color-accent)",
+                        flexShrink: 0,
+                      }}
+                    />
+                  )}
                   {value}
                 </p>
               </div>
@@ -380,11 +380,11 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* Scroll indicator — labeled */}
+      {/* Scroll indicator */}
       <m.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1.4, duration: 0.8 }}
+        transition={{ delay: 1.5, duration: 0.8 }}
         style={{
           position: "absolute",
           bottom: "2rem",
@@ -399,8 +399,8 @@ export default function Hero() {
         <span
           style={{
             fontFamily: "var(--font-mono)",
-            fontSize: "0.62rem",
-            letterSpacing: "0.2em",
+            fontSize: "0.6rem",
+            letterSpacing: "0.22em",
             textTransform: "uppercase",
             color: "var(--color-text-muted)",
           }}
@@ -413,11 +413,25 @@ export default function Hero() {
           style={{
             width: "1px",
             height: "40px",
-            background:
-              "linear-gradient(to bottom, var(--color-accent), transparent)",
+            background: "linear-gradient(to bottom, var(--color-accent), transparent)",
           }}
         />
       </m.div>
+
+      <style>{`
+        @media (max-width: 860px) {
+          .hero-grid { grid-template-columns: 1fr !important; }
+          .hero-meta {
+            flex-direction: row !important;
+            flex-wrap: wrap;
+            padding-left: 0 !important;
+            padding-top: 2.5rem;
+            gap: 1.75rem !important;
+            align-self: auto !important;
+            justify-content: flex-start !important;
+          }
+        }
+      `}</style>
     </section>
   );
 }
