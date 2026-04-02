@@ -1,76 +1,50 @@
 import { ImageResponse } from "next/og";
 
+export const runtime = "edge";
 export const size = { width: 32, height: 32 };
 export const contentType = "image/png";
 
 export default function Icon() {
   return new ImageResponse(
-    <div style={{
-      width: 32,
-      height: 32,
-      background: "#100d0c",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      position: "relative",
-    }}>
-      {/* Top-left corner accent */}
-      <div style={{
-        position: "absolute",
-        top: 0,
-        left: 0,
-        width: 8,
-        height: 1,
-        background: "#b85c45",
-        display: "flex",
-      }} />
-      <div style={{
-        position: "absolute",
-        top: 0,
-        left: 0,
-        width: 1,
-        height: 8,
-        background: "#b85c45",
-        display: "flex",
-      }} />
+    (
+      <div
+        style={{
+          width: "32px",
+          height: "32px",
+          background: "#151515",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          borderRadius: "6px",
+          position: "relative",
+        }}
+      >
+        <span
+          style={{
+            fontFamily: "serif",
+            fontSize: "14px",
+            fontWeight: 700,
+            color: "#9fbf6b",
+            letterSpacing: "-0.05em",
+            lineHeight: 1,
+          }}
+        >
+          MO
+        </span>
 
-      {/* Bottom-right corner accent */}
-      <div style={{
-        position: "absolute",
-        bottom: 0,
-        right: 0,
-        width: 8,
-        height: 1,
-        background: "#b85c45",
-        display: "flex",
-      }} />
-      <div style={{
-        position: "absolute",
-        bottom: 0,
-        right: 0,
-        width: 1,
-        height: 8,
-        background: "#b85c45",
-        display: "flex",
-      }} />
-
-      {/* [ m ] text */}
-      <span style={{
-        fontFamily: "monospace",
-        fontSize: 16,
-        fontWeight: 700,
-        color: "#f5f0e8",
-        letterSpacing: "-0.5px",
-        display: "flex",
-        alignItems: "center",
-        gap: 1,
-        lineHeight: 1,
-      }}>
-        <span style={{ color: "#b85c45" }}>[</span>
-        m
-        <span style={{ color: "#b85c45" }}>]</span>
-      </span>
-    </div>,
+        <div
+          style={{
+            position: "absolute",
+            bottom: "4px",
+            right: "4px",
+            width: "4px",
+            height: "4px",
+            borderRadius: "50%",
+            background: "#9fbf6b",
+          }}
+        />
+      </div>
+    ),
     { ...size }
   );
 }
