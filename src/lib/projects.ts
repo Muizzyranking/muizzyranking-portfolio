@@ -37,7 +37,6 @@ export function getAllProjects(): Project[] {
         repo: data.repo ?? "",
         live: data.live ?? "",
         featured: data.featured ?? false,
-        cover: data.cover ?? "",
       } as Project;
     })
     .sort((a, b) => Number(b.year) - Number(a.year));
@@ -69,7 +68,6 @@ export function getProjectBySlug(slug: string): {
       repo: data.repo ?? "",
       live: data.live ?? "",
       featured: data.featured ?? false,
-      cover: data.cover ?? "",
     },
     content,
     parsed: parseProjectContent(content),
