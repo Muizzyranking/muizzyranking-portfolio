@@ -12,7 +12,6 @@ export type Project = {
   repo: string;
   live: string;
   featured: boolean;
-  cover: string;
 };
 
 const projectsDir = path.join(process.cwd(), "content/projects");
