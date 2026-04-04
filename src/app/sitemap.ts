@@ -3,7 +3,7 @@ import { getAllProjects } from "@/lib/projects";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const projects = getAllProjects();
-  const baseUrl = "https://muizzyranking.dev";
+  const baseUrl = "https://muizzyranking.me";
 
   const projectUrls = projects.map((p) => ({
     url: `${baseUrl}/projects/${p.slug}`,
