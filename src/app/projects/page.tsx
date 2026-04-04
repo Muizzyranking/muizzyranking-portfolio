@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Footer from "@/components/layout/Footer";
 import ProjectsGrid from "@/components/ui/ProjectsGrid";
 import { getAllProjects } from "@/lib/projects";
 
@@ -16,9 +15,6 @@ export default async function ProjectsPage() {
   const inProgress = projects.filter((p) => p.status === "in-progress").length;
 
   return (
-    <>
       <ProjectsGrid projects={projects} stats={{ total: projects.length, complete, inProgress }} />
-      <Footer />
-    </>
   );
 }
