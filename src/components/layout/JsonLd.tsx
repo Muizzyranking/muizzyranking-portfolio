@@ -4,10 +4,12 @@ export default function JsonLd() {
     "@type": "Person",
     name: "Muiz Oyebowale",
     alternateName: "Muizzyranking",
-    url: "https://muizzyranking.dev",
+    url: "https://muizzyranking.me",
     jobTitle: "Backend Engineer",
     description:
       "Backend engineer building systems that have to be correct. Python, Django, distributed systems.",
+    image: "https://www.muizzyranking.me/opengraph-image",
+    email: "mailto:oyebowaleabdulmuiz@gmail.com",
     knowsAbout: [
       "Backend Engineering",
       "Python",
@@ -27,9 +29,9 @@ export default function JsonLd() {
     },
     sameAs: [
       "https://github.com/Muizzyranking",
-      "https://linkedin.com/in/muizzyranking",
+      "https://linkedin.com/in/muizzyrankin",
       "https://x.com/muizzyranking",
-      "https://muizzyranking.hashnode.dev",
+      "https://blog.muizzyranking.me",
     ],
   };
 

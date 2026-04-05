@@ -74,7 +74,7 @@ export default function OGImage() {
           }}
         >
           <span style={{ color: "#4a7c59", opacity: 0.8 }}>~/</span>
-          <span style={{ color: "#7a7470" }}>muizzyranking.dev</span>
+          <span style={{ color: "#7a7470" }}>muizzyranking.me</span>
         </div>
 
         <div

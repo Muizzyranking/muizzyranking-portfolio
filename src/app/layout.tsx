@@ -2,8 +2,10 @@ import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 import type { Metadata } from "next";
 import "./globals.css";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import { domAnimation, LazyMotion } from "framer-motion";
 import Footer from "@/components/layout/Footer";
+import JsonLd from "@/components/layout/JsonLd";
 import Navbar from "@/components/layout/Navbar";
 
 export const metadata: Metadata = {
@@ -13,18 +15,7 @@ export const metadata: Metadata = {
   },
   description:
     "Backend engineer building systems that have to be correct. Python, Django, distributed systems, and a Neovim config that's never finished.",
-  keywords: [
-    "backend engineer",
-    "Python",
-    "Django",
-    "FastAPI",
-    "PostgreSQL",
-    "Redis",
-    "API development",
-    "Lagos",
-    "Nigeria",
-    "software engineer",
-  ],
+  keywords: ["backend engineer", "Python", "Django", "FastAPI", "PostgreSQL", "Redis", "API development", "Lagos", "Nigeria", "software engineer"],
   authors: [{ name: "Muiz Oyebowale" }],
   creator: "Muiz Oyebowale",
   robots: {
@@ -40,7 +31,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://muizzyranking.dev",
+    url: "https://muizzyranking.me",
     title: "Muizzyranking — Backend Engineer",
     description: "Backend engineer building systems that have to be correct.",
     siteName: "Muizzyranking",
@@ -52,7 +43,7 @@ export const metadata: Metadata = {
     creator: "@muizzyranking",
   },
   alternates: {
-    canonical: "https://muizzyranking.dev",
+    canonical: "https://muizzyranking.me",
   },
 };
 
@@ -63,12 +54,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`}>
+      <head>
+        <JsonLd />
+      </head>
       <body className="antialiased">
         <LazyMotion features={domAnimation} strict>
           <Navbar />
           {children}
         </LazyMotion>
         <Footer />
+        {/** biome-ignore lint/style/noNonNullAssertion: not null */}
+        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID!} />
       </body>
     </html>
   );
