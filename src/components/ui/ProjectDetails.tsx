@@ -4,17 +4,14 @@ import { m, useInView } from "framer-motion";
 import Link from "next/link";
 import { useRef } from "react";
 import { SCROLL_REVEAL, staggerContainer, staggerItem } from "@/lib/motion";
-import type { Project,ProjectContent } from "@/lib/projects";
+import type { Project, ProjectContent } from "@/lib/projects";
 
 type Props = {
   meta: Project;
   parsed: ProjectContent;
 };
 
-const STATUS_STYLE: Record<
-  Project["status"],
-  { label: string; color: string; border: string }
-> = {
+const STATUS_STYLE: Record<Project["status"], { label: string; color: string; border: string }> = {
   complete: {
     label: "complete",
     color: "var(--color-success)",
@@ -63,10 +60,8 @@ export default function ProjectDetail({ meta, parsed }: Props) {
             backgroundSize: "48px 48px",
             opacity: 0.35,
             pointerEvents: "none",
-            maskImage:
-              "radial-gradient(ellipse 80% 100% at 50% 0%, black 30%, transparent 100%)",
-            WebkitMaskImage:
-              "radial-gradient(ellipse 80% 100% at 50% 0%, black 30%, transparent 100%)",
+            maskImage: "radial-gradient(ellipse 80% 100% at 50% 0%, black 30%, transparent 100%)",
+            WebkitMaskImage: "radial-gradient(ellipse 80% 100% at 50% 0%, black 30%, transparent 100%)",
           }}
         />
 
@@ -80,16 +75,12 @@ export default function ProjectDetail({ meta, parsed }: Props) {
             left: "clamp(1.5rem, 5vw, 4rem)",
             right: "clamp(1.5rem, 5vw, 4rem)",
             height: "1px",
-            background:
-              "linear-gradient(to right, var(--color-accent), var(--color-border), transparent)",
+            background: "linear-gradient(to right, var(--color-accent), var(--color-border), transparent)",
             transformOrigin: "left",
           }}
         />
 
-        <div
-          className="container-main"
-          style={{ position: "relative", zIndex: 2 }}
-        >
+        <div className="container-main" style={{ position: "relative", zIndex: 2 }}>
           {/* Breadcrumb */}
           <m.div
             initial={{ opacity: 0, y: 8 }}
@@ -113,12 +104,12 @@ export default function ProjectDetail({ meta, parsed }: Props) {
                 textDecoration: "none",
                 transition: "opacity 0.15s",
               }}
-              onMouseEnter={(e) =>
-                ((e.currentTarget as HTMLElement).style.opacity = "0.65")
-              }
-              onMouseLeave={(e) =>
-                ((e.currentTarget as HTMLElement).style.opacity = "1")
-              }
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLElement).style.opacity = "0.65";
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLElement).style.opacity = "1";
+              }}
             >
               ~/projects
             </Link>
@@ -149,11 +140,7 @@ export default function ProjectDetail({ meta, parsed }: Props) {
                   marginBottom: "1.25rem",
                 }}
               >
-                <span
-                  style={{ color: "var(--color-text-primary)", fontStyle: "italic" }}
-                >
-                  {meta.title}
-                </span>
+                <span style={{ color: "var(--color-text-primary)", fontStyle: "italic" }}>{meta.title}</span>
               </m.h1>
 
               <m.p
@@ -292,12 +279,12 @@ export default function ProjectDetail({ meta, parsed }: Props) {
                     transition: "opacity 0.15s",
                     letterSpacing: "0.03em",
                   }}
-                  onMouseEnter={(e) =>
-                    ((e.currentTarget as HTMLElement).style.opacity = "0.85")
-                  }
-                  onMouseLeave={(e) =>
-                    ((e.currentTarget as HTMLElement).style.opacity = "1")
-                  }
+                  onMouseEnter={(e) => {
+                    (e.currentTarget as HTMLElement).style.opacity = "0.85";
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.currentTarget as HTMLElement).style.opacity = "1";
+                  }}
                 >
                   ↗ live
                 </a>
@@ -324,16 +311,12 @@ export default function ProjectDetail({ meta, parsed }: Props) {
                     letterSpacing: "0.03em",
                   }}
                   onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLElement).style.borderColor =
-                      "var(--color-accent-dim)";
-                    (e.currentTarget as HTMLElement).style.color =
-                      "var(--color-text-primary)";
+                    (e.currentTarget as HTMLElement).style.borderColor = "var(--color-accent-dim)";
+                    (e.currentTarget as HTMLElement).style.color = "var(--color-text-primary)";
                   }}
                   onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLElement).style.borderColor =
-                      "var(--color-border)";
-                    (e.currentTarget as HTMLElement).style.color =
-                      "var(--color-text-secondary)";
+                    (e.currentTarget as HTMLElement).style.borderColor = "var(--color-border)";
+                    (e.currentTarget as HTMLElement).style.color = "var(--color-text-secondary)";
                   }}
                 >
                   ⌥ source
@@ -369,17 +352,14 @@ export default function ProjectDetail({ meta, parsed }: Props) {
               transition={{ delay: 0.15, duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
               style={{ marginBottom: "4rem" }}
             >
-              <SectionLabel num="01" label="Overview" />
+              <SectionLabel label="Overview" />
               <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
                 {parsed.overview.split("\n\n").map((para, i) => (
                   <p
-                    key={i}
+                    key={para.slice(0, 10)}
                     style={{
                       fontSize: "0.96rem",
-                      color:
-                        i === 0
-                          ? "var(--color-text-primary)"
-                          : "var(--color-text-secondary)",
+                      color: i === 0 ? "var(--color-text-primary)" : "var(--color-text-secondary)",
                       lineHeight: 1.82,
                       fontWeight: i === 0 ? 500 : 400,
                     }}
@@ -397,7 +377,7 @@ export default function ProjectDetail({ meta, parsed }: Props) {
                 animate={challengesInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
               >
-                <SectionLabel num="02" label="Challenges" />
+                <SectionLabel label="Challenges" />
               </m.div>
 
               <m.div
@@ -408,7 +388,7 @@ export default function ProjectDetail({ meta, parsed }: Props) {
               >
                 {parsed.challenges.map((challenge, i) => (
                   <m.div
-                    key={i}
+                    key={challenge.title}
                     variants={staggerItem}
                     style={{
                       padding: "1.5rem 1.75rem",
@@ -467,7 +447,7 @@ export default function ProjectDetail({ meta, parsed }: Props) {
                 animate={learnedInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
               >
-                <SectionLabel num="03" label="What I learned" />
+                <SectionLabel label="What I learned" />
               </m.div>
 
               <m.div
@@ -483,15 +463,12 @@ export default function ProjectDetail({ meta, parsed }: Props) {
               >
                 {parsed.learned.split("\n\n").map((para, i) => (
                   <p
-                    key={i}
+                    key={para.slice(0, 10)}
                     style={{
                       fontSize: "0.95rem",
                       color: "var(--color-text-secondary)",
                       lineHeight: 1.82,
-                      marginBottom:
-                        i < parsed.learned.split("\n\n").length - 1
-                          ? "1rem"
-                          : 0,
+                      marginBottom: i < parsed.learned.split("\n\n").length - 1 ? "1rem" : 0,
                       fontStyle: i === 0 ? "italic" : "normal",
                     }}
                   >
@@ -616,12 +593,12 @@ export default function ProjectDetail({ meta, parsed }: Props) {
                       fontWeight: 600,
                       transition: "opacity 0.15s",
                     }}
-                    onMouseEnter={(e) =>
-                      ((e.currentTarget as HTMLElement).style.opacity = "0.85")
-                    }
-                    onMouseLeave={(e) =>
-                      ((e.currentTarget as HTMLElement).style.opacity = "1")
-                    }
+                    onMouseEnter={(e) => {
+                      (e.currentTarget as HTMLElement).style.opacity = "0.85";
+                    }}
+                    onMouseLeave={(e) => {
+                      (e.currentTarget as HTMLElement).style.opacity = "1";
+                    }}
                   >
                     ↗ View live
                   </a>
@@ -648,16 +625,12 @@ export default function ProjectDetail({ meta, parsed }: Props) {
                       transition: "border-color 0.15s, color 0.15s",
                     }}
                     onMouseEnter={(e) => {
-                      (e.currentTarget as HTMLElement).style.borderColor =
-                        "var(--color-accent-dim)";
-                      (e.currentTarget as HTMLElement).style.color =
-                        "var(--color-text-primary)";
+                      (e.currentTarget as HTMLElement).style.borderColor = "var(--color-accent-dim)";
+                      (e.currentTarget as HTMLElement).style.color = "var(--color-text-primary)";
                     }}
                     onMouseLeave={(e) => {
-                      (e.currentTarget as HTMLElement).style.borderColor =
-                        "var(--color-border)";
-                      (e.currentTarget as HTMLElement).style.color =
-                        "var(--color-text-secondary)";
+                      (e.currentTarget as HTMLElement).style.borderColor = "var(--color-border)";
+                      (e.currentTarget as HTMLElement).style.color = "var(--color-text-secondary)";
                     }}
                   >
                     ⌥ View source
@@ -678,14 +651,12 @@ export default function ProjectDetail({ meta, parsed }: Props) {
                     transition: "color 0.15s",
                     marginTop: "0.25rem",
                   }}
-                  onMouseEnter={(e) =>
-                    ((e.currentTarget as HTMLElement).style.color =
-                      "var(--color-accent)")
-                  }
-                  onMouseLeave={(e) =>
-                    ((e.currentTarget as HTMLElement).style.color =
-                      "var(--color-text-muted)")
-                  }
+                  onMouseEnter={(e) => {
+                    (e.currentTarget as HTMLElement).style.color = "var(--color-accent)";
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.currentTarget as HTMLElement).style.color = "var(--color-text-muted)";
+                  }}
                 >
                   ← all projects
                 </Link>
@@ -712,7 +683,7 @@ export default function ProjectDetail({ meta, parsed }: Props) {
   );
 }
 
-function SectionLabel({ num, label }: { num: string; label: string }) {
+function SectionLabel({ label }: { label: string }) {
   return (
     <div
       style={{
@@ -731,7 +702,7 @@ function SectionLabel({ num, label }: { num: string; label: string }) {
           letterSpacing: "0.1em",
         }}
       >
-        [ {num} ]
+        [ ]
       </span>
       <h2
         style={{
@@ -747,8 +718,7 @@ function SectionLabel({ num, label }: { num: string; label: string }) {
         style={{
           flex: 1,
           height: "1px",
-          background:
-            "linear-gradient(to right, var(--color-border), transparent)",
+          background: "linear-gradient(to right, var(--color-border), transparent)",
         }}
       />
     </div>
