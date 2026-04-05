@@ -10,14 +10,28 @@ import Navbar from "@/components/layout/Navbar";
 
 export const metadata: Metadata = {
   title: {
-    default: "Muizzyranking — Backend Engineer",
-    template: "%s | Muizzyranking",
+    default: "Muiz Oyebowale (Muizzyranking) — Backend Engineer",
+    template: "%s | Muiz Oyebowale",
   },
   description:
-    "Backend engineer building systems that have to be correct. Python, Django, distributed systems, and a Neovim config that's never finished.",
-  keywords: ["backend engineer", "Python", "Django", "FastAPI", "PostgreSQL", "Redis", "API development", "Lagos", "Nigeria", "software engineer"],
-  authors: [{ name: "Muiz Oyebowale" }],
+    "I'm Muiz Oyebowale — a backend engineer focused on Python, Django, and distributed systems. I build things that have to work: APIs, queues, databases, and the plumbing no one sees but everyone depends on.",
+  keywords: [
+    "backend engineer",
+    "Python",
+    "Django",
+    "FastAPI",
+    "PostgreSQL",
+    "Redis",
+    "API development",
+    "Lagos",
+    "Nigeria",
+    "software engineer",
+  ],
+  authors: [{ name: "Muiz Oyebowale" }, { name: "Muizzyranking" }],
   creator: "Muiz Oyebowale",
+  icons: {
+    icon: "/icon",
+  },
   robots: {
     index: true,
     follow: true,
@@ -32,14 +46,14 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://muizzyranking.me",
-    title: "Muizzyranking — Backend Engineer",
-    description: "Backend engineer building systems that have to be correct.",
+    title: "Muiz Oyebowale (Muizzyranking) — Backend Engineer",
+    description: "Backend engineer building reliable APIs and distributed systems with Python and Django",
     siteName: "Muizzyranking",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Muizzyranking — Backend Engineer",
-    description: "Backend engineer building systems that have to be correct.",
+    title: "Muiz Oyebowale (Muizzyranking) — Backend Engineer",
+    description: "Backend engineer building reliable APIs and distributed systems with Python and Django.",
     creator: "@muizzyranking",
   },
   alternates: {
