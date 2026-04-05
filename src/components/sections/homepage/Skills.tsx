@@ -93,7 +93,7 @@ export default function Skills() {
             marginBottom: "2rem",
           }}
         >
-          <span style={{ color: "var(--color-accent)", opacity: 0.7 }}>[  ]</span>
+          <span style={{ color: "var(--color-accent)", opacity: 0.7 }}>[ ]</span>
           Skills
           <span style={{ display: "inline-block", width: "32px", height: "1px", background: "var(--color-border)" }} />
         </m.p>
@@ -113,6 +113,23 @@ export default function Skills() {
           >
             The stack
           </m.h2>
+          <m.p
+            variants={fadeUp}
+            custom={2}
+            initial="hidden"
+            animate={inView ? "visible" : "hidden"}
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: "0.65rem",
+              color: "var(--color-text-muted)",
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+            }}
+          >
+            
+            {"// dashed = still in the oven (let me cook)"}
+          </m.p>
         </div>
 
         {/* Grid of skill groups — border-collapsed look */}
@@ -155,7 +172,7 @@ export default function Skills() {
                   <span
                     key={name}
                     role="img"
-                    aria-hidden="true" 
+                    aria-hidden="true"
                     style={{
                       fontFamily: "var(--font-mono)",
                       fontSize: "0.74rem",
@@ -173,9 +190,7 @@ export default function Skills() {
                     }}
                     onMouseLeave={(e) => {
                       (e.currentTarget as HTMLElement).style.borderColor = "var(--color-border)";
-                      (e.currentTarget as HTMLElement).style.color = exploring
-                        ? "var(--color-text-muted)"
-                        : "var(--color-text-secondary)";
+                      (e.currentTarget as HTMLElement).style.color = exploring ? "var(--color-text-muted)" : "var(--color-text-secondary)";
                     }}
                   >
                     {name}
