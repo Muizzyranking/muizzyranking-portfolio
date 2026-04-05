@@ -1,4 +1,4 @@
-# muizzyranking.dev
+# [muizzyranking.me](https://muizzyranking.me)
 
 Personal portfolio and blog — built with Next.js, Tailwind v4, and Framer Motion.
 
