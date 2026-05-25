@@ -14,12 +14,6 @@ export const SOCIALS = {
     handle: "@muizzyranking",
     href: "https://twitter.com/muizzyranking",
   },
-  hashnode: {
-    name: "Hashnode",
-    handle: "muizzyranking.hashnode.dev",
-    href: "https://muizzyranking.hashnode.dev",
-  },
 };
 
-export const EMAIL = "oyebowaleabdulmuiz@gmail.com"
-
+export const EMAIL = "oyebowaleabdulmuiz@gmail.com";
