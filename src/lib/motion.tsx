@@ -58,4 +58,36 @@ export const scaleUp = {
   hover: { scale: 1.015, transition: { duration: 0.25, ease: "easeOut" } },
 };
 
+/** Card hover — subtle lift + accent-dim border (used in Selected work, Roadmap, Values). */
+export const hoverLift: Variants = {
+  rest: {
+    y: 0,
+    borderColor: "var(--color-border)",
+    transition: { duration: 0.25, ease: [0.22, 1, 0.36, 1] },
+  },
+  hover: {
+    y: -2,
+    borderColor: "var(--color-accent-dim)",
+    transition: { duration: 0.25, ease: [0.22, 1, 0.36, 1] },
+  },
+};
+
+/** Trace line under inline links — scaleX 0→1 from left on hover. */
+export const traceUnderline: Variants = {
+  rest: { scaleX: 0, transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] } },
+  hover: { scaleX: 1, transition: { duration: 0.35, ease: [0.22, 1, 0.36, 1] } },
+};
+
+/** Arrow chevron — nudges right on hover. Pair with the "→" character. */
+export const arrowNudge: Variants = {
+  rest: { x: 0, transition: { duration: 0.25, ease: [0.22, 1, 0.36, 1] } },
+  hover: { x: 4, transition: { duration: 0.25, ease: [0.22, 1, 0.36, 1] } },
+};
+
+/** Blinking terminal cursor. */
+export const cursorBlink = {
+  animate: { opacity: [1, 0, 1] },
+  transition: { repeat: Infinity, duration: 1, times: [0, 0.5, 0.5] },
+} as const;
+
 export const SCROLL_REVEAL = { once: true, margin: "-80px" } as const;
