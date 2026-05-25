@@ -3,13 +3,8 @@
 import { m, useInView } from "framer-motion";
 import Link from "next/link";
 import { useRef } from "react";
-import { SOCIALS } from "@/lib/data";
-import type { HashnodePost } from "@/lib/hashnode";
 import { fadeUp, SCROLL_REVEAL } from "@/lib/motion";
-
-type Props = {
-  posts: HashnodePost[];
-};
+import type { PostMeta } from "@/types";
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("en-GB", {
@@ -18,7 +13,7 @@ function formatDate(iso: string) {
   });
 }
 
-export default function BlogTeaser({ posts }: Props) {
+export default function BlogTeaser({ posts }: { posts: PostMeta[] }) {
   const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, SCROLL_REVEAL);
 
@@ -26,10 +21,7 @@ export default function BlogTeaser({ posts }: Props) {
     <section
       ref={ref}
       id="blog"
-      style={{
-        padding: "clamp(5rem, 10vw, 8rem) 0",
-        borderTop: "1px solid var(--color-border-subtle)",
-      }}
+      className="py-[clamp(5rem,10vw,8rem)] border-t border-border-subtle"
     >
       <div className="container-main">
         <m.p
@@ -37,214 +29,92 @@ export default function BlogTeaser({ posts }: Props) {
           custom={0}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: "0.68rem",
-            letterSpacing: "0.2em",
-            textTransform: "uppercase",
-            color: "var(--color-text-muted)",
-            display: "flex",
-            alignItems: "center",
-            gap: "0.75rem",
-            marginBottom: "2rem",
-          }}
+          className="eyebrow mb-8"
         >
-          <span style={{ color: "var(--color-accent)", opacity: 0.7 }}>
-            [  ]
-          </span>
+          <span className="eyebrow__mark">[ 04 ]</span>
           Writing
-          <span
-            style={{
-              display: "inline-block",
-              width: "32px",
-              height: "1px",
-              background: "var(--color-border)",
-            }}
-          />
+          <span className="eyebrow__rule" />
         </m.p>
 
-        {/* Header row */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "flex-end",
-            marginBottom: "3rem",
-            flexWrap: "wrap",
-            gap: "1rem",
-          }}
-        >
+        <div className="flex items-end justify-between gap-4 mb-12 flex-wrap">
           <m.h2
             variants={fadeUp}
             custom={1}
             initial="hidden"
             animate={inView ? "visible" : "hidden"}
-            style={{
-              fontSize: "clamp(1.8rem, 3.5vw, 2.5rem)",
-              fontWeight: 700,
-              letterSpacing: "-0.03em",
-            }}
+            className="font-display font-semibold tracking-[-0.04em] leading-[1.05] text-[clamp(1.9rem,4vw,2.75rem)]"
           >
             From the notebook
           </m.h2>
 
-          <m.div
-            variants={fadeUp}
-            custom={2}
-            initial="hidden"
-            animate={inView ? "visible" : "hidden"}
-          >
+          <m.div variants={fadeUp} custom={2} initial="hidden" animate={inView ? "visible" : "hidden"}>
             <Link
               href="/blog"
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "0.76rem",
-                color: "var(--color-accent)",
-                textDecoration: "none",
-                letterSpacing: "0.08em",
-                transition: "opacity 0.2s",
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.opacity = "0.65";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.opacity = "1";
-              }}
+              className="group inline-flex items-center gap-2 font-mono text-[0.76rem] text-accent tracking-[0.08em]"
             >
-              all posts →
+              <span>all posts</span>
+              <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
             </Link>
           </m.div>
         </div>
 
-        {/* Post list */}
-        <div>
-          {posts.map((post, i) => (
-            <m.a
-              key={post.id}
-              href={`${SOCIALS.hashnode.href}/${post.slug}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              initial={{ opacity: 0, x: -8 }}
-              animate={inView ? { opacity: 1, x: 0 } : { opacity: 0, x: -8 }}
-              transition={{
-                delay: 0.15 + i * 0.1,
-                duration: 0.5,
-                ease: [0.22, 1, 0.36, 1],
-              }}
-              whileHover={{ paddingLeft: "0.75rem" }}
-              style={{
-                display: "flex",
-                alignItems: "baseline",
-                justifyContent: "space-between",
-                gap: "2rem",
-                padding: "1.5rem 0",
-                borderBottom: "1px solid var(--color-border-subtle)",
-                textDecoration: "none",
-                transition: "padding-left 0.2s ease",
-                color: "inherit",
-              }}
-              className={i === 0 ? "blog-first-item" : ""}
-            >
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <p
-                  style={{
-                    fontSize: "1rem",
-                    fontWeight: 500,
-                    color: "var(--color-text-primary)",
-                    marginBottom: "0.35rem",
-                    lineHeight: 1.4,
-                    transition: "color 0.2s",
-                  }}
-                  className="blog-title"
-                >
-                  {post.title}
-                </p>
-                <p
-                  style={{
-                    fontSize: "0.855rem",
-                    color: "var(--color-text-muted)",
-                    lineHeight: 1.55,
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    whiteSpace: "nowrap",
-                    maxWidth: "56ch",
-                  }}
-                >
-                  {post.brief}
-                </p>
-                {/* Tags */}
-                {post.tags?.length > 0 && (
-                  <div
-                    style={{
-                      display: "flex",
-                      gap: "0.35rem",
-                      marginTop: "0.6rem",
-                      flexWrap: "wrap",
-                    }}
-                  >
-                    {post.tags.slice(0, 3).map((tag) => (
-                      <span
-                        key={tag.slug}
-                        style={{
-                          fontFamily: "var(--font-mono)",
-                          fontSize: "0.63rem",
-                          color: "var(--color-text-muted)",
-                          border: "1px solid var(--color-border-subtle)",
-                          borderRadius: "var(--radius-sm)",
-                          padding: "0.15rem 0.45rem",
-                        }}
-                      >
-                        {tag.name}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {/* Right meta */}
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "flex-end",
-                  gap: "0.35rem",
-                  flexShrink: 0,
-                }}
+        {posts.length === 0 ? (
+          <div className="py-12 font-mono text-text-muted text-[0.82rem]">
+            <p className="mb-2">
+              <span className="text-accent">$</span> ls ./posts
+            </p>
+            <p>{"// nothing here yet. check back soon."}</p>
+          </div>
+        ) : (
+          <div>
+            {posts.map((post, i) => (
+              <m.div
+                key={post.slug}
+                initial={{ opacity: 0, x: -8 }}
+                animate={inView ? { opacity: 1, x: 0 } : { opacity: 0, x: -8 }}
+                transition={{ delay: 0.15 + i * 0.1, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
               >
-                <span
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "0.68rem",
-                    color: "var(--color-text-muted)",
-                    letterSpacing: "0.08em",
-                  }}
+                <Link
+                  href={`/blog/${post.slug}`}
+                  className="group flex items-baseline justify-between gap-8 py-6 border-b border-border-subtle no-underline text-inherit transition-[padding-left] duration-200 ease-out hover:pl-3"
                 >
-                  {formatDate(post.publishedAt)}
-                </span>
-                <span
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "0.65rem",
-                    color: "var(--color-accent)",
-                  }}
-                >
-                  {post.readTimeInMinutes} min read
-                </span>
-              </div>
-            </m.a>
-          ))}
-        </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-display text-[1.05rem] font-semibold tracking-[-0.02em] text-text-primary mb-[0.35rem] leading-[1.3] transition-colors duration-200 group-hover:text-accent">
+                      {post.title}
+                    </p>
+                    {post.summary && (
+                      <p className="text-[0.85rem] text-text-muted leading-[1.55] overflow-hidden text-ellipsis whitespace-nowrap max-w-[56ch]">
+                        {post.summary}
+                      </p>
+                    )}
+                    {post.categories.length > 0 && (
+                      <div className="flex gap-[0.35rem] mt-[0.6rem] flex-wrap">
+                        {post.categories.slice(0, 3).map((c) => (
+                          <span
+                            key={c.slug}
+                            className="font-mono text-[0.63rem] text-text-muted border border-border-subtle rounded-sm px-[0.45rem] py-[0.15rem]"
+                          >
+                            {c.label}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex flex-col items-end gap-[0.35rem] shrink-0">
+                    <span className="font-mono text-[0.68rem] text-text-muted tracking-[0.08em]">
+                      {formatDate(post.publishedAtIso)}
+                    </span>
+                    <span className="font-mono text-[0.65rem] text-accent">
+                      {post.readingTime.text}
+                    </span>
+                  </div>
+                </Link>
+              </m.div>
+            ))}
+          </div>
+        )}
       </div>
-
-      <style>{`
-        .blog-first-item { border-top: 1px solid var(--color-border-subtle); }
-        a:hover .blog-title { color: var(--color-accent) !important; }
-
-        @media (max-width: 600px) {
-          /* Stack layout on mobile */
-          .blog-row { flex-direction: column !important; gap: 0.5rem !important; }
-        }
-      `}</style>
     </section>
   );
 }

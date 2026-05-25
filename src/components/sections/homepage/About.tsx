@@ -1,29 +1,22 @@
 "use client";
 
 import { m, useInView } from "framer-motion";
-
+import Link from "next/link";
 import { useRef } from "react";
-import {
-  fadeUp,
-  SCROLL_REVEAL,
-  staggerContainer,
-  staggerItem,
-} from "@/lib/motion";
+import { arrowNudge, fadeUp, SCROLL_REVEAL, staggerContainer, staggerItem } from "@/lib/motion";
 
 const SIDEBAR_CARDS = [
   {
     label: "Current setup",
     body: (
       <>
-        <code>nvim</code> + <code>tmux</code> + <code>lazygit</code> +{" "}
-        <code>zsh</code>. If it doesn&apos;t have a terminal interface, I&apos;m
-        suspicious of it.
+        <code className="about-code">nvim</code> + <code className="about-code">tmux</code> + <code className="about-code">lazygit</code> + <code className="about-code">zsh</code>. If it doesn&apos;t have a terminal interface, I&apos;m suspicious of it.
       </>
     ),
   },
   {
     label: "Currently exploring",
-    chips: ["LLMs", "Rust", "Machine Learning", "MLOps", "Statistics"],
+    chips: ["LLMs", "MLOps", "Rust", "Statistics"],
   },
   {
     label: "Off the clock",
@@ -36,225 +29,111 @@ export default function About() {
   const inView = useInView(ref, SCROLL_REVEAL);
 
   return (
-    <section
-      ref={ref}
-      id="about"
-      style={{
-        padding: "clamp(5rem, 10vw, 8rem) 0",
-        borderTop: "1px solid var(--color-border-subtle)",
-      }}
-    >
+    <section ref={ref} id="about" className="section-band">
       <div className="container-main">
         <m.p
           variants={fadeUp}
           custom={0}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: "0.68rem",
-            letterSpacing: "0.2em",
-            textTransform: "uppercase",
-            color: "var(--color-text-muted)",
-            display: "flex",
-            alignItems: "center",
-            gap: "0.75rem",
-            marginBottom: "2rem",
-          }}
+          className="eyebrow mb-8"
         >
-          <span style={{ color: "var(--color-accent)", opacity: 0.7 }}>
-            [  ]
-          </span>
+          <span className="eyebrow__mark">[ 01 ]</span>
           About
-          <span
-            style={{
-              display: "inline-block",
-              width: "32px",
-              height: "1px",
-              background: "var(--color-border)",
-            }}
-          />
+          <span className="eyebrow__rule" />
         </m.p>
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: "5rem",
-            alignItems: "start",
-          }}
-          className="about-grid"
-        >
+        <div className="about-grid grid grid-cols-2 gap-20 items-start max-[860px]:grid-cols-1 max-[860px]:gap-12">
           <div>
             <m.h2
               variants={fadeUp}
               custom={1}
               initial="hidden"
               animate={inView ? "visible" : "hidden"}
-              style={{
-                fontSize: "clamp(1.9rem, 3.8vw, 2.75rem)",
-                fontWeight: 700,
-                letterSpacing: "-0.03em",
-                lineHeight: 1.1,
-                marginBottom: "1.5rem",
-                color: "var(--color-text-primary)",
-              }}
+              className="font-display font-semibold tracking-[-0.04em] leading-[1.05] mb-7 text-text-primary text-[clamp(1.9rem,3.8vw,2.75rem)]"
             >
-              I listen well.{" "}
-              <em style={{ fontStyle: "italic", color: "var(--color-accent)" }}>
-                I build better.
-              </em>
+              I listen well. <em className="italic text-accent font-bold">I build better.</em>
             </m.h2>
 
             {[
               <>
-                Backend engineer with a few years of building the invisible
-                infrastructure — the APIs, queues, and pipelines nobody claps
-                for.{" "}
-                <strong style={{ color: "var(--color-text-primary)" }}>
-                  I&apos;m now pivoting into AI/ML and MLOps
-                </strong>
-                , because if you&apos;re going to be obsessed with systems, you
-                might as well be obsessed with the most interesting ones.
+                I work on backend systems. APIs, queues, databases — the bits that have to keep working when nobody&apos;s watching. Right now{" "}
+                <strong className="text-text-primary font-semibold">I&apos;m learning my way into AI and ML</strong>, which has been humbling in roughly the way you&apos;d expect.
               </>,
-              <>
-                I&apos;m a good listener. The kind that actually pays attention
-                — not the kind waiting for their turn to talk. I notice details
-                most people skip. Terrible at small talk, but I&apos;ll go deep
-                on distributed systems, the history of computing, or{" "}
-                <span
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "0.88em",
-                    color: "var(--color-text-muted)",
-                  }}
-                >
-                  why the sky isn&apos;t actually blue.*
-                </span>
-              </>,
+              "I'm quiet until you ask the right question. Distributed systems, why anything works, how things break — once we're there, I'll happily lose track of time.",
             ].map((text, i) => (
               <m.p
-                // biome-ignore lint/suspicious/noArrayIndexKey: index is fine
-                key={i}
+                key={text.toString().slice(0, 30)}
                 variants={fadeUp}
                 custom={i + 2}
                 initial="hidden"
                 animate={inView ? "visible" : "hidden"}
-                style={{
-                  color: "var(--color-text-secondary)",
-                  lineHeight: 1.78,
-                  marginBottom: "1rem",
-                  fontSize: "0.96rem",
-                }}
+                className="text-text-secondary leading-[1.78] mb-[1.1rem] text-[0.96rem]"
               >
                 {text}
               </m.p>
             ))}
 
-            <m.p
+            <m.div
               variants={fadeUp}
               custom={4}
               initial="hidden"
               animate={inView ? "visible" : "hidden"}
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "0.76rem",
-                color: "var(--color-text-muted)",
-                marginTop: "0.25rem",
-              }}
+              className="mt-6 flex gap-7 flex-wrap items-center"
             >
-              * It is. I just wanted to see if you were paying attention.
-            </m.p>
-
-            <m.div
-              variants={fadeUp}
-              custom={5}
-              initial="hidden"
-              animate={inView ? "visible" : "hidden"}
-              style={{ marginTop: "2rem" }}
-            >
-              <a
+              <Link
                 href="/about"
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "0.78rem",
-                  letterSpacing: "0.08em",
-                  color: "var(--color-accent)",
-                  textDecoration: "none",
-                  borderBottom: "1px solid var(--color-accent-dim)",
-                  paddingBottom: "0.15rem",
-                  transition: "opacity 0.2s",
-                }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.opacity = "0.65";
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.opacity = "1";
-                }}
+                className="group inline-flex items-center gap-2 font-mono text-[0.78rem] tracking-[0.08em] text-accent border-b border-acccent-dim pb-[0.2rem]"
               >
-                more about me →
-              </a>
+                <span>the longer version</span>
+                <m.span variants={arrowNudge} initial="rest" whileHover="hover" className="inline-block group-hover:translate-x-1 transition-transform">
+                  →
+                </m.span>
+              </Link>
+
+              <Link
+                href="/tools"
+                className="group inline-flex items-center gap-2 font-mono text-[0.78rem] tracking-[0.08em] text-text-muted pb-[0.2rem]"
+              >
+                <span>p.s. the toolbox</span>
+                <m.span variants={arrowNudge} initial="rest" whileHover="hover" className="inline-block">
+                  →
+                </m.span>
+              </Link>
             </m.div>
           </div>
 
-          {/* ── RIGHT — sidebar cards */}
+          {/* Sidebar cards */}
           <m.div
             variants={staggerContainer}
             initial="hidden"
             animate={inView ? "visible" : "hidden"}
-            style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
+            className="flex flex-col gap-4"
           >
             {SIDEBAR_CARDS.map(({ label, body, chips }) => (
               <m.div
                 key={label}
                 variants={staggerItem}
-                style={{
-                  background: "var(--color-surface)",
-                  border: "1px solid var(--color-border)",
-                  borderRadius: "var(--radius-lg)",
-                  padding: "1.25rem 1.5rem",
-                }}
+                whileHover={{ y: -2, borderColor: "var(--color-accent-dim)" }}
+                transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+                className="bg-bg-elevated border border-border rounded-lg px-6 py-5"
               >
-                <p
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "0.63rem",
-                    letterSpacing: "0.16em",
-                    textTransform: "uppercase",
-                    color: "var(--color-text-muted)",
-                    marginBottom: "0.75rem",
-                  }}
-                >
+                <p className="font-mono text-[0.63rem] tracking-[0.16em] uppercase text--text-muted mb-3">
                   {label}
                 </p>
 
                 {body && (
-                  <p
-                    style={{
-                      color: "var(--color-text-secondary)",
-                      fontSize: "0.87rem",
-                      lineHeight: 1.65,
-                    }}
-                  >
+                  <p className="text-text-secondary text-[0.87rem] leading-[1.65]">
                     {body}
                   </p>
                 )}
 
                 {chips && (
-                  <div
-                    style={{ display: "flex", flexWrap: "wrap", gap: "0.4rem" }}
-                  >
+                  <div className="flex flex-wrap gap-1.5">
                     {chips.map((c) => (
                       <span
                         key={c}
-                        style={{
-                          fontFamily: "var(--font-mono)",
-                          fontSize: "0.7rem",
-                          color: "var(--color-text-muted)",
-                          border: "1px solid var(--color-border)",
-                          borderRadius: "var(--radius-sm)",
-                          padding: "0.25rem 0.6rem",
-                        }}
+                        className="font-mono text-[0.7rem] text-text-muted border border-dashed border-border rounded-sm px-[0.6rem] py-1"
                       >
                         {c}
                       </span>
@@ -264,59 +143,22 @@ export default function About() {
               </m.div>
             ))}
 
-            {/* Perfectionist card — personality */}
             <m.div
               variants={staggerItem}
-              style={{
-                background: "var(--color-accent-subtle)",
-                border: "1px solid var(--color-accent-dim)",
-                borderRadius: "var(--radius-lg)",
-                padding: "1.25rem 1.5rem",
-              }}
+              whileHover={{ y: -2 }}
+              transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+              className="bg-accent-subtle border border-accent-dim rounded-lg px-6 py-5"
             >
-              <p
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "0.63rem",
-                  letterSpacing: "0.16em",
-                  textTransform: "uppercase",
-                  color: "var(--color-accent-dim)",
-                  marginBottom: "0.5rem",
-                }}
-              >
-                Philosophy
+              <p className="font-mono text-[0.63rem] tracking-[0.16em] uppercase text-accent-dim mb-2">
+                Operating principle
               </p>
-              <p
-                style={{
-                  color: "var(--color-text-secondary)",
-                  fontSize: "0.87rem",
-                  lineHeight: 1.65,
-                }}
-              >
-                Perfectionist. Lazy about it. The combination somehow always
-                works.
+              <p className="text-text-secondary text-[0.87rem] leading-[1.65]">
+                Perfectionist. Lazy about it. The combination somehow always works.
               </p>
             </m.div>
           </m.div>
         </div>
       </div>
-
-      <style>{`
-        .about-grid {
-          grid-template-columns: 1fr 1fr;
-        }
-        @media (max-width: 860px) {
-          .about-grid { grid-template-columns: 1fr !important; gap: 3rem !important; }
-        }
-        code {
-          font-family: var(--font-mono);
-          font-size: 0.82em;
-          color: var(--color-accent);
-          background: var(--color-accent-subtle);
-          padding: 0.1em 0.4em;
-          border-radius: var(--radius-sm);
-        }
-      `}</style>
     </section>
   );
 }
