@@ -1,18 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
-
-export type Project = {
-  slug: string;
-  title: string;
-  summary: string;
-  status: "complete" | "in-progress" | "archived";
-  year: string;
-  stack: string[];
-  repo: string;
-  live: string;
-  featured: boolean;
-};
+import type { Challenge, Project, ProjectContent } from "@/types";
 
 const projectsDir = path.join(process.cwd(), "content/projects");
 
@@ -73,17 +62,6 @@ export function getProjectBySlug(slug: string): {
     parsed: parseProjectContent(content),
   };
 }
-
-export type Challenge = {
-  title: string;
-  body: string;
-};
-
-export type ProjectContent = {
-  overview: string;
-  challenges: Challenge[];
-  learned: string;
-};
 
 export function parseProjectContent(raw: string): ProjectContent {
   const overviewMatch = raw.match(/##\s+Overview\s*([\s\S]*?)(?=##|$)/i);

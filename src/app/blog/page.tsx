@@ -1,25 +1,17 @@
 import type { Metadata } from "next";
-import BlogIndex from "@/components/ui/BlogIndex";
-import { getPosts,type HashnodePost } from "@/lib/hashnode";
+import BlogIndex from "@/components/blog/BlogIndex";
+import { getAllCategories, getAllPosts } from "@/lib/blog";
 
 export const metadata: Metadata = {
   title: "Writing — Muiz Oyebowale",
-  description: "Things I've written about backend engineering, distributed systems, AI, and the occasional rant about tooling.",
+  description: "Notes on backend systems, AI/ML, and the occasional rant about tooling. Written and maintained by Muiz Oyebowale.",
+  alternates: { canonical: "https://muizzyranking.me/blog" },
 };
 
-export default async function BlogPage() {
-  const posts = await getPosts(20);
+export const revalidate = 3600;
 
-  const byYear = posts.reduce<Record<string, HashnodePost[]>>((acc, post) => {
-    const year = new Date(post.publishedAt).getFullYear().toString();
-    if (!acc[year]) acc[year] = [];
-    acc[year].push(post);
-    return acc;
-  }, {});
-
-  const years = Object.keys(byYear).sort((a, b) => Number(b) - Number(a));
-
-  return (
-      <BlogIndex posts={posts} byYear={byYear} years={years} />
-  );
+export default function BlogPage() {
+  const posts = getAllPosts();
+  const categories = getAllCategories();
+  return <BlogIndex posts={posts} categories={categories} />;
 }

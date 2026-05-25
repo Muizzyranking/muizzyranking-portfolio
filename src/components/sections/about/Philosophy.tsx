@@ -2,12 +2,7 @@
 
 import { m, useInView } from "framer-motion";
 import { useRef } from "react";
-import {
-  fadeUp,
-  SCROLL_REVEAL,
-  staggerContainer,
-  staggerItem,
-} from "@/lib/motion";
+import { fadeUp, SCROLL_REVEAL, staggerContainer, staggerItem } from "@/lib/motion";
 
 const VALUES = [
   {
@@ -26,14 +21,6 @@ const VALUES = [
     title: "Disagreement is a feature",
     body: "I'll push back if something doesn't make sense. Respectfully. Persistently. I'll also change my mind the moment I see a better argument — ego doesn't survive good evidence.",
   },
-  {
-    title: "Perfectionist, managed",
-    body: "I want everything to be right. I've learned to ship anyway. The tension between those two things produces most of my best work.",
-  },
-  {
-    title: "Terminal-first, everything-else-second",
-    body: "If a tool doesn't have a CLI, I'm suspicious of it. If it does, I've probably already aliased it to three letters.",
-  },
 ];
 
 export default function Philosophy() {
@@ -45,41 +32,22 @@ export default function Philosophy() {
       ref={ref}
       style={{
         padding: "clamp(4.5rem, 9vw, 7rem) 0",
-        background: "var(--color-surface)",
+        background: "var(--color-bg-elevated)",
         borderBottom: "1px solid var(--color-border-subtle)",
       }}
     >
       <div className="container-main">
-        {/* Eyebrow */}
         <m.p
           variants={fadeUp}
           custom={0}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: "0.68rem",
-            letterSpacing: "0.2em",
-            textTransform: "uppercase",
-            color: "var(--color-text-muted)",
-            display: "flex",
-            alignItems: "center",
-            gap: "0.75rem",
-            marginBottom: "3rem",
-          }}
+          className="eyebrow"
+          style={{ marginBottom: "3rem" }}
         >
-          <span style={{ color: "var(--color-accent)", opacity: 0.7 }}>
-            [ ]
-          </span>
+          <span className="eyebrow__mark">[ 02 ]</span>
           How I think
-          <span
-            style={{
-              display: "inline-block",
-              width: "32px",
-              height: "1px",
-              background: "var(--color-border)",
-            }}
-          />
+          <span className="eyebrow__rule" />
         </m.p>
 
         <m.div
@@ -134,10 +102,11 @@ export default function Philosophy() {
 
             <h2
               style={{
+                fontFamily: "var(--font-display)",
                 fontSize: "clamp(1.6rem, 3.2vw, 2.25rem)",
-                fontWeight: 700,
-                letterSpacing: "-0.03em",
-                lineHeight: 1.2,
+                fontWeight: 600,
+                letterSpacing: "-0.035em",
+                lineHeight: 1.15,
                 color: "var(--color-text-primary)",
                 marginBottom: "1.25rem",
               }}
@@ -153,10 +122,8 @@ export default function Philosophy() {
                 marginBottom: "1rem",
               }}
             >
-              Not because I&apos;m difficult. Because I genuinely cannot move
-              forward until I understand the thing underneath the thing. The
-              root cause. The actual reason a decision was made. The constraint
-              that nobody documented but everyone assumed.
+              Not because I&apos;m difficult. Because I genuinely cannot move forward until I understand the thing underneath the thing. The root
+              cause. The actual reason a decision was made. The constraint that nobody documented but everyone assumed.
             </p>
 
             <p
@@ -167,10 +134,8 @@ export default function Philosophy() {
                 marginBottom: "1rem",
               }}
             >
-              It makes me slower sometimes. It makes the work better, always.
-              And once in a while, the why reveals that we&apos;re solving the
-              wrong problem entirely — which is the most valuable discovery you
-              can make before you&apos;ve written any code.
+              It makes me slower sometimes. It makes the work better, always. And once in a while, the why reveals that we&apos;re solving the wrong
+              problem entirely — which is the most valuable discovery you can make before you&apos;ve written any code.
             </p>
 
             <p
@@ -187,13 +152,7 @@ export default function Philosophy() {
         </m.div>
 
         {/* ── VALUES GRID */}
-        <m.div
-          variants={fadeUp}
-          custom={2}
-          initial="hidden"
-          animate={inView ? "visible" : "hidden"}
-          style={{ marginBottom: "2rem" }}
-        >
+        <m.div variants={fadeUp} custom={2} initial="hidden" animate={inView ? "visible" : "hidden"} style={{ marginBottom: "2rem" }}>
           <h3
             style={{
               fontSize: "clamp(1.1rem, 2vw, 1.4rem)",
@@ -213,17 +172,19 @@ export default function Philosophy() {
           animate={inView ? "visible" : "hidden"}
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+            gridTemplateColumns: "repeat(12, 1fr)",
             gap: "1px",
             border: "1px solid var(--color-border)",
             borderRadius: "var(--radius-lg)",
             overflow: "hidden",
           }}
+          className="philosophy-grid"
         >
-          {VALUES.map(({ title, body }) => (
+          {VALUES.map(({ title, body }, idx) => (
             <m.div
               key={title}
               variants={staggerItem}
+              data-idx={idx}
               style={{
                 background: "var(--color-background)",
                 padding: "1.75rem",
@@ -231,9 +192,7 @@ export default function Philosophy() {
                 borderBottom: "1px solid var(--color-border)",
                 transition: "background 0.2s",
               }}
-              whileHover={
-                { backgroundColor: "var(--color-surface-raised)" } as never
-              }
+              whileHover={{ backgroundColor: "var(--color-surface-raised)" } as never}
             >
               <div
                 style={{
@@ -268,6 +227,17 @@ export default function Philosophy() {
           ))}
         </m.div>
       </div>
+
+      <style>{`
+        .philosophy-grid > [data-idx="0"] { grid-column: span 7; }
+        .philosophy-grid > [data-idx="1"] { grid-column: span 5; }
+        .philosophy-grid > [data-idx="2"] { grid-column: span 5; }
+        .philosophy-grid > [data-idx="3"] { grid-column: span 7; }
+
+        @media (max-width: 760px) {
+          .philosophy-grid > [data-idx] { grid-column: span 12 !important; }
+        }
+      `}</style>
     </section>
   );
 }

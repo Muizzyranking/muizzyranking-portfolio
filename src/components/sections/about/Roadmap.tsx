@@ -1,6 +1,5 @@
 "use client";
 
-
 import { m, useInView } from "framer-motion";
 import { useRef } from "react";
 import { fadeUp, SCROLL_REVEAL, staggerContainer, staggerItem } from "@/lib/motion";
@@ -53,13 +52,7 @@ const TRACKS = [
     stage: "reading" as Stage,
     description:
       "I like Rust because it refuses to let you be sloppy. The borrow checker is a strict code reviewer who never takes a day off. I respect it. I also occasionally want to argue with it.",
-    items: [
-      "Ownership & borrowing",
-      "Error handling (Result, Option)",
-      "Traits & generics",
-      "Async Rust (tokio)",
-      "CLI tooling with clap",
-    ],
+    items: ["Ownership & borrowing", "Error handling (Result, Option)", "Traits & generics", "Async Rust (tokio)", "CLI tooling with clap"],
     reading: ["The Rust Book", "Rust by Practice", "Error Handling in Rust"],
     note: "// current status: the borrow checker and I have an understanding",
   },
@@ -76,12 +69,7 @@ function StageIndicator({ current }: { current: Stage }) {
               width: i <= currentIdx ? "24px" : "8px",
               height: "3px",
               borderRadius: "2px",
-              background:
-                i < currentIdx
-                  ? "var(--color-accent-dim)"
-                  : i === currentIdx
-                  ? "var(--color-accent)"
-                  : "var(--color-border)",
+              background: i < currentIdx ? "var(--color-accent-dim)" : i === currentIdx ? "var(--color-accent)" : "var(--color-border)",
               transition: "width 0.3s ease",
             }}
           />
@@ -112,7 +100,7 @@ export default function Roadmap() {
       ref={ref}
       style={{
         padding: "clamp(4.5rem, 9vw, 7rem) 0",
-        background: "var(--color-surface)",
+        background: "var(--color-bg-elevated)",
         borderBottom: "1px solid var(--color-border-subtle)",
       }}
     >
@@ -122,28 +110,12 @@ export default function Roadmap() {
           custom={0}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: "0.68rem",
-            letterSpacing: "0.2em",
-            textTransform: "uppercase",
-            color: "var(--color-text-muted)",
-            display: "flex",
-            alignItems: "center",
-            gap: "0.75rem",
-            marginBottom: "3rem",
-          }}
+          className="eyebrow"
+          style={{ marginBottom: "3rem" }}
         >
-          <span style={{ color: "var(--color-accent)", opacity: 0.7 }}>[  ]</span>
-          Learning roadmap
-          <span
-            style={{
-              display: "inline-block",
-              width: "32px",
-              height: "1px",
-              background: "var(--color-border)",
-            }}
-          />
+          <span className="eyebrow__mark">[ 04 ]</span>
+          What I&apos;m learning
+          <span className="eyebrow__rule" />
         </m.p>
 
         <div
@@ -162,9 +134,11 @@ export default function Roadmap() {
             initial="hidden"
             animate={inView ? "visible" : "hidden"}
             style={{
-              fontSize: "clamp(1.8rem, 3.5vw, 2.5rem)",
-              fontWeight: 700,
-              letterSpacing: "-0.03em",
+              fontFamily: "var(--font-display)",
+              fontSize: "clamp(1.9rem, 4vw, 2.75rem)",
+              fontWeight: 600,
+              letterSpacing: "-0.04em",
+              lineHeight: 1.05,
             }}
           >
             What I&apos;m building toward
@@ -185,7 +159,7 @@ export default function Roadmap() {
             }}
             className="roadmap-subtitle"
           >
-            { `// updated ${new Date().toLocaleDateString("en-GB", { month: "long", year: "numeric" })}` }
+            {`// updated ${new Date().toLocaleDateString("en-GB", { month: "long", year: "numeric" })}`}
           </m.p>
         </div>
 

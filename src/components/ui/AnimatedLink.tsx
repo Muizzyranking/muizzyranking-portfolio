@@ -1,21 +1,19 @@
 "use client";
 
 import Link from "next/link";
-import type { CSSProperties } from "react";
+import type { AnimatedLinkProps } from "@/types";
 
-type Props = {
-  href: string;
-  style?: CSSProperties;
-  children: React.ReactNode;
-};
-
-export default function AnimatedLink({ href, style, children }: Props) {
+export default function AnimatedLink({ href, style, children }: AnimatedLinkProps) {
   return (
     <Link
       href={href}
       style={style}
-      onMouseEnter={(e) => { e.currentTarget.style.opacity = "0.7";}}
-      onMouseLeave={(e) => { e.currentTarget.style.opacity = "1";}}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.opacity = "0.7";
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.opacity = "1";
+      }}
     >
       {children}
     </Link>

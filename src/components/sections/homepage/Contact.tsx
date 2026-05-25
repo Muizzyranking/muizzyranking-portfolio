@@ -18,11 +18,7 @@ export default function Contact() {
     <section
       ref={ref}
       id="contact"
-      style={{
-        padding: "clamp(5rem, 10vw, 8rem) 0",
-        background: "var(--color-surface)",
-        borderTop: "1px solid var(--color-border-subtle)",
-      }}
+      className="py-[clamp(5rem,10vw,8rem)] bg-bg-elevated border-t border-border-subtle"
     >
       <div className="container-main">
         <m.p
@@ -30,54 +26,23 @@ export default function Contact() {
           custom={0}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: "0.68rem",
-            letterSpacing: "0.2em",
-            textTransform: "uppercase",
-            color: "var(--color-text-muted)",
-            display: "flex",
-            alignItems: "center",
-            gap: "0.75rem",
-            marginBottom: "2rem",
-          }}
+          className="eyebrow mb-8"
         >
-          <span style={{ color: "var(--color-accent)", opacity: 0.7 }}>[ ]</span>
+          <span className="eyebrow__mark">[ 05 ]</span>
           Contact
-          <span
-            style={{
-              display: "inline-block",
-              width: "32px",
-              height: "1px",
-              background: "var(--color-border)",
-            }}
-          />
+          <span className="eyebrow__rule" />
         </m.p>
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: "5rem",
-            alignItems: "start",
-          }}
-          className="contact-grid"
-        >
+        <div className="contact-grid grid grid-cols-2 gap-20 items-start max-[860px]:grid-cols-1 max-[860px]:gap-12">
           <div>
             <m.h2
               variants={fadeUp}
               custom={1}
               initial="hidden"
               animate={inView ? "visible" : "hidden"}
-              style={{
-                fontSize: "clamp(2rem, 4vw, 3rem)",
-                fontWeight: 700,
-                letterSpacing: "-0.03em",
-                lineHeight: 1.1,
-                marginBottom: "1.25rem",
-              }}
+              className="font-display font-semibold tracking-[-0.04em] leading-[1.05] mb-5 text-[clamp(2rem,4vw,3rem)]"
             >
-              Let&apos;s build something <em style={{ fontStyle: "italic", color: "var(--color-accent)" }}>interesting.</em>
+              Let&apos;s build something <em className="italic text-accent font-medium">interesting.</em>
             </m.h2>
 
             <m.p
@@ -85,22 +50,11 @@ export default function Contact() {
               custom={2}
               initial="hidden"
               animate={inView ? "visible" : "hidden"}
-              style={{
-                color: "var(--color-text-secondary)",
-                fontSize: "0.95rem",
-                lineHeight: 1.78,
-                maxWidth: "42ch",
-                marginBottom: "1.75rem",
-              }}
+              className="text-text-secondary text-[0.95rem] leading-[1.78] max-w-[42ch] mb-7"
             >
               Open to backend roles, AI/ML adjacent work, interesting problems, conversations about systems, AI, conversations that don&apos;t start
               with &ldquo;circle back,&rdquo; or why Neovim is still relevant in {new Date().getFullYear()}.{" "}
-              <span
-                style={{
-                  color: "var(--color-text-muted)",
-                  fontStyle: "italic",
-                }}
-              >
+              <span className="text-text-muted italic">
                 (It is.)
               </span>
             </m.p>
@@ -108,25 +62,7 @@ export default function Contact() {
             <m.div variants={fadeUp} custom={3} initial="hidden" animate={inView ? "visible" : "hidden"}>
               <a
                 href={`mailto:${EMAIL}`}
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "0.5rem",
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "0.88rem",
-                  color: "var(--color-accent)",
-                  textDecoration: "none",
-                  borderBottom: "1px solid var(--color-accent-dim)",
-                  paddingBottom: "0.15rem",
-                  transition: "opacity 0.2s",
-                  letterSpacing: "0.04em",
-                }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.opacity = "0.65";
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.opacity = "1";
-                }}
+                className="inline-flex items-center gap-2 font-mono text-[0.88rem] text-accent no-underline border-b border-accent-dim pb-[0.15rem] tracking-[0.04em] transition-opacity duration-200 hover:opacity-65"
               >
                 {EMAIL} →
               </a>
@@ -140,14 +76,7 @@ export default function Contact() {
               custom={1}
               initial="hidden"
               animate={inView ? "visible" : "hidden"}
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "0.63rem",
-                letterSpacing: "0.18em",
-                textTransform: "uppercase",
-                color: "var(--color-text-muted)",
-                marginBottom: "1.25rem",
-              }}
+              className="font-mono text-[0.63rem] tracking-[0.18em] uppercase text-text-muted mb-5"
             >
               Find me online
             </m.p>
@@ -156,11 +85,7 @@ export default function Contact() {
               variants={staggerContainer}
               initial="hidden"
               animate={inView ? "visible" : "hidden"}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "0.5rem",
-              }}
+              className="flex flex-col gap-2"
             >
               {socialsArray.map(({ name, handle, href, icon }) => (
                 <m.a
@@ -171,79 +96,23 @@ export default function Contact() {
                   variants={staggerItem}
                   whileHover={{ x: 4 }}
                   transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.875rem",
-                    padding: "0.875rem 1rem",
-                    background: "var(--color-background)",
-                    border: "1px solid var(--color-border)",
-                    borderRadius: "var(--radius-md)",
-                    textDecoration: "none",
-                    color: "var(--color-text-secondary)",
-                    transition: "border-color 0.2s",
-                  }}
-                  onHoverStart={(e) => {
-                    const link = (e.target as HTMLElement).closest("a");
-                    if (link) {
-                      link.style.borderColor = "var(--color-accent-dim)";
-                    }
-                  }}
-                  onHoverEnd={(e) => {
-                    const link = (e.target as HTMLElement).closest("a");
-                    if (link) {
-                      link.style.borderColor = "var(--color-border)";
-                    }
-                  }}
+                  className="group flex items-center gap-[0.875rem] px-4 py-[0.875rem] bg-background border border-border rounded-md no-underline text-text-secondary transition-colors duration-200 hover:border-accent-dim"
                 >
                   {/* Icon box */}
-                  <div
-                    style={{
-                      width: "32px",
-                      height: "32px",
-                      background: "var(--color-surface)",
-                      border: "1px solid var(--color-border)",
-                      borderRadius: "var(--radius-sm)",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      color: "var(--color-accent)",
-                      flexShrink: 0,
-                    }}
-                  >
+                  <div className="w-8 h-8 bg-surface border border-border rounded-sm flex items-center justify-center text-accent shrink-0">
                     {icon}
                   </div>
 
                   <div>
-                    <p
-                      style={{
-                        fontSize: "0.85rem",
-                        fontWeight: 500,
-                        color: "var(--color-text-primary)",
-                        marginBottom: "0.1rem",
-                        lineHeight: 1.3,
-                      }}
-                    >
+                    <p className="text-[0.85rem] font-medium text-text-primary mb-[0.1rem] leading-[1.3]">
                       {name}
                     </p>
-                    <p
-                      style={{
-                        fontFamily: "var(--font-mono)",
-                        fontSize: "0.7rem",
-                        color: "var(--color-text-muted)",
-                      }}
-                    >
+                    <p className="font-mono text-[0.7rem] text-text-muted">
                       {handle}
                     </p>
                   </div>
 
-                  <span
-                    style={{
-                      marginLeft: "auto",
-                      color: "var(--color-text-muted)",
-                      fontSize: "0.82rem",
-                    }}
-                  >
+                  <span className="ml-auto text-text-muted text-[0.82rem]">
                     →
                   </span>
                 </m.a>
@@ -252,12 +121,6 @@ export default function Contact() {
           </div>
         </div>
       </div>
-
-      <style>{`
-        @media (max-width: 860px) {
-          .contact-grid { grid-template-columns: 1fr !important; gap: 3rem !important; }
-        }
-      `}</style>
     </section>
   );
 }

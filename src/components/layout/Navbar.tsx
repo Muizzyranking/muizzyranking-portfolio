@@ -8,6 +8,7 @@ import { useState } from "react";
 const NAV_LINKS = [
   { label: "about", href: "/about" },
   { label: "projects", href: "/projects" },
+  { label: "tools", href: "/tools" },
   { label: "writing", href: "/blog" },
 ];
 
@@ -27,83 +28,31 @@ export default function Navbar() {
         initial={{ y: -80, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+        className="fixed top-0 left-0 right-0 z-[100] h-16 flex items-center justify-between px-[clamp(1.5rem,5vw,4rem)] transition-[background,border-color,backdrop-filter] duration-[350ms] ease-out"
         style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          right: 0,
-          zIndex: 100,
-          height: "64px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          paddingInline: "clamp(1.5rem, 5vw, 4rem)",
-          borderBottom: scrolled
-            ? "1px solid var(--color-border)"
-            : "1px solid transparent",
+          borderBottom: scrolled ? "1px solid var(--color-border)" : "1px solid transparent",
           background: scrolled ? "rgba(14,14,14,0.92)" : "transparent",
           backdropFilter: scrolled ? "blur(14px)" : "none",
           WebkitBackdropFilter: scrolled ? "blur(14px)" : "none",
-          transition:
-            "background 0.35s ease, border-color 0.35s ease, backdrop-filter 0.35s ease",
         }}
       >
-        <div
-          className="container-main"
-          style={{
-            height: "100%",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
+        <div className="container-main h-full flex items-center justify-between">
           {/* ── LOGO ── */}
           <Link
             href="/"
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "0.88rem",
-              fontWeight: 600,
-              letterSpacing: "-0.01em",
-              color: "var(--color-text-primary)",
-              transition: "color 0.2s ease",
-              textDecoration: "none",
-              display: "flex",
-              alignItems: "center",
-              gap: "0",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.color = "var(--color-accent)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.color = "var(--color-text-primary)";
-            }}
+            className="font-mono text-[0.88rem] font-semibold tracking-[-0.01em] text-text-primary transition-colors duration-200 no-underline flex items-center gap-0 hover:text-accent"
           >
-            muizzyranking
-            <span style={{ color: "var(--color-accent)" }}>.</span>
+            muizzy
+            <span className="text-accent">ranking.</span>
           </Link>
 
           {/* ── DESKTOP NAV ── */}
           <nav
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "0.25rem",
-            }}
+            className="flex items-center gap-1"
             aria-label="Primary navigation"
           >
             {/* Links — hidden on mobile via CSS */}
-            <ul
-              className="nav-desktop-links"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "0.125rem",
-                listStyle: "none",
-                margin: 0,
-                padding: 0,
-              }}
-            >
+            <ul className="nav-desktop-links hidden sm:flex items-center gap-0 list-none m-0 p-0">
               {NAV_LINKS.map(({ label, href }, i) => {
                 const isActive = pathname.startsWith(href);
                 return (
@@ -116,67 +65,32 @@ export default function Navbar() {
                       duration: 0.4,
                       ease: [0.22, 1, 0.36, 1],
                     }}
-                    style={{ display: "flex", alignItems: "center" }}
+                    className="flex items-center"
                   >
                     {i > 0 && (
-                      <span
-                        style={{
-                          fontFamily: "var(--font-mono)",
-                          fontSize: "0.65rem",
-                          color: "var(--color-accent)",
-                          paddingInline: "0.75rem",
-                          userSelect: "none",
-                        }}
-                      >
+                      <span className="font-mono text-[0.65rem] text-accent px-3 select-none">
                         /
                       </span>
                     )}
                     <Link
                       href={href}
+                      className="font-mono text-[0.72rem] tracking-[0.1em] no-underline py-[0.4rem] px-5 rounded-sm transition-[color,background] duration-200 block relative"
                       style={{
-                        fontFamily: "var(--font-mono)",
-                        fontSize: "0.72rem",
-                        letterSpacing: "0.1em",
-                        color: isActive
-                          ? "var(--color-text-primary)"
-                          : "var(--color-text-secondary)",
-                        textDecoration: "none",
-                        padding: "0.4rem 0.8rem",
-                        borderRadius: "var(--radius-sm)",
-                        transition: "color 0.2s, background 0.2s",
-                        display: "block",
-                        position: "relative",
-                      }}
-                      onMouseEnter={(e) => {
-                        (e.currentTarget as HTMLElement).style.color =
-                          "var(--color-text-primary)";
-                        (e.currentTarget as HTMLElement).style.background =
-                          "var(--color-surface)";
-                      }}
-                      onMouseLeave={(e) => {
-                        (e.currentTarget as HTMLElement).style.color =
-                          "var(--color-text-muted)";
-                        (e.currentTarget as HTMLElement).style.background =
-                          "transparent";
+                        color: isActive ? "var(--color-text-primary)" : "var(--color-text-secondary)",
                       }}
                     >
                       {label}
-                      { isActive && <m.span
-                        layoutId="nav-underline"
-                        style={{
-                          position: "absolute",
-                          bottom: -2,
-                          left: 0,
-                          right: 0,
-                          height: "1px",
-                          backgroundColor: "var(--color-accent)",
-                        }}
-                        transition={{
-                          type: "spring",
-                          stiffness: 400,
-                          damping: 30,
-                        }}
-                      /> }
+                      {isActive && (
+                        <m.span
+                          layoutId="nav-underline"
+                          className="absolute -bottom-0.5 left-0 right-0 h-px bg-accent"
+                          transition={{
+                            type: "spring",
+                            stiffness: 400,
+                            damping: 30,
+                          }}
+                        />
+                      )}
                     </Link>
                   </m.li>
                 );
@@ -190,110 +104,30 @@ export default function Navbar() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5, duration: 0.4 }}
-              className="nav-resume-btn"
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "0.72rem",
-                letterSpacing: "0.1em",
-                color: "var(--color-accent)",
-                textDecoration: "none",
-                border: "1px solid var(--color-accent-dim)",
-                padding: "0.4rem 1rem",
-                borderRadius: "var(--radius-sm)",
-                marginLeft: "0.75rem",
-                transition: "background 0.2s, color 0.2s",
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "0.4rem",
-              }}
-              onHoverStart={(e) => {
-                (e.target as HTMLElement).style.background =
-                  "var(--color-accent)";
-                (e.target as HTMLElement).style.color = "#fff";
-              }}
-              onHoverEnd={(e) => {
-                (e.target as HTMLElement).style.background = "transparent";
-                (e.target as HTMLElement).style.color = "var(--color-accent)";
-              }}
+              className="nav-resume-btn hidden sm:inline-flex items-center gap-[0.4rem] font-mono text-[0.72rem] tracking-[0.1em] text-accent no-underline border border-accent-dim py-[0.4rem] px-4 ml-3 rounded-sm transition-[background,color] duration-200 hover:bg-accent hover:text-white"
             >
               résumé
               {/* down arrow icon */}
-              <svg
-                width="11"
-                height="11"
-                viewBox="0 0 11 11"
-                fill="none"
-                aria-hidden="true"
-              >
-                <path
-                  d="M5.5 1v7M2 5.5l3.5 3.5L9 5.5"
-                  stroke="currentColor"
-                  strokeWidth="1.4"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
+              <svg width="11" height="11" viewBox="0 0 11 11" fill="none" aria-hidden="true">
+                <path d="M5.5 1v7M2 5.5l3.5 3.5L9 5.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </m.a>
 
             {/* Mobile hamburger */}
             <button
               type="button"
-              className="nav-hamburger"
+              className="nav-hamburger sm:hidden bg-transparent border-0 cursor-pointer p-2 text-text-secondary ml-2"
               aria-label="Toggle menu"
               onClick={() => setMobileOpen((o) => !o)}
-              style={{
-                display: "none",
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-                padding: "0.5rem",
-                color: "var(--color-text-secondary)",
-                marginLeft: "0.5rem",
-              }}
             >
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="none"
-                aria-hidden="true"
-              >
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
                 {mobileOpen ? (
-                  <path
-                    d="M4 4l12 12M16 4L4 16"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                  />
+                  <path d="M4 4l12 12M16 4L4 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
                 ) : (
                   <>
-                    <line
-                      x1="3"
-                      y1="6"
-                      x2="17"
-                      y2="6"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                    />
-                    <line
-                      x1="3"
-                      y1="10"
-                      x2="17"
-                      y2="10"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                    />
-                    <line
-                      x1="3"
-                      y1="14"
-                      x2="17"
-                      y2="14"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                    />
+                    <line x1="3" y1="6" x2="17" y2="6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                    <line x1="3" y1="10" x2="17" y2="10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                    <line x1="3" y1="14" x2="17" y2="14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
                   </>
                 )}
               </svg>
@@ -305,25 +139,12 @@ export default function Navbar() {
       {/* ── MOBILE MENU ── */}
       <m.div
         initial={false}
-        animate={
-          mobileOpen
-            ? { opacity: 1, y: 0, pointerEvents: "auto" }
-            : { opacity: 0, y: -8, pointerEvents: "none" }
-        }
+        animate={mobileOpen ? { opacity: 1, y: 0, pointerEvents: "auto" } : { opacity: 0, y: -8, pointerEvents: "none" }}
         transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+        className="fixed top-16 left-0 right-0 z-[99] flex flex-col gap-1 px-[clamp(1.5rem,5vw,4rem)] py-6 border-b border-border"
         style={{
-          position: "fixed",
-          top: "64px",
-          left: 0,
-          right: 0,
-          zIndex: 99,
           background: "rgba(14,14,14,0.97)",
           backdropFilter: "blur(16px)",
-          borderBottom: "1px solid var(--color-border)",
-          padding: "1.5rem clamp(1.5rem, 5vw, 4rem)",
-          display: "flex",
-          flexDirection: "column",
-          gap: "0.25rem",
         }}
       >
         {NAV_LINKS.map(({ label, href }) => (
@@ -331,16 +152,7 @@ export default function Navbar() {
             key={href}
             href={href}
             onClick={() => setMobileOpen(false)}
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "0.9rem",
-              letterSpacing: "0.1em",
-              color: "var(--color-text-secondary)",
-              textDecoration: "none",
-              padding: "0.75rem 0",
-              borderBottom: "1px solid var(--color-border-subtle)",
-              transition: "color 0.2s",
-            }}
+            className="font-mono text-[0.9rem] tracking-[0.1em] text-text-secondary no-underline py-3 border-b border-border-subtle transition-colors duration-200 hover:text-text-primary"
           >
             {label}
           </Link>
@@ -348,27 +160,11 @@ export default function Navbar() {
         <a
           href="/resume.pdf"
           download
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: "0.9rem",
-            letterSpacing: "0.1em",
-            color: "var(--color-accent)",
-            textDecoration: "none",
-            padding: "0.75rem 0",
-            marginTop: "0.25rem",
-          }}
+          className="font-mono text-[0.9rem] tracking-[0.1em] text-accent no-underline py-3 mt-1"
         >
           résumé ↓
         </a>
       </m.div>
-
-      <style>{`
-        @media (max-width: 640px) {
-          .nav-desktop-links { display: none !important; }
-          .nav-resume-btn { display: none !important; }
-          .nav-hamburger { display: flex !important; }
-        }
-      `}</style>
     </>
   );
 }

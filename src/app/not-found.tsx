@@ -60,10 +60,8 @@ export default function NotFound() {
           backgroundSize: "48px 48px",
           opacity: 0.4,
           pointerEvents: "none",
-          maskImage:
-            "radial-gradient(ellipse 70% 70% at 50% 50%, black 20%, transparent 100%)",
-          WebkitMaskImage:
-            "radial-gradient(ellipse 70% 70% at 50% 50%, black 20%, transparent 100%)",
+          maskImage: "radial-gradient(ellipse 70% 70% at 50% 50%, black 20%, transparent 100%)",
+          WebkitMaskImage: "radial-gradient(ellipse 70% 70% at 50% 50%, black 20%, transparent 100%)",
         }}
       />
 
@@ -159,6 +157,7 @@ export default function NotFound() {
           >
             {LINES.slice(0, visibleLines).map((line, i) => (
               <m.div
+                // biome-ignore lint/suspicious/noArrayIndexKey: lines render in fixed order
                 key={i}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -170,10 +169,10 @@ export default function NotFound() {
                   color: line.error
                     ? "var(--color-error)"
                     : line.accent
-                    ? "var(--color-accent)"
-                    : line.muted
-                    ? "var(--color-text-muted)"
-                    : "var(--color-text-secondary)",
+                      ? "var(--color-accent)"
+                      : line.muted
+                        ? "var(--color-text-muted)"
+                        : "var(--color-text-secondary)",
                 }}
               >
                 {line.cursor ? (
@@ -219,12 +218,7 @@ export default function NotFound() {
               marginBottom: "0.5rem",
             }}
           >
-            Nothing here.{" "}
-            <span
-              style={{ color: "var(--color-accent)", fontStyle: "italic" }}
-            >
-              Genuinely.
-            </span>
+            Nothing here. <span style={{ color: "var(--color-accent)", fontStyle: "italic" }}>Genuinely.</span>
           </h1>
           <p
             style={{
@@ -234,9 +228,9 @@ export default function NotFound() {
               lineHeight: 1.6,
             }}
           >
-            // the page you&apos;re looking for doesn&apos;t exist.
+            {"// the page you're looking for doesn't exist."}
             <br />
-            // it might never have. or it moved. probably moved.
+            {"// it might never have. or it moved. probably moved."}
           </p>
         </m.div>
 
@@ -263,17 +257,9 @@ export default function NotFound() {
                 fontFamily: "var(--font-mono)",
                 fontSize: "0.75rem",
                 letterSpacing: "0.08em",
-                color:
-                  i === 0
-                    ? "#fff"
-                    : "var(--color-text-secondary)",
-                background:
-                  i === 0
-                    ? "var(--color-accent)"
-                    : "transparent",
-                border: i === 0
-                  ? "none"
-                  : "1px solid var(--color-border)",
+                color: i === 0 ? "#fff" : "var(--color-text-secondary)",
+                background: i === 0 ? "var(--color-accent)" : "transparent",
+                border: i === 0 ? "none" : "1px solid var(--color-border)",
                 borderRadius: "var(--radius-md)",
                 textDecoration: "none",
                 transition: "opacity 0.15s, border-color 0.15s, color 0.15s",

@@ -1,5 +1,3 @@
-import { GeistMono } from "geist/font/mono";
-import { GeistSans } from "geist/font/sans";
 import type { Metadata } from "next";
 import "./globals.css";
 import { GoogleAnalytics } from "@next/third-parties/google";
@@ -7,6 +5,8 @@ import { domAnimation, LazyMotion } from "framer-motion";
 import Footer from "@/components/layout/Footer";
 import JsonLd from "@/components/layout/JsonLd";
 import Navbar from "@/components/layout/Navbar";
+import VimCommandLine from "@/components/ui/VimCommandLine";
+import { jetbrainsMono, spaceGrotesk } from "@/lib/font";
 
 export const metadata: Metadata = {
   title: {
@@ -15,18 +15,7 @@ export const metadata: Metadata = {
   },
   description:
     "I'm Muiz Oyebowale — a backend engineer focused on Python, Django, and distributed systems. I build things that have to work: APIs, queues, databases, and the plumbing no one sees but everyone depends on.",
-  keywords: [
-    "backend engineer",
-    "Python",
-    "Django",
-    "FastAPI",
-    "PostgreSQL",
-    "Redis",
-    "API development",
-    "Lagos",
-    "Nigeria",
-    "software engineer",
-  ],
+  keywords: ["backend engineer", "Python", "Django", "FastAPI", "PostgreSQL", "Redis", "API development", "Lagos", "Nigeria", "software engineer"],
   authors: [{ name: "Muiz Oyebowale" }, { name: "Muizzyranking" }],
   creator: "Muiz Oyebowale",
   icons: {
@@ -58,6 +47,9 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: "https://muizzyranking.me",
+    types: {
+      "application/rss+xml": "https://muizzyranking.me/blog/rss.xml",
+    },
   },
 };
 
@@ -67,7 +59,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`}>
+    <html lang="en" className={`${spaceGrotesk.variable} ${jetbrainsMono.variable}`}>
       <head>
         <JsonLd />
       </head>
@@ -75,6 +67,7 @@ export default function RootLayout({
         <LazyMotion features={domAnimation} strict>
           <Navbar />
           {children}
+          <VimCommandLine />
         </LazyMotion>
         <Footer />
         {/** biome-ignore lint/style/noNonNullAssertion: not null */}

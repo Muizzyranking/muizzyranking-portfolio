@@ -1,0 +1,16 @@
+# Global injection table for blog MDX files.
+#
+# Anywhere in a post body you can write {{key}} and it'll be replaced
+# with the value below. Per-post `inject:` in frontmatter overrides
+# these values for that post only.
+#
+# Examples:
+#   "Drop me an email at {{email}}"
+#   "My GitHub: {{github}}"
+
+email: "oyebowaleabdulmuiz@gmail.com"
+github: "https://github.com/Muizzyranking"
+twitter: "https://twitter.com/muizzyranking"
+linkedin: "https://linkedin.com/in/muizzyrankin"
+site: "https://muizzyranking.me"
+name: "Muiz Oyebowale"
