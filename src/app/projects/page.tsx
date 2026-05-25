@@ -14,7 +14,5 @@ export default async function ProjectsPage() {
   const complete = projects.filter((p) => p.status === "complete").length;
   const inProgress = projects.filter((p) => p.status === "in-progress").length;
 
-  return (
-      <ProjectsGrid projects={projects} stats={{ total: projects.length, complete, inProgress }} />
-  );
+  return <ProjectsGrid projects={projects} stats={{ total: projects.length, complete, inProgress }} />;
 }
