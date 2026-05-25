@@ -1,20 +1,11 @@
 "use client";
 
-import { m, type Variants } from "framer-motion";
+import { m } from "framer-motion";
 import Image from "next/image";
-
-const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 14 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: { delay: i * 0.09, duration: 0.55, ease: [0.22, 1, 0.36, 1] },
-  }),
-};
+import { fadeUp } from "@/lib/motion";
 
 const STATS = [
   { label: "Role", value: "Backend Engineer" },
-  { label: "Experience", value: "~4 years" },
   { label: "Primary lang", value: "Python / TS" },
   { label: "Availability", value: "Open" },
 ];
@@ -112,6 +103,7 @@ export default function AboutHero() {
               animate="visible"
               variants={fadeUp}
               style={{
+                fontFamily: "var(--font-display)",
                 fontSize: "clamp(2.8rem, 7vw, 5.5rem)",
                 fontWeight: 700,
                 letterSpacing: "-0.04em",
@@ -120,7 +112,7 @@ export default function AboutHero() {
               }}
             >
               <span style={{ color: "var(--color-accent)", display: "block" }}>Muiz</span>
-              <span style={{ color: "var(--color-text-primary)", display: "block", fontStyle: "italic" }}>Oyebowale</span>
+              <span style={{ color: "var(--color-text-primary)", display: "block", fontStyle: "italic", fontWeight: 700 }}>Oyebowale</span>
             </m.h1>
 
             {/* Opening line — personality first */}

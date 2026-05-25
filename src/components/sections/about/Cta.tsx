@@ -19,42 +19,57 @@ export default function AboutCTA() {
       }}
     >
       <div className="container-main">
-        {/* Eyebrow */}
         <m.p
           variants={fadeUp}
           custom={0}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
+          className="eyebrow"
+          style={{ marginBottom: "3rem" }}
+        >
+          <span className="eyebrow__mark">[ 06 ]</span>
+          What&apos;s next
+          <span className="eyebrow__rule" />
+        </m.p>
+
+        <m.h2
+          variants={fadeUp}
+          custom={1}
+          initial="hidden"
+          animate={inView ? "visible" : "hidden"}
           style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: "0.68rem",
-            letterSpacing: "0.2em",
-            textTransform: "uppercase",
+            fontFamily: "var(--font-display)",
+            fontSize: "clamp(1.8rem, 3.5vw, 2.5rem)",
+            fontWeight: 600,
+            letterSpacing: "-0.04em",
+            lineHeight: 1.1,
+            marginBottom: "0.5rem",
+            maxWidth: "24ch",
+          }}
+        >
+          If you got here, you read <em style={{ fontStyle: "italic", color: "var(--color-accent)", fontWeight: 500 }}>enough.</em>
+        </m.h2>
+
+        <m.p
+          variants={fadeUp}
+          custom={2}
+          initial="hidden"
+          animate={inView ? "visible" : "hidden"}
+          style={{
+            fontSize: "0.95rem",
             color: "var(--color-text-muted)",
-            display: "flex",
-            alignItems: "center",
-            gap: "0.75rem",
+            lineHeight: 1.7,
+            maxWidth: "48ch",
             marginBottom: "3rem",
           }}
         >
-          <span style={{ color: "var(--color-accent)", opacity: 0.7 }}>
-            [ 07 ]
-          </span>
-          What&apos;s next
-          <span
-            style={{
-              display: "inline-block",
-              width: "32px",
-              height: "1px",
-              background: "var(--color-border)",
-            }}
-          />
+          Three doors. Pick one.
         </m.p>
 
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "1fr 1fr",
+            gridTemplateColumns: "repeat(3, 1fr)",
             gap: "1px",
             border: "1px solid var(--color-border)",
             borderRadius: "var(--radius-lg)",
@@ -62,20 +77,23 @@ export default function AboutCTA() {
           }}
           className="cta-grid"
         >
-          {/* ── See the work */}
+          {/* See the work */}
           <m.div
             variants={fadeUp}
-            custom={1}
+            custom={3}
             initial="hidden"
             animate={inView ? "visible" : "hidden"}
+            whileHover={{ y: -2, backgroundColor: "var(--color-surface)" }}
+            transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
             style={{
-              padding: "3rem",
-              background: "var(--color-surface)",
+              padding: "2.5rem 2rem",
+              background: "var(--color-bg-elevated)",
               borderRight: "1px solid var(--color-border)",
               display: "flex",
               flexDirection: "column",
-              gap: "1.25rem",
+              gap: "1rem",
             }}
+            className="cta-card"
           >
             <p
               style={{
@@ -86,78 +104,65 @@ export default function AboutCTA() {
                 color: "var(--color-text-muted)",
               }}
             >
-              See the work
+              [ 01 ] The work
             </p>
             <h3
               style={{
-                fontSize: "clamp(1.4rem, 2.5vw, 1.9rem)",
-                fontWeight: 700,
-                letterSpacing: "-0.025em",
-                lineHeight: 1.2,
-                color: "var(--color-text-primary)",
+                fontFamily: "var(--font-display)",
+                fontSize: "clamp(1.3rem, 2.4vw, 1.7rem)",
+                fontWeight: 600,
+                letterSpacing: "-0.03em",
+                lineHeight: 1.15,
               }}
             >
-              Projects that{" "}
-              <em style={{ fontStyle: "italic", color: "var(--color-accent)" }}>
-                shipped.
-              </em>
+              Projects that <em style={{ fontStyle: "italic", color: "var(--color-accent)", fontWeight: 500 }}>shipped.</em>
             </h3>
             <p
               style={{
-                fontSize: "0.9rem",
+                fontSize: "0.88rem",
                 color: "var(--color-text-secondary)",
-                lineHeight: 1.7,
-                maxWidth: "38ch",
+                lineHeight: 1.65,
+                flex: 1,
               }}
             >
-              Things I built, problems I solved, and at least one project that
-              exists because I was tired of doing something manually.
+              Things I built. The interesting decisions behind them.
             </p>
             <Link
               href="/projects"
               style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "0.78rem",
+                color: "var(--color-accent)",
+                letterSpacing: "0.06em",
                 display: "inline-flex",
                 alignItems: "center",
-                gap: "0.5rem",
-                paddingInline: "1.5rem",
-                paddingBlock: "0.8rem",
-                background: "var(--color-accent)",
-                color: "#fff",
-                fontWeight: 600,
-                fontSize: "0.85rem",
-                borderRadius: "var(--radius-md)",
-                textDecoration: "none",
-                letterSpacing: "0.02em",
-                transition: "opacity 0.2s, transform 0.2s",
-                alignSelf: "flex-start",
+                gap: "0.4rem",
                 marginTop: "0.5rem",
               }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.opacity = "0.85";
-                e.currentTarget.style.transform = "translateY(-2px)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.opacity = "1";
-                e.currentTarget.style.transform = "translateY(0)";
-              }}
+              className="group"
             >
-              View all projects →
+              all projects
+              <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
             </Link>
           </m.div>
 
-          {/* ── Get in touch */}
+          {/* Daily driver */}
           <m.div
             variants={fadeUp}
-            custom={2}
+            custom={4}
             initial="hidden"
             animate={inView ? "visible" : "hidden"}
+            whileHover={{ y: -2, backgroundColor: "var(--color-surface)" }}
+            transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
             style={{
-              padding: "3rem",
-              background: "var(--color-background)",
+              padding: "2.5rem 2rem",
+              background: "var(--color-bg-elevated)",
+              borderRight: "1px solid var(--color-border)",
               display: "flex",
               flexDirection: "column",
-              gap: "1.25rem",
+              gap: "1rem",
             }}
+            className="cta-card"
           >
             <p
               style={{
@@ -168,100 +173,123 @@ export default function AboutCTA() {
                 color: "var(--color-text-muted)",
               }}
             >
-              Get in touch
+              [ 02 ] The toolbox
             </p>
             <h3
               style={{
-                fontSize: "clamp(1.4rem, 2.5vw, 1.9rem)",
-                fontWeight: 700,
-                letterSpacing: "-0.025em",
-                lineHeight: 1.2,
-                color: "var(--color-text-primary)",
+                fontFamily: "var(--font-display)",
+                fontSize: "clamp(1.3rem, 2.4vw, 1.7rem)",
+                fontWeight: 600,
+                letterSpacing: "-0.03em",
+                lineHeight: 1.15,
               }}
             >
-              Let&apos;s build something{" "}
-              <em style={{ fontStyle: "italic", color: "var(--color-accent)" }}>
-                interesting.
-              </em>
+              What I <em style={{ fontStyle: "italic", color: "var(--color-accent)", fontWeight: 500 }}>reach for.</em>
             </h3>
             <p
               style={{
-                fontSize: "0.9rem",
+                fontSize: "0.88rem",
                 color: "var(--color-text-secondary)",
-                lineHeight: 1.7,
-                maxWidth: "38ch",
+                lineHeight: 1.65,
+                flex: 1,
               }}
             >
-              Open to backend roles, AI/ML work, and conversations that
-              don&apos;t start with &ldquo;circling back.&rdquo; Hard problems
-              preferred.
+              Languages, tools, the setup that survives a fresh install.
             </p>
-            <div
+            <Link
+              href="/tools"
               style={{
-                display: "flex",
-                gap: "0.75rem",
-                flexWrap: "wrap",
+                fontFamily: "var(--font-mono)",
+                fontSize: "0.78rem",
+                color: "var(--color-accent)",
+                letterSpacing: "0.06em",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.4rem",
                 marginTop: "0.5rem",
               }}
+              className="group"
             >
+              the toolbox
+              <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
+            </Link>
+          </m.div>
+
+          {/* Get in touch */}
+          <m.div
+            variants={fadeUp}
+            custom={5}
+            initial="hidden"
+            animate={inView ? "visible" : "hidden"}
+            whileHover={{ y: -2, backgroundColor: "var(--color-surface)" }}
+            transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+            style={{
+              padding: "2.5rem 2rem",
+              background: "var(--color-bg-elevated)",
+              display: "flex",
+              flexDirection: "column",
+              gap: "1rem",
+            }}
+            className="cta-card"
+          >
+            <p
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "0.62rem",
+                letterSpacing: "0.16em",
+                textTransform: "uppercase",
+                color: "var(--color-text-muted)",
+              }}
+            >
+              [ 03 ] Say hi
+            </p>
+            <h3
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: "clamp(1.3rem, 2.4vw, 1.7rem)",
+                fontWeight: 600,
+                letterSpacing: "-0.03em",
+                lineHeight: 1.15,
+              }}
+            >
+              Backend roles. AI/ML work. <em style={{ fontStyle: "italic", color: "var(--color-accent)", fontWeight: 500 }}>Interesting problems.</em>
+            </h3>
+            <p
+              style={{
+                fontSize: "0.88rem",
+                color: "var(--color-text-secondary)",
+                lineHeight: 1.65,
+                flex: 1,
+              }}
+            >
+              Bonus points if it doesn&apos;t start with &ldquo;circling back.&rdquo;
+            </p>
+            <div className="flex flex-wrap gap-2" style={{ marginTop: "0.5rem" }}>
               <a
                 href={`mailto:${EMAIL}`}
                 style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "0.78rem",
+                  color: "var(--color-accent)",
+                  letterSpacing: "0.06em",
                   display: "inline-flex",
                   alignItems: "center",
-                  gap: "0.5rem",
-                  paddingInline: "1.5rem",
-                  paddingBlock: "0.8rem",
-                  background: "transparent",
-                  color: "var(--color-text-secondary)",
-                  fontSize: "0.85rem",
-                  borderRadius: "var(--radius-md)",
-                  border: "1px solid var(--color-border)",
-                  textDecoration: "none",
-                  fontFamily: "var(--font-mono)",
-                  letterSpacing: "0.02em",
-                  transition: "border-color 0.2s, color 0.2s, transform 0.2s",
+                  gap: "0.4rem",
                 }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = "var(--color-accent)";
-                  e.currentTarget.style.color = "var(--color-text-primary)";
-                  e.currentTarget.style.transform = "translateY(-2px)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = "var(--color-border)";
-                  e.currentTarget.style.color = "var(--color-text-secondary)";
-                  e.currentTarget.style.transform = "translateY(0)";
-                }}
+                className="group"
               >
-                say hello →
+                email me
+                <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
               </a>
+              <span style={{ color: "var(--color-text-muted)", opacity: 0.4 }}>·</span>
               <a
                 href="/resume.pdf"
                 download
                 style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "0.5rem",
-                  paddingInline: "1.25rem",
-                  paddingBlock: "0.8rem",
-                  background: "transparent",
-                  color: "var(--color-text-muted)",
-                  fontSize: "0.82rem",
-                  borderRadius: "var(--radius-md)",
-                  border: "1px solid var(--color-border-subtle)",
-                  textDecoration: "none",
                   fontFamily: "var(--font-mono)",
-                  letterSpacing: "0.02em",
-                  transition: "color 0.2s, border-color 0.2s",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.color = "var(--color-accent)";
-                  e.currentTarget.style.borderColor = "var(--color-accent-dim)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.color = "var(--color-text-muted)";
-                  e.currentTarget.style.borderColor =
-                    "var(--color-border-subtle)";
+                  fontSize: "0.78rem",
+                  color: "var(--color-text-muted)",
+                  letterSpacing: "0.06em",
                 }}
               >
                 résumé ↓
@@ -272,8 +300,10 @@ export default function AboutCTA() {
       </div>
 
       <style>{`
-        @media (max-width: 700px) {
+        @media (max-width: 900px) {
           .cta-grid { grid-template-columns: 1fr !important; }
+          .cta-card { border-right: none !important; border-bottom: 1px solid var(--color-border); }
+          .cta-card:last-child { border-bottom: none; }
         }
       `}</style>
     </section>

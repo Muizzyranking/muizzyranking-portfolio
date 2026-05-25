@@ -6,7 +6,7 @@ import Journey from "@/components/sections/about/Journey";
 import Origin from "@/components/sections/about/Origin";
 import Philosophy from "@/components/sections/about/Philosophy";
 import Roadmap from "@/components/sections/about/Roadmap";
-import Setup from "@/components/sections/about/Setup";
+import { getJourney } from "@/lib/journey";
 
 export const metadata: Metadata = {
   title: "About — Muiz Oyebowale",
@@ -19,14 +19,14 @@ export const metadata: Metadata = {
 };
 
 export default function AboutPage() {
+  const milestones = getJourney();
   return (
     <>
       <AboutHero />
       <Origin />
       <Philosophy />
-      <Journey />
+      <Journey milestones={milestones} />
       <Roadmap />
-      <Setup />
       <HumanSide />
       <AboutCTA />
     </>

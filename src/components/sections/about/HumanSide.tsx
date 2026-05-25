@@ -37,28 +37,12 @@ export default function HumanSide() {
           custom={0}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: "0.68rem",
-            letterSpacing: "0.2em",
-            textTransform: "uppercase",
-            color: "var(--color-text-muted)",
-            display: "flex",
-            alignItems: "center",
-            gap: "0.75rem",
-            marginBottom: "3rem",
-          }}
+          className="eyebrow"
+          style={{ marginBottom: "3rem" }}
         >
-          <span style={{ color: "var(--color-accent)", opacity: 0.7 }}>[ ]</span>
+          <span className="eyebrow__mark">[ 05 ]</span>
           The human side
-          <span
-            style={{
-              display: "inline-block",
-              width: "32px",
-              height: "1px",
-              background: "var(--color-border)",
-            }}
-          />
+          <span className="eyebrow__rule" />
         </m.p>
 
         <m.h2
@@ -67,9 +51,11 @@ export default function HumanSide() {
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
           style={{
-            fontSize: "clamp(1.8rem, 3.5vw, 2.5rem)",
-            fontWeight: 700,
-            letterSpacing: "-0.03em",
+            fontFamily: "var(--font-display)",
+            fontSize: "clamp(1.9rem, 4vw, 2.75rem)",
+            fontWeight: 600,
+            letterSpacing: "-0.04em",
+            lineHeight: 1.05,
             marginBottom: "3rem",
           }}
         >
@@ -204,9 +190,9 @@ export default function HumanSide() {
                 marginBottom: "1rem",
               }}
             >
-              Still. In 2026.
+              Still. <span style={{ color: "var(--color-accent)" }}>:wq</span> survivor.
               <br />
-              Config: I'm done this time, I promise.
+              Config: I&apos;m done this time, I promise.
               <br />
               Regrets: zero.
             </p>
