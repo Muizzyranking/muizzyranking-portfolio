@@ -19,7 +19,7 @@ export function slugify(input: string): string {
     .replace(/^-+|-+$/g, "");
 }
 
-function labelizeCategory(slug: string): string {
+export function labelizeCategory(slug: string): string {
   return slug
     .split("-")
     .map((p) => p.charAt(0).toUpperCase() + p.slice(1))
@@ -54,14 +54,14 @@ export function applyInjections(body: string, perPost: Record<string, string> = 
 }
 
 // Date handling
-function computePublishedAt(year: number, month: number, day: number, time: string): Date {
+export function computePublishedAt(year: number, month: number, day: number, time: string): Date {
   const safeTime = /^\d{1,2}:\d{2}$/.test(time) ? time : "08:00";
   const [hh, mm] = safeTime.split(":");
   const iso = `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}T${hh.padStart(2, "0")}:${mm}:00${OFFSET}`;
   return new Date(iso);
 }
 
-function formatHumanDate(d: Date): string {
+export function formatHumanDate(d: Date): string {
   return d.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
 }
 
@@ -201,6 +201,21 @@ function getAllParsed(): RawPost[] {
 function getPublishedParsed(): RawPost[] {
   const now = Date.now();
   return getAllParsed().filter((p) => !p.draft && p.publishedDate.getTime() <= now);
+}
+
+export function clearBlogCache(): void {
+  cachedAllParsed = null;
+  cachedGlobalInjections = null;
+}
+
+export function listAllPostsForEditor(): RawPost[] {
+  return getAllParsed();
+}
+
+export function getPostIncludingDrafts(slug: string): Post | null {
+  const found = getAllParsed().find((p) => p.meta.slug === slug);
+  if (!found) return null;
+  return { ...found.meta, body: found.body, toc: found.toc };
 }
 
 // Public API

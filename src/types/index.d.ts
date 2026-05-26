@@ -21,6 +21,7 @@ export type Project = {
   repo: string;
   live: string;
   featured: boolean;
+  draft: boolean;
 };
 
 export type Experience = {

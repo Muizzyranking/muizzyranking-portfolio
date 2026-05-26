@@ -5,30 +5,36 @@ import type { Challenge, Project, ProjectContent } from "@/types";
 
 const projectsDir = path.join(process.cwd(), "content/projects");
 
-export function getAllProjects(): Project[] {
+function readProjectMeta(filename: string): Project {
+  const slug = filename.replace(/\.mdx$/, "");
+  const raw = fs.readFileSync(path.join(projectsDir, filename), "utf8");
+  const { data } = matter(raw);
+
+  return {
+    slug,
+    title: data.title ?? "",
+    summary: data.summary ?? "",
+    status: data.status ?? "complete",
+    year: data.year ?? "",
+    stack: data.stack ?? [],
+    repo: data.repo ?? "",
+    live: data.live ?? "",
+    featured: Boolean(data.featured),
+    draft: Boolean(data.draft),
+  };
+}
+
+export function listAllProjectsForEditor(): Project[] {
   if (!fs.existsSync(projectsDir)) return [];
-
-  const files = fs.readdirSync(projectsDir).filter((f) => f.endsWith(".mdx"));
-
-  return files
-    .map((filename) => {
-      const slug = filename.replace(/\.mdx$/, "");
-      const raw = fs.readFileSync(path.join(projectsDir, filename), "utf8");
-      const { data } = matter(raw);
-
-      return {
-        slug,
-        title: data.title ?? "",
-        summary: data.summary ?? "",
-        status: data.status ?? "complete",
-        year: data.year ?? "",
-        stack: data.stack ?? [],
-        repo: data.repo ?? "",
-        live: data.live ?? "",
-        featured: data.featured ?? false,
-      } as Project;
-    })
+  return fs
+    .readdirSync(projectsDir)
+    .filter((f) => f.endsWith(".mdx"))
+    .map(readProjectMeta)
     .sort((a, b) => Number(b.year) - Number(a.year));
+}
+
+export function getAllProjects(): Project[] {
+  return listAllProjectsForEditor().filter((p) => !p.draft);
 }
 
 export function getFeaturedProjects(): Project[] {
@@ -36,6 +42,16 @@ export function getFeaturedProjects(): Project[] {
 }
 
 export function getProjectBySlug(slug: string): {
+  meta: Project;
+  content: string;
+  parsed: ProjectContent;
+} | null {
+  const found = getProjectBySlugIncludingDrafts(slug);
+  if (!found || found.meta.draft) return null;
+  return found;
+}
+
+export function getProjectBySlugIncludingDrafts(slug: string): {
   meta: Project;
   content: string;
   parsed: ProjectContent;
@@ -56,7 +72,8 @@ export function getProjectBySlug(slug: string): {
       stack: data.stack ?? [],
       repo: data.repo ?? "",
       live: data.live ?? "",
-      featured: data.featured ?? false,
+      featured: Boolean(data.featured),
+      draft: Boolean(data.draft),
     },
     content,
     parsed: parseProjectContent(content),
