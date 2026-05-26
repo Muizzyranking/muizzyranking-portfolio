@@ -39,11 +39,7 @@ function ExperienceRow({ exp, index, open, onToggle }: { exp: Experience; index:
             <span>{exp.location}</span>
           </div>
 
-          {!open && (
-            <p className="text-text-secondary text-[0.88rem] leading-[1.6] max-w-[70ch] line-clamp-2">
-              {exp.summary}
-            </p>
-          )}
+          {!open && <p className="text-text-secondary text-[0.88rem] leading-[1.6] max-w-[70ch] line-clamp-2">{exp.summary}</p>}
         </div>
 
         <m.span
@@ -68,20 +64,13 @@ function ExperienceRow({ exp, index, open, onToggle }: { exp: Experience; index:
             className="overflow-hidden"
           >
             <div className="pb-7">
-              <p className="text-text-secondary text-[0.95rem] leading-[1.72] max-w-[66ch] mb-5">
-                {exp.summary}
-              </p>
+              <p className="text-text-secondary text-[0.95rem] leading-[1.72] max-w-[66ch] mb-5">{exp.summary}</p>
 
               {exp.highlights?.length > 0 && (
                 <ul className="flex flex-col gap-2 mb-5 pl-0 list-none">
                   {exp.highlights.map((h) => (
-                    <li
-                      key={h.slice(0, 40)}
-                      className="text-text-secondary text-[0.9rem] leading-[1.65] pl-[1.1rem] relative max-w-[70ch]"
-                    >
-                      <span className="absolute left-0 text-accent font-mono">
-                        →
-                      </span>
+                    <li key={h.slice(0, 40)} className="text-text-secondary text-[0.9rem] leading-[1.65] pl-[1.1rem] relative max-w-[70ch]">
+                      <span className="absolute left-0 text-accent font-mono">→</span>
                       {h}
                     </li>
                   ))}
@@ -112,19 +101,9 @@ export default function ExperienceSection({ exp }: { exp: Experience[] }) {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <section
-      ref={ref}
-      id="experience"
-      className="py-[clamp(5rem,10vw,8rem)] border-t border-border-subtle bg-bg-elevated"
-    >
+    <section ref={ref} id="experience" className="py-[clamp(5rem,10vw,8rem)] border-t border-border-subtle bg-bg-elevated">
       <div className="container-main">
-        <m.p
-          variants={fadeUp}
-          custom={0}
-          initial="hidden"
-          animate={inView ? "visible" : "hidden"}
-          className="eyebrow mb-8"
-        >
+        <m.p variants={fadeUp} custom={0} initial="hidden" animate={inView ? "visible" : "hidden"} className="eyebrow mb-8">
           <span className="eyebrow__mark">[ 03 ]</span>
           Experience
           <span className="eyebrow__rule" />
@@ -151,12 +130,7 @@ export default function ExperienceSection({ exp }: { exp: Experience[] }) {
           </m.p>
         </div>
 
-        <m.div
-          variants={staggerContainer}
-          initial="hidden"
-          animate={inView ? "visible" : "hidden"}
-          className="border-t border-border-subtle"
-        >
+        <m.div variants={staggerContainer} initial="hidden" animate={inView ? "visible" : "hidden"} className="border-t border-border-subtle">
           {exp.map((exp, i) => (
             <ExperienceRow
               key={`${exp.company}-${i}`}

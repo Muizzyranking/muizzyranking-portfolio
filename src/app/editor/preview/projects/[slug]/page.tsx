@@ -29,10 +29,7 @@ export default async function ProjectPreviewPage({ params }: Props) {
           fontSize: "0.72rem",
         }}
       >
-        <Link
-          href={`/editor/projects/${slug}`}
-          style={{ color: "var(--color-accent)", textDecoration: "none" }}
-        >
+        <Link href={`/editor/projects/${slug}`} style={{ color: "var(--color-accent)", textDecoration: "none" }}>
           ← back to editor
         </Link>
         <span style={{ color: "var(--color-text-muted)", opacity: 0.5 }}>·</span>

@@ -14,10 +14,7 @@ export default function BlogIndex({ posts, categories }: { posts: PostMeta[]; ca
   return (
     <>
       {/* ── PAGE HEADER ── */}
-      <div
-        ref={headerRef}
-        className="relative pt-[clamp(6rem,14vw,10rem)] pb-[clamp(3rem,6vw,5rem)] border-b border-border-subtle overflow-hidden"
-      >
+      <div ref={headerRef} className="relative pt-[clamp(6rem,14vw,10rem)] pb-[clamp(3rem,6vw,5rem)] border-b border-border-subtle overflow-hidden">
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
@@ -78,15 +75,8 @@ export default function BlogIndex({ posts, categories }: { posts: PostMeta[]; ca
       {categories.length > 0 && (
         <div className="border-b border-border-subtle py-6">
           <div className="container-main">
-            <m.div
-              variants={fadeUp}
-              initial="hidden"
-              animate="visible"
-              className="flex gap-2 items-center flex-wrap"
-            >
-              <span className="font-mono text-[0.66rem] tracking-[0.16em] uppercase text-text-muted mr-2">
-                categories:
-              </span>
+            <m.div variants={fadeUp} initial="hidden" animate="visible" className="flex gap-2 items-center flex-wrap">
+              <span className="font-mono text-[0.66rem] tracking-[0.16em] uppercase text-text-muted mr-2">categories:</span>
               {categories.map((c) => (
                 <Link
                   key={c.slug}

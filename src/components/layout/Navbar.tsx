@@ -47,10 +47,7 @@ export default function Navbar() {
           </Link>
 
           {/* ── DESKTOP NAV ── */}
-          <nav
-            className="flex items-center gap-1"
-            aria-label="Primary navigation"
-          >
+          <nav className="flex items-center gap-1" aria-label="Primary navigation">
             {/* Links — hidden on mobile via CSS */}
             <ul className="nav-desktop-links hidden sm:flex items-center gap-0 list-none m-0 p-0">
               {NAV_LINKS.map(({ label, href }, i) => {
@@ -67,11 +64,7 @@ export default function Navbar() {
                     }}
                     className="flex items-center"
                   >
-                    {i > 0 && (
-                      <span className="font-mono text-[0.65rem] text-accent px-3 select-none">
-                        /
-                      </span>
-                    )}
+                    {i > 0 && <span className="font-mono text-[0.65rem] text-accent px-3 select-none">/</span>}
                     <Link
                       href={href}
                       className="font-mono text-[0.72rem] tracking-[0.1em] no-underline py-[0.4rem] px-5 rounded-sm transition-[color,background] duration-200 block relative"
@@ -157,11 +150,7 @@ export default function Navbar() {
             {label}
           </Link>
         ))}
-        <a
-          href="/resume.pdf"
-          download
-          className="font-mono text-[0.9rem] tracking-[0.1em] text-accent no-underline py-3 mt-1"
-        >
+        <a href="/resume.pdf" download className="font-mono text-[0.9rem] tracking-[0.1em] text-accent no-underline py-3 mt-1">
           résumé ↓
         </a>
       </m.div>

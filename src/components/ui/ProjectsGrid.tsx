@@ -58,10 +58,7 @@ function ProjectRow({ project, index }: { project: Project; index: number }) {
             >
               {project.title}
             </m.h3>
-            <span
-              className="font-mono text-[0.6rem] tracking-[0.1em] uppercase opacity-85"
-              style={{ color: status.color }}
-            >
+            <span className="font-mono text-[0.6rem] tracking-[0.1em] uppercase opacity-85" style={{ color: status.color }}>
               {status.label}
             </span>
           </div>
@@ -92,9 +89,7 @@ function ProjectRow({ project, index }: { project: Project; index: number }) {
 
         {/* Right meta */}
         <div className="project-row-meta flex flex-col items-end gap-[0.55rem] shrink-0 pt-[0.15rem] max-[640px]:col-span-full max-[640px]:items-start max-[640px]:flex-row max-[640px]:gap-3">
-          <span className="font-mono text-[0.72rem] text-text-muted tracking-[0.08em]">
-            {project.year}
-          </span>
+          <span className="font-mono text-[0.72rem] text-text-muted tracking-[0.08em]">{project.year}</span>
 
           <m.span
             animate={{
@@ -132,10 +127,7 @@ export default function ProjectsGrid({ projects, stats }: ProjectGridProps) {
   return (
     <>
       {/* ── PAGE HEADER ── */}
-      <div
-        ref={headerRef}
-        className="relative pt-[clamp(6rem,14vw,10rem)] pb-[clamp(3rem,6vw,5rem)] border-b border-border-subtle overflow-hidden"
-      >
+      <div ref={headerRef} className="relative pt-[clamp(6rem,14vw,10rem)] pb-[clamp(3rem,6vw,5rem)] border-b border-border-subtle overflow-hidden">
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
@@ -180,9 +172,7 @@ export default function ProjectsGrid({ projects, stats }: ProjectGridProps) {
               className="font-display font-bold tracking-[-0.045em] leading-[0.95] text-[clamp(2.5rem,6vw,4.5rem)]"
             >
               <span className="block text-accent">Things</span>
-              <span className="block italic text-text-primary">
-                I&apos;ve shipped.
-              </span>
+              <span className="block italic text-text-primary">I&apos;ve shipped.</span>
             </m.h1>
 
             <m.div
@@ -196,16 +186,9 @@ export default function ProjectsGrid({ projects, stats }: ProjectGridProps) {
                 { label: "shipped", value: stats.complete },
                 { label: "cooking", value: stats.inProgress },
               ].map(({ label, value }) => (
-                <div
-                  key={label}
-                  className="flex items-center border border-border rounded-sm overflow-hidden font-mono text-[0.7rem]"
-                >
-                  <span className="px-[0.6rem] py-[0.3rem] bg-surface text-text-muted tracking-[0.08em] border-r border-border">
-                    {label}
-                  </span>
-                  <span className="px-[0.7rem] py-[0.3rem] text-text-secondary font-semibold">
-                    {value}
-                  </span>
+                <div key={label} className="flex items-center border border-border rounded-sm overflow-hidden font-mono text-[0.7rem]">
+                  <span className="px-[0.6rem] py-[0.3rem] bg-surface text-text-muted tracking-[0.08em] border-r border-border">{label}</span>
+                  <span className="px-[0.7rem] py-[0.3rem] text-text-secondary font-semibold">{value}</span>
                 </div>
               ))}
             </m.div>
@@ -214,10 +197,7 @@ export default function ProjectsGrid({ projects, stats }: ProjectGridProps) {
       </div>
 
       {/* ── PROJECTS LIST ── */}
-      <div
-        ref={listRef}
-        className="py-[clamp(3rem,6vw,5rem)] pb-[clamp(5rem,10vw,8rem)]"
-      >
+      <div ref={listRef} className="py-[clamp(3rem,6vw,5rem)] pb-[clamp(5rem,10vw,8rem)]">
         <div className="container-main">
           {projects.length === 0 ? (
             <div className="text-center py-20 font-mono text-text-muted text-[0.82rem]">

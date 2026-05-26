@@ -15,19 +15,9 @@ export default function Contact() {
   const inView = useInView(ref, SCROLL_REVEAL);
 
   return (
-    <section
-      ref={ref}
-      id="contact"
-      className="py-[clamp(5rem,10vw,8rem)] bg-bg-elevated border-t border-border-subtle"
-    >
+    <section ref={ref} id="contact" className="py-[clamp(5rem,10vw,8rem)] bg-bg-elevated border-t border-border-subtle">
       <div className="container-main">
-        <m.p
-          variants={fadeUp}
-          custom={0}
-          initial="hidden"
-          animate={inView ? "visible" : "hidden"}
-          className="eyebrow mb-8"
-        >
+        <m.p variants={fadeUp} custom={0} initial="hidden" animate={inView ? "visible" : "hidden"} className="eyebrow mb-8">
           <span className="eyebrow__mark">[ 05 ]</span>
           Contact
           <span className="eyebrow__rule" />
@@ -54,9 +44,7 @@ export default function Contact() {
             >
               Open to backend roles, AI/ML adjacent work, interesting problems, conversations about systems, AI, conversations that don&apos;t start
               with &ldquo;circle back,&rdquo; or why Neovim is still relevant in {new Date().getFullYear()}.{" "}
-              <span className="text-text-muted italic">
-                (It is.)
-              </span>
+              <span className="text-text-muted italic">(It is.)</span>
             </m.p>
 
             <m.div variants={fadeUp} custom={3} initial="hidden" animate={inView ? "visible" : "hidden"}>
@@ -81,12 +69,7 @@ export default function Contact() {
               Find me online
             </m.p>
 
-            <m.div
-              variants={staggerContainer}
-              initial="hidden"
-              animate={inView ? "visible" : "hidden"}
-              className="flex flex-col gap-2"
-            >
+            <m.div variants={staggerContainer} initial="hidden" animate={inView ? "visible" : "hidden"} className="flex flex-col gap-2">
               {socialsArray.map(({ name, handle, href, icon }) => (
                 <m.a
                   key={name}
@@ -104,17 +87,11 @@ export default function Contact() {
                   </div>
 
                   <div>
-                    <p className="text-[0.85rem] font-medium text-text-primary mb-[0.1rem] leading-[1.3]">
-                      {name}
-                    </p>
-                    <p className="font-mono text-[0.7rem] text-text-muted">
-                      {handle}
-                    </p>
+                    <p className="text-[0.85rem] font-medium text-text-primary mb-[0.1rem] leading-[1.3]">{name}</p>
+                    <p className="font-mono text-[0.7rem] text-text-muted">{handle}</p>
                   </div>
 
-                  <span className="ml-auto text-text-muted text-[0.82rem]">
-                    →
-                  </span>
+                  <span className="ml-auto text-text-muted text-[0.82rem]">→</span>
                 </m.a>
               ))}
             </m.div>

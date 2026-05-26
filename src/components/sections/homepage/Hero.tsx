@@ -27,7 +27,10 @@ export default function Hero() {
     if (done) return;
     if (charIdx < target.length) {
       const timeout = setTimeout(
-        () => { setDisplayed(target.slice(0, charIdx + 1)); setCharIdx((c) => c + 1); },
+        () => {
+          setDisplayed(target.slice(0, charIdx + 1));
+          setCharIdx((c) => c + 1);
+        },
         charIdx < LINES[0].length ? 45 : 38,
       );
       return () => clearTimeout(timeout);
@@ -120,11 +123,13 @@ export default function Hero() {
               <div key={label}>
                 <p className="hero-meta-item-label">{label}</p>
                 <p className="hero-meta-item-value">
-                  {pulse && <m.span
-                    animate={{ opacity: [1, 0.2, 1] }}
-                    transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-                    className="hero-meta-pulse"
-                  />}
+                  {pulse && (
+                    <m.span
+                      animate={{ opacity: [1, 0.2, 1] }}
+                      transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+                      className="hero-meta-pulse"
+                    />
+                  )}
                   {value}
                 </p>
               </div>
@@ -133,18 +138,9 @@ export default function Hero() {
         </div>
       </div>
 
-      <m.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.5, duration: 0.8 }}
-        className="hero-scroll"
-      >
+      <m.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5, duration: 0.8 }} className="hero-scroll">
         <span className="hero-scroll-text">scroll</span>
-        <m.div
-          animate={{ y: [0, 8, 0] }}
-          transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-          className="hero-scroll-line"
-        />
+        <m.div animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }} className="hero-scroll-line" />
       </m.div>
     </section>
   );

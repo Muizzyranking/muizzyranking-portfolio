@@ -31,10 +31,7 @@ export default async function BlogPreviewPage({ params }: Props) {
           fontSize: "0.72rem",
         }}
       >
-        <Link
-          href={`/editor/blog/${slug}`}
-          style={{ color: "var(--color-accent)", textDecoration: "none" }}
-        >
+        <Link href={`/editor/blog/${slug}`} style={{ color: "var(--color-accent)", textDecoration: "none" }}>
           ← back to editor
         </Link>
         <span style={{ color: "var(--color-text-muted)", opacity: 0.5 }}>·</span>
@@ -43,10 +40,7 @@ export default async function BlogPreviewPage({ params }: Props) {
 
       <PostHero post={post} />
       <div style={{ padding: "clamp(2.5rem, 5vw, 4rem) 0 clamp(5rem, 10vw, 8rem)" }}>
-        <div
-          className="container-main post-layout"
-          style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) 220px", gap: "4rem" }}
-        >
+        <div className="container-main post-layout" style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) 220px", gap: "4rem" }}>
           <article style={{ minWidth: 0 }}>
             <PostBody source={post.body} />
           </article>

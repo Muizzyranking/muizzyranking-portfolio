@@ -201,21 +201,13 @@ export default function ProjectEditor({ initial }: { initial: ProjectEditorIniti
             onChange={(e) => setFeatured(e.target.checked)}
             style={{ width: "1rem", height: "1rem", accentColor: "var(--color-accent)" }}
           />
-          <label
-            htmlFor="featured"
-            style={{ fontFamily: "var(--font-mono)", fontSize: "0.78rem", color: "var(--color-text-secondary)" }}
-          >
+          <label htmlFor="featured" style={{ fontFamily: "var(--font-mono)", fontSize: "0.78rem", color: "var(--color-text-secondary)" }}>
             featured (shown on home page)
           </label>
         </div>
 
         <SectionDivider label="Overview" />
-        <MarkdownField
-          value={overview}
-          onChange={setOverview}
-          minHeight={140}
-          placeholder="First paragraph is highlighted on the live page."
-        />
+        <MarkdownField value={overview} onChange={setOverview} minHeight={140} placeholder="First paragraph is highlighted on the live page." />
 
         <SectionDivider label="Challenges" />
         <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
@@ -246,12 +238,7 @@ export default function ProjectEditor({ initial }: { initial: ProjectEditorIniti
               </div>
               <TextField label="Title" value={c.title} onChange={(v) => updateChallenge(i, { title: v })} />
               <div style={{ height: "0.5rem" }} />
-              <MarkdownField
-                label="Body"
-                value={c.body}
-                onChange={(v) => updateChallenge(i, { body: v })}
-                minHeight={100}
-              />
+              <MarkdownField label="Body" value={c.body} onChange={(v) => updateChallenge(i, { body: v })} minHeight={100} />
             </div>
           ))}
           <button type="button" onClick={addChallenge} style={addBtnStyle}>
@@ -260,12 +247,7 @@ export default function ProjectEditor({ initial }: { initial: ProjectEditorIniti
         </div>
 
         <SectionDivider label="What I Learned" />
-        <MarkdownField
-          value={learned}
-          onChange={setLearned}
-          minHeight={140}
-          placeholder="First paragraph is italicized on the live page."
-        />
+        <MarkdownField value={learned} onChange={setLearned} minHeight={140} placeholder="First paragraph is italicized on the live page." />
       </div>
     </div>
   );
@@ -309,11 +291,7 @@ function Toolbar({
 
       <div style={{ flex: 1 }} />
 
-      {savedAt && !busy && (
-        <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.7rem", color: "var(--color-success)" }}>
-          saved
-        </span>
-      )}
+      {savedAt && !busy && <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.7rem", color: "var(--color-success)" }}>saved</span>}
 
       <button type="button" onClick={onSaveDraft} disabled={busy !== null} style={ghostBtnStyle}>
         {busy === "stay" ? "saving…" : "Save Draft"}
@@ -353,17 +331,7 @@ function SectionDivider({ label }: { label: string }) {
   );
 }
 
-function IconBtn({
-  children,
-  onClick,
-  disabled,
-  label,
-}: {
-  children: React.ReactNode;
-  onClick: () => void;
-  disabled?: boolean;
-  label: string;
-}) {
+function IconBtn({ children, onClick, disabled, label }: { children: React.ReactNode; onClick: () => void; disabled?: boolean; label: string }) {
   return (
     <button
       type="button"

@@ -237,11 +237,7 @@ function Toolbar({
 
       <div style={{ flex: 1 }} />
 
-      {savedAt && !busy && (
-        <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.7rem", color: "var(--color-success)" }}>
-          saved
-        </span>
-      )}
+      {savedAt && !busy && <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.7rem", color: "var(--color-success)" }}>saved</span>}
 
       <button type="button" onClick={onSaveDraft} disabled={busy !== null} style={ghostBtnStyle}>
         {busy === "stay" ? "saving…" : "Save Draft"}

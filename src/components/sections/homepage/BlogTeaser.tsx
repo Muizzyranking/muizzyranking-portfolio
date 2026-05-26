@@ -18,19 +18,9 @@ export default function BlogTeaser({ posts }: { posts: PostMeta[] }) {
   const inView = useInView(ref, SCROLL_REVEAL);
 
   return (
-    <section
-      ref={ref}
-      id="blog"
-      className="py-[clamp(5rem,10vw,8rem)] border-t border-border-subtle"
-    >
+    <section ref={ref} id="blog" className="py-[clamp(5rem,10vw,8rem)] border-t border-border-subtle">
       <div className="container-main">
-        <m.p
-          variants={fadeUp}
-          custom={0}
-          initial="hidden"
-          animate={inView ? "visible" : "hidden"}
-          className="eyebrow mb-8"
-        >
+        <m.p variants={fadeUp} custom={0} initial="hidden" animate={inView ? "visible" : "hidden"} className="eyebrow mb-8">
           <span className="eyebrow__mark">[ 04 ]</span>
           Writing
           <span className="eyebrow__rule" />
@@ -48,10 +38,7 @@ export default function BlogTeaser({ posts }: { posts: PostMeta[] }) {
           </m.h2>
 
           <m.div variants={fadeUp} custom={2} initial="hidden" animate={inView ? "visible" : "hidden"}>
-            <Link
-              href="/blog"
-              className="group inline-flex items-center gap-2 font-mono text-[0.76rem] text-accent tracking-[0.08em]"
-            >
+            <Link href="/blog" className="group inline-flex items-center gap-2 font-mono text-[0.76rem] text-accent tracking-[0.08em]">
               <span>all posts</span>
               <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
             </Link>
@@ -102,12 +89,8 @@ export default function BlogTeaser({ posts }: { posts: PostMeta[] }) {
                   </div>
 
                   <div className="flex flex-col items-end gap-[0.35rem] shrink-0">
-                    <span className="font-mono text-[0.68rem] text-text-muted tracking-[0.08em]">
-                      {formatDate(post.publishedAtIso)}
-                    </span>
-                    <span className="font-mono text-[0.65rem] text-accent">
-                      {post.readingTime.text}
-                    </span>
+                    <span className="font-mono text-[0.68rem] text-text-muted tracking-[0.08em]">{formatDate(post.publishedAtIso)}</span>
+                    <span className="font-mono text-[0.65rem] text-accent">{post.readingTime.text}</span>
                   </div>
                 </Link>
               </m.div>

@@ -10,7 +10,8 @@ const SIDEBAR_CARDS = [
     label: "Current setup",
     body: (
       <>
-        <code className="about-code">nvim</code> + <code className="about-code">tmux</code> + <code className="about-code">lazygit</code> + <code className="about-code">zsh</code>. If it doesn&apos;t have a terminal interface, I&apos;m suspicious of it.
+        <code className="about-code">nvim</code> + <code className="about-code">tmux</code> + <code className="about-code">lazygit</code> +{" "}
+        <code className="about-code">zsh</code>. If it doesn&apos;t have a terminal interface, I&apos;m suspicious of it.
       </>
     ),
   },
@@ -31,13 +32,7 @@ export default function About() {
   return (
     <section ref={ref} id="about" className="section-band">
       <div className="container-main">
-        <m.p
-          variants={fadeUp}
-          custom={0}
-          initial="hidden"
-          animate={inView ? "visible" : "hidden"}
-          className="eyebrow mb-8"
-        >
+        <m.p variants={fadeUp} custom={0} initial="hidden" animate={inView ? "visible" : "hidden"} className="eyebrow mb-8">
           <span className="eyebrow__mark">[ 01 ]</span>
           About
           <span className="eyebrow__rule" />
@@ -58,7 +53,8 @@ export default function About() {
             {[
               <>
                 I work on backend systems. APIs, queues, databases — the bits that have to keep working when nobody&apos;s watching. Right now{" "}
-                <strong className="text-text-primary font-semibold">I&apos;m learning my way into AI and ML</strong>, which has been humbling in roughly the way you&apos;d expect.
+                <strong className="text-text-primary font-semibold">I&apos;m learning my way into AI and ML</strong>, which has been humbling in
+                roughly the way you&apos;d expect.
               </>,
               "I'm quiet until you ask the right question. Distributed systems, why anything works, how things break — once we're there, I'll happily lose track of time.",
             ].map((text, i) => (
@@ -86,7 +82,12 @@ export default function About() {
                 className="group inline-flex items-center gap-2 font-mono text-[0.78rem] tracking-[0.08em] text-accent border-b border-acccent-dim pb-[0.2rem]"
               >
                 <span>the longer version</span>
-                <m.span variants={arrowNudge} initial="rest" whileHover="hover" className="inline-block group-hover:translate-x-1 transition-transform">
+                <m.span
+                  variants={arrowNudge}
+                  initial="rest"
+                  whileHover="hover"
+                  className="inline-block group-hover:translate-x-1 transition-transform"
+                >
                   →
                 </m.span>
               </Link>
@@ -104,12 +105,7 @@ export default function About() {
           </div>
 
           {/* Sidebar cards */}
-          <m.div
-            variants={staggerContainer}
-            initial="hidden"
-            animate={inView ? "visible" : "hidden"}
-            className="flex flex-col gap-4"
-          >
+          <m.div variants={staggerContainer} initial="hidden" animate={inView ? "visible" : "hidden"} className="flex flex-col gap-4">
             {SIDEBAR_CARDS.map(({ label, body, chips }) => (
               <m.div
                 key={label}
@@ -118,15 +114,9 @@ export default function About() {
                 transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
                 className="bg-bg-elevated border border-border rounded-lg px-6 py-5"
               >
-                <p className="font-mono text-[0.63rem] tracking-[0.16em] uppercase text--text-muted mb-3">
-                  {label}
-                </p>
+                <p className="font-mono text-[0.63rem] tracking-[0.16em] uppercase text--text-muted mb-3">{label}</p>
 
-                {body && (
-                  <p className="text-text-secondary text-[0.87rem] leading-[1.65]">
-                    {body}
-                  </p>
-                )}
+                {body && <p className="text-text-secondary text-[0.87rem] leading-[1.65]">{body}</p>}
 
                 {chips && (
                   <div className="flex flex-wrap gap-1.5">
@@ -149,12 +139,8 @@ export default function About() {
               transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
               className="bg-accent-subtle border border-accent-dim rounded-lg px-6 py-5"
             >
-              <p className="font-mono text-[0.63rem] tracking-[0.16em] uppercase text-accent-dim mb-2">
-                Operating principle
-              </p>
-              <p className="text-text-secondary text-[0.87rem] leading-[1.65]">
-                Perfectionist. Lazy about it. The combination somehow always works.
-              </p>
+              <p className="font-mono text-[0.63rem] tracking-[0.16em] uppercase text-accent-dim mb-2">Operating principle</p>
+              <p className="text-text-secondary text-[0.87rem] leading-[1.65]">Perfectionist. Lazy about it. The combination somehow always works.</p>
             </m.div>
           </m.div>
         </div>
