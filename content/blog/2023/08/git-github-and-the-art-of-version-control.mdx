@@ -1,0 +1,72 @@
+---
+title: 'Git, GitHub, and the Art of Version Control'
+day: 25
+summary: >-
+  Version control is an essential tool for tracking changes to your code over
+  time, and Git is the industry standard that every software engineer should get
+  comfortable with early.
+categories: [git, github, version-control]
+---
+If you have ever accidentally overwritten a file, lost progress on something you were working on, or struggled to collaborate with someone on the same codebase, you already understand the problem that version control solves. In this post, I want to break down what version control is, why it matters, and how Git fits into the picture as a software engineer.
+
+## What is Version Control?
+
+Version control is a system that tracks changes to your files over time. Every time you make a meaningful change, the system records it. This means you can look back at any previous version of your work, see who made a change and when, and even reverse a mistake without losing everything else.
+
+Think of it like a detailed history log for your code. Instead of saving files as "final.js", "final_v2.js", and "final_ACTUALLY_FINAL.js", a version control system handles all of that for you in a clean and organised way.
+
+## Two Types of Version Control Systems
+
+There are two main approaches to version control: centralised and distributed.
+
+**Centralised Version Control (CVCS)** stores all the project history in one central server. Every team member connects to that server to get the latest code or save their changes. The downside is that if the server goes down, no one can work. Examples include SVN and CVS.
+
+**Distributed Version Control (DVCS)** gives every developer a full copy of the project history on their own machine. You do not need to be connected to a server to work, and if one copy is lost, others still have the full history. Git is the most widely used distributed version control system today.
+
+## Why Version Control Matters
+
+Beyond just saving your work, version control enables a few things that are hard to do without it.
+
+Collaboration becomes manageable. Multiple people can work on the same project simultaneously without constantly overwriting each other's work.
+
+Mistakes become recoverable. If a change breaks something, you can roll back to a version that worked without starting from scratch.
+
+Progress becomes visible. You can see exactly what changed, when it changed, and who changed it. This is useful both for understanding a codebase and for working in a team.
+
+## What is Git?
+
+Git is a distributed version control system created by Linus Torvalds in 2005, originally built to manage the development of the Linux kernel. Today, it is the industry standard for version control and is used by individual developers and large engineering teams alike.
+
+At its core, Git tracks changes to your files by taking snapshots of your project over time. Each snapshot is called a commit. Together, these commits form a timeline of your project's history that you can move through, branch off from, and merge back together.
+
+## How Git Works: The Three Key Areas
+
+To understand Git, it helps to know about the three areas where your code lives at any given time.
+
+**The Working Directory** is where you actively edit files. Any change you make to your code happens here first.
+
+**The Staging Area** is where you prepare changes before saving them. Think of it as a holding area where you decide exactly what you want to include in your next snapshot.
+
+**The Repository** is where Git permanently stores your committed snapshots. This is the full history of your project.
+
+The typical flow is: you make changes in the working directory, you add the ones you want to the staging area, and then you commit them to the repository.
+
+## Core Git Concepts You Should Know
+
+**Commits** are the building blocks of Git. Each commit is a saved snapshot of your project at a specific point in time, along with a message describing what changed.
+
+**Branches** allow you to create a separate line of development without affecting the main codebase. This is useful when working on a new feature or fixing a bug. Once the work is done, you can merge it back in.
+
+**Merging** is the process of combining changes from one branch into another. Git is generally good at doing this automatically, though conflicts can arise when two people edit the same part of a file.
+
+**Remote Repositories** are versions of your project hosted on a server. You push your local changes to a remote so others can access them, and you pull their changes down to stay up to date.
+
+## Why Git is Worth Learning Early
+
+Git might feel like an extra layer of complexity when you are just starting out, but it quickly becomes second nature. More importantly, it is a non-negotiable skill in professional software engineering. Almost every team uses it, and understanding it well makes collaboration significantly smoother.
+
+Starting with Git early also builds good habits: committing regularly, writing clear commit messages, and working in branches rather than directly on the main codebase.
+
+## What Comes Next
+
+Now that we have covered version control and Git, the next step is understanding GitHub: where Git meets collaboration at scale. In the next post, we will get into repositories, forks, pull requests, and how teams use GitHub to build software together.

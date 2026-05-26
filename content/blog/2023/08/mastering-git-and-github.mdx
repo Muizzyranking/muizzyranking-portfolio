@@ -1,0 +1,148 @@
+---
+title: Mastering Git and GitHub
+day: 26
+summary: >-
+  Git and GitHub are essential tools for every developer: Git tracks your code
+  history locally, and GitHub makes collaboration seamless by hosting your
+  repositories and enabling structured code review through pull requests.
+categories: [git, github, version-control]
+---
+In the previous post, we covered the fundamentals of version control and why Git is the industry standard for tracking changes in your code. If you have not read that one yet, it is worth starting there. This post picks up from there and gets into the practical side: how to actually use Git, what GitHub brings to the table, and how the two work together.
+
+## Git and GitHub: What is the Difference?
+
+This is one of the most common points of confusion for beginners, so let us clear it up first.
+
+Git is the version control system itself. It runs locally on your machine, tracks changes to your files, and stores the full history of your project. You do not need an internet connection to use Git, and you do not need GitHub either.
+
+GitHub is a web-based platform built around Git. It hosts your repositories online, making it easy to back up your work, share it with others, and collaborate on projects. On top of that, GitHub adds features like pull requests, issue tracking, and code review that make working in teams more structured.
+
+The simplest way to think about it: Git is the tool, GitHub is the platform that makes using that tool collaborative.
+
+## Setting Up Git
+
+Before anything else, you need to have Git installed on your machine. You can download it from the official Git website at git-scm.com. Once installed, open your terminal and configure it with your name and email:
+
+```bash
+git config --global user.name "Your Name"
+git config --global user.email "your@email.com"
+```
+
+This is important because every commit you make will be tagged with this information.
+
+## Core Git Workflow
+
+Once Git is set up, the day to day workflow follows a straightforward pattern.
+
+**Initializing a repository** is the first step when starting a new project. Navigate to your project folder and run:
+
+```bash
+git init
+```
+
+This creates a hidden folder called .git that Git uses to track everything in that directory.
+
+**Staging changes** is how you tell Git which changes you want to include in your next commit. After editing a file, you add it to the staging area like this:
+
+```bash
+git add filename.txt
+```
+
+To stage all changed files at once:
+
+```bash
+git add .
+```
+
+**Committing** saves a snapshot of your staged changes to the repository. Every commit should have a clear, descriptive message:
+
+```bash
+git commit -m "Add initial project structure"
+```
+
+**Checking your status** at any point shows you which files have been changed, staged, or left untracked:
+
+```bash
+git status
+```
+
+**Viewing your history** lets you see all the commits made so far:
+
+```bash
+git log
+```
+
+## Working with Branches
+
+Branches are one of the most powerful features in Git. They let you work on a new feature or fix a bug on a separate line of development without touching the main codebase.
+
+To create and switch to a new branch:
+
+```bash
+git checkout -b feature-name
+```
+
+Once your work on that branch is done, you can merge it back into the main branch:
+
+```bash
+git checkout main
+git merge feature-name
+```
+
+Getting comfortable with branches early on is one of the best habits you can build as a developer.
+
+## Getting Started with GitHub
+
+To use GitHub, you first need to create a free account at github.com. Once that is done, you can create a new repository directly from the GitHub interface. Give it a name, an optional description, and choose whether it should be public or private.
+
+## Connecting Your Local Repository to GitHub
+
+After creating a repository on GitHub, you connect it to your local project by adding it as a remote:
+
+```bash
+git remote add origin https://github.com/your-username/your-repo.git
+```
+
+Then push your local commits up to GitHub:
+
+```bash
+git push -u origin main
+```
+
+From this point on, any new commits can be pushed with just:
+
+```bash
+git push
+```
+
+## Cloning a Repository
+
+If you want to work on a project that already exists on GitHub, you clone it to your local machine:
+
+```bash
+git clone https://github.com/username/repo.git
+```
+
+This creates a local copy of the repository with the full commit history included.
+
+## Pull Requests and Collaboration
+
+A pull request is how you propose changes to a project on GitHub. Instead of pushing directly to the main branch, you push your changes to a separate branch and open a pull request. This gives others a chance to review your code, leave comments, and approve or request changes before anything is merged.
+
+Even if you are working solo, using pull requests is a good habit. It keeps your main branch clean and gives you a clear record of what changed and why.
+
+## Keeping Your Local Copy Up to Date
+
+When working with others, you will regularly need to pull in changes that others have pushed to the remote repository:
+
+```bash
+git pull
+```
+
+This fetches the latest changes from GitHub and merges them into your current branch.
+
+## Final Thoughts
+
+Git and GitHub are skills that pay off quickly. The initial learning curve is real, but once the core workflow clicks, it becomes second nature. Start with the basics: init, add, commit, push. Then gradually get comfortable with branches and pull requests. From there, everything else builds naturally.
+
+In the next post, we will look at common Git errors and how to fix them, because at some point you will run into them, and knowing how to recover confidently makes a big difference.

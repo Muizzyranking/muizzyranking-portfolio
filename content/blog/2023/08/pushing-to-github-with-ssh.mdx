@@ -1,0 +1,87 @@
+---
+title: 'Bye Bye Personal Access Token: Cloning and Pushing to GitHub with SSH'
+day: 28
+summary: >-
+  SSH is a simpler and more secure alternative to personal access tokens that
+  lets your machine authenticate with GitHub automatically once it is set up.
+categories: [git, github, version-control]
+
+---
+If you have been using HTTPS to push code to GitHub, you are probably familiar with the hassle of personal access tokens. Every time you push, you need to copy and paste a token, keep track of when it expires, and generate a new one when it does. It gets old fast.
+
+SSH is a cleaner solution. Once it is set up, your machine communicates with GitHub automatically using a key pair. No tokens, no repeated prompts, just push and go.
+
+## What is SSH?
+
+SSH stands for Secure Shell. It is a protocol that allows two machines to communicate securely. In the context of GitHub, it lets your computer authenticate itself without needing a username and token every time. You generate a key pair: a private key that stays on your machine, and a public key that you share with GitHub. When you push or clone, GitHub checks that your private key matches the public key on file, and that is it.
+
+## Prerequisites
+
+Before getting started, make sure you have the following:
+
+- A GitHub account
+- Git installed on your machine. You can download it from git-scm.com. On Windows, Git Bash works fine.
+- Basic familiarity with the command line
+
+## Step 1: Generate an SSH Key
+
+Open your terminal (or Git Bash on Windows) and run the following command, replacing the email with the one linked to your GitHub account:
+
+```bash
+ssh-keygen -t rsa -b 4096 -C "you@email.com"
+```
+
+When prompted for a file location, press Enter to accept the default. When asked for a passphrase, you can either set one for extra security or press Enter twice to skip it.
+
+This generates two files in a folder called .ssh: a private key and a public key ending in .pub. Keep the private key to yourself and never share it with anyone.
+
+## Step 1.1: Add the Key to the SSH Agent (Git Bash on Windows)
+
+If you are using Git Bash, run this first to start the SSH agent:
+
+```bash
+eval "$(ssh-agent -s)"
+```
+
+Then add your key to it:
+
+```bash
+ssh-add ~/.ssh/id_rsa
+```
+
+You should see a message confirming the identity was added.
+
+## Step 2: Add Your Public Key to GitHub
+
+First, copy your public key. You can print it in the terminal with:
+
+```bash
+cat ~/.ssh/id_rsa.pub
+```
+
+Or copy it directly to your clipboard:
+
+- On macOS: `pbcopy < ~/.ssh/id_ed25519.pub`
+- On Windows: `clip < ~/.ssh/id_ed25519.pub`
+
+Then go to github.com/settings/keys. Click "New SSH key", give it a title, leave the key type as "Authentication Key", paste your public key into the key field, and click "Add SSH key".
+
+## Step 3: Clone or Push Using SSH
+
+When cloning a repository, select the SSH option on GitHub instead of HTTPS. The URL will look like this:
+
+```bash
+git clone git@github.com:username/repo.git
+```
+
+For repositories you have already cloned using HTTPS, you can update the remote URL to use SSH:
+
+```bash
+git remote set-url origin git@github.com:username/repo.git
+```
+
+From this point on, pushing and pulling will work without any token prompts.
+
+## Final Thoughts
+
+Setting up SSH takes about five minutes and saves a lot of friction in the long run. Once it is done, you can focus on writing code instead of managing tokens. If you are pushing to GitHub regularly, this is worth doing sooner rather than later.

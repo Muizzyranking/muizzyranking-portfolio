@@ -133,8 +133,7 @@ function parseFile(record: FileRecord): RawPost | null {
   const fileBase = path.basename(record.filepath, path.extname(record.filepath));
   // Strip any leading "NN-" or "NN_" prefix from filename for cleaner default slug.
   const fileSlug = fileBase.replace(/^\d+[-_]/, "");
-  const slug =
-    typeof data.slug === "string" && data.slug.trim() ? slugify(data.slug) : slugify(typeof data.title === "string" ? data.title : fileSlug);
+  const slug = typeof data.slug === "string" && data.slug.trim() ? slugify(data.slug) : fileSlug;
 
   const summary = typeof data.summary === "string" ? data.summary : "";
   const categoriesRaw = Array.isArray(data.categories) ? data.categories : [];
