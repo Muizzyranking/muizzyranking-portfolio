@@ -147,6 +147,10 @@ pre {
   border-radius: var(--radius-sm);
 }
 
+input:focus-visible {
+  outline: none;
+}
+
 /* ----------------------------------------
    LAYOUT UTILITIES
 ---------------------------------------- */

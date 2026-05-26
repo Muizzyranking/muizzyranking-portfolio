@@ -1,9 +1,5 @@
 "use client";
 
-// app/not-found.tsx
-// Personality 404 — terminal-style, dry humor, consistent with the rest of the site.
-// Uses Next.js not-found convention (file must be named not-found.tsx at app root).
-
 import { m } from "framer-motion";
 import Link from "next/link";
 import { useEffect, useState } from "react";
