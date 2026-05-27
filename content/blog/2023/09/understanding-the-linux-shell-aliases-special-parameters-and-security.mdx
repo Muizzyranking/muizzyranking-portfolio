@@ -1,0 +1,151 @@
+---
+title: 'Understanding the Linux Shell: Aliases, Special Parameters, and Security'
+day: 10
+summary: >-
+  Aliases streamline your workflow, special parameters make scripts adaptable to
+  different inputs, and good security habits ensure your shell environment stays
+  safe and reliable.
+categories:
+  - Command line
+  - Linux
+  - Shell
+  - Software engineering
+  - '1'
+  - Developer tools
+---
+Two things that make a noticeable difference in how efficiently you work in the shell are aliases and special parameters. Aliases save you from typing the same long commands over and over, and special parameters give your scripts the ability to respond to different inputs. Alongside both of those, it is worth building good security habits early. This post covers all three.
+
+## Aliases
+
+An alias is a custom shortcut for a command or a sequence of commands. Instead of typing out a long command every time, you give it a short name and use that instead.
+
+You create an alias with the `alias` command:
+
+```bash
+alias ll='ls -l'
+```
+
+Now typing `ll` runs `ls -l`. To make an alias permanent, add it to your `.bashrc` file so it is loaded every time you open a terminal.
+
+Here are some useful aliases to get started with:
+
+**File listing shortcuts:**
+
+```bash
+alias ll='ls -l'
+alias la='ls -la'
+```
+
+**Navigation shortcuts:**
+
+```bash
+alias ..='cd ..'
+alias ...='cd ../..'
+```
+
+**Git shortcuts:**
+
+```bash
+alias gs='git status'
+alias ga='git add'
+alias gc='git commit'
+alias gp='git pull'
+```
+
+**Package management shortcuts (for systems using APT):**
+
+```bash
+alias install='sudo apt-get install'
+alias update='sudo apt-get update'
+alias upgrade='sudo apt-get upgrade'
+```
+
+To see all currently defined aliases, run:
+
+```bash
+alias
+```
+
+To remove an alias for the current session:
+
+```bash
+unalias ll
+```
+
+## Special Parameters
+
+Special parameters are built in variables that the shell sets automatically. They give you information about your script and how it was called, which is particularly useful when writing scripts that accept input from the command line.
+
+**`$0`** holds the name of the script itself:
+
+```bash
+echo "Script name: $0"
+```
+
+**`$1`, `$2`, `$3`** hold the arguments passed to the script. `$1` is the first argument, `$2` is the second, and so on:
+
+```bash
+echo "First argument: $1"
+echo "Second argument: $2"
+```
+
+**`$#`** holds the total number of arguments passed:
+
+```bash
+echo "Number of arguments: $#"
+```
+
+**`$@`** holds all the arguments as a list, which is useful when you want to loop through them:
+
+```bash
+for arg in "$@"; do
+    echo " - $arg"
+done
+```
+
+Here is a simple script that puts these together:
+
+```bash
+#!/bin/bash
+
+echo "Script: $0"
+echo "Total arguments: $#"
+echo "Arguments:"
+for arg in "$@"; do
+    echo " - $arg"
+done
+```
+
+Running this as `./script.sh hello world` would output:
+
+```bash
+Script: ./script.sh
+Total arguments: 2
+Arguments:
+ - hello
+ - world
+```
+
+## Security Considerations
+
+As you spend more time in the shell, it is worth building good habits around security early.
+
+**Protect your init files.** Files like `.bashrc` and `.bash_profile` can contain sensitive configurations. Make sure they are only readable by you:
+
+```bash
+chmod 600 ~/.bashrc
+```
+
+**Do not hardcode sensitive information in scripts.** Passwords, API keys, and tokens should never be written directly into a script file. Use environment variables or external configuration files with restricted permissions instead.
+
+**Be careful with environment variables.** Any process running under your user account can read your environment variables. Avoid storing sensitive data in them where possible.
+
+**Validate command line arguments.** If your script accepts input from the command line, validate and sanitize that input before using it. Unvalidated input can lead to unintended behavior or security vulnerabilities.
+
+**Use aliases carefully.** Avoid creating aliases that override important system commands, especially security related ones. An alias that silently changes the behavior of a command like `sudo` or `rm` can cause serious problems.
+
+**Be cautious with `sudo`.** Only use `sudo` when you understand exactly what a command does. Running the wrong command with superuser privileges can affect your entire system.
+
+## Final Thoughts
+
+Aliases, special parameters, and security awareness are what separate someone who uses the shell from someone who uses it well. If you want to build more context around these topics, [Init Files and Environment Variables]({{site}}/blog/understanding-the-linux-shell-init-files-and-environment-variables) and [Variables, Expansions, and Shell Scripts]({{site}}/blog/understanding-the-linux-shell-variables-expansions-and-shell-scripts) are worth reading alongside this one.

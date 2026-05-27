@@ -1,0 +1,169 @@
+---
+title: 'Mastering the Shell: Navigation, File Operations, and Shortcuts'
+day: 2
+summary: >-
+  Knowing how to navigate your file system and manage files from the command
+  line is a core skill that makes everything else in software engineering faster
+  and more efficient.
+categories:
+  - Developer tools
+  - Linux
+  - Software engineering
+  - Command line
+  - Shell
+---
+In [Part 1]({{site}}/blog/getting-started-with-the-command-line), we covered what the shell is, how it works, and some good habits to build early. In this post, we are getting into the practical side: how to move around your file system, work with files, and use wildcards to handle multiple files at once.
+
+## Understanding Your File System
+
+Before diving into commands, it helps to understand how your computer organizes files. Everything lives in a tree structure that starts from a single root directory represented by `/`. Every file and folder on your system lives somewhere within that tree.
+
+There are three locations worth knowing:
+
+The **root directory** (`/`) is the very top of the file system. Everything branches out from here.
+
+The **home directory** (`~`) is your personal space. It is where your files, folders, and configurations live. When you open a terminal, this is usually where you start.
+
+The **working directory** is wherever you currently are in the file system at any given moment.
+
+## Navigating the File System
+
+**`pwd`** stands for "print working directory." It tells you exactly where you are:
+
+```bash
+pwd
+```
+
+**`ls`** lists the contents of your current directory:
+
+```bash
+ls
+```
+
+You can add options to get more detail. `ls -l` shows a detailed list with permissions, file sizes, and dates. `ls -a` shows hidden files, which are files whose names start with a dot:
+
+```bash
+ls -l
+ls -a
+```
+
+**`cd`** stands for "change directory." It is how you move around:
+
+```bash
+cd Documents
+```
+
+To go up one level:
+
+```bash
+cd ..
+```
+
+To go back to your home directory from anywhere:
+
+```bash
+cd ~
+```
+
+To jump back to the previous directory you were in:
+
+```bash
+cd -
+```
+
+## Working with Files and Directories
+
+**Creating a file** with `touch` creates a new empty file:
+
+```bash
+touch newfile.txt
+```
+
+**Creating a directory** with `mkdir` creates a new folder:
+
+```bash
+mkdir projects
+```
+
+**Copying files** with `cp` duplicates a file to a new location:
+
+```bash
+cp sourcefile.txt destination/
+```
+
+**Moving or renaming files** with `mv` either moves a file to a different location or renames it:
+
+```bash
+mv oldname.txt newname.txt
+mv file.txt projects/
+```
+
+**Deleting files** with `rm` permanently removes a file:
+
+```bash
+rm file.txt
+```
+
+To delete a directory and everything inside it:
+
+```bash
+rm -r foldername
+```
+
+Use this carefully. There is no undo.
+
+## Viewing File Contents
+
+**`less`** lets you read the contents of a file one page at a time. Use the arrow keys to scroll and press `q` to exit:
+
+```bash
+less filename.txt
+```
+
+**`cat`** prints the entire contents of a file directly in the terminal. Best used for short files:
+
+```bash
+cat filename.txt
+```
+
+**`file`** tells you what type a file is, which is useful when you are not sure what you are dealing with:
+
+```bash
+file filename
+```
+
+## Using Wildcards
+
+Wildcards let you work with multiple files at once without typing each name individually.
+
+The asterisk `*` matches any number of characters. For example, to list all text files in a directory:
+
+```bash
+ls *.txt
+```
+
+The question mark `?` matches exactly one character. So `file?.txt` would match `file1.txt` or `fileA.txt` but not `file.txt`:
+
+```bash
+ls file?.txt
+```
+
+Wildcards work with most file commands. For example, to delete all `.log` files in a directory:
+
+```bash
+rm *.log
+```
+
+## Hidden Files
+
+Files whose names begin with a dot are hidden by default and will not show up with a regular `ls`. To see them:
+
+```bash
+ls -a
+```
+
+These are often configuration files for tools and applications. You will come across them frequently as you work more in the command line.
+
+## Final Thoughts
+
+Navigation and file management are the foundation of working in the shell. Once these commands feel natural, everything else builds on top of them. The best way to get there is to practice in a real terminal rather than just reading about it. Open one up, move around, create some files, and get a feel for how it all fits together.

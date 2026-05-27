@@ -1,0 +1,133 @@
+---
+title: 'Understanding the Linux Shell: Init Files and Environment Variables'
+day: 8
+summary: >-
+  Init files configure your shell environment every time you open a terminal,
+  and environment variables store the key information your shell and programs
+  rely on to function correctly.
+categories:
+  - Developer tools
+  - Software engineering
+  - Linux
+  - Command line
+  - Shell
+---
+If you spend any time working in the Linux shell, you will notice that your terminal always feels familiar when you open it. Your aliases are there, your prompt looks the way you set it up, and everything behaves the way you expect. That does not happen by accident. It is the result of initialization files and environment variables working behind the scenes. In this post, we are going to break down what they are and how to use them.
+
+## A Quick Note on Shell Types
+
+Not all shell sessions are the same, and the distinction matters when it comes to which configuration files get loaded.
+
+A **login shell** is started when you log into a system directly or over SSH. It reads certain initialization files to set up your environment.
+
+An **interactive shell** is one where you are actively typing commands, like a regular terminal window you open on your desktop.
+
+Different init files are read depending on which type of session you are in, so it helps to know the difference.
+
+## What are Init Files?
+
+Every time you open a terminal, the shell reads a set of configuration files called init files before you type a single command. These files define your environment: your aliases, your prompt, your PATH, and any other preferences you have set up.
+
+For Bash, the most common init files are:
+
+**.bash_profile** is read when you start a login shell. It is typically used to set environment variables and run commands that should only happen once at login.
+
+**.bashrc** is read when you start an interactive non-login shell, like opening a new terminal window. This is where most day to day customizations live.
+
+**.bash_logout** is read when a login shell exits. It is less commonly used but can be useful for cleanup tasks.
+
+If you are using Zsh, the equivalent files are `.zprofile` and `.zshrc`.
+
+## Customizing Your Shell Through Init Files
+
+Init files are where you make the shell your own. Here are the most common things people configure in them.
+
+**Setting aliases** creates shortcuts for commands you use often. Adding this to your `.bashrc`:
+
+```bash
+alias ll='ls -l'
+```
+
+means you can type `ll` instead of `ls -l` every time you want a detailed file listing.
+
+**Customizing your prompt** changes what you see at the start of each line. For example:
+
+```bash
+PS1='\u@\h \w $ '
+```
+
+This displays your username, hostname, and current directory in the prompt.
+
+**Setting environment variables** tells the shell and other programs where to find things or how to behave:
+
+```bash
+export PATH=$PATH:/usr/local/bin
+```
+
+After editing an init file, reload it for the changes to take effect in your current session:
+
+```bash
+source ~/.bashrc
+```
+
+## What are Environment Variables?
+
+Environment variables are named values that the shell and other programs use to understand the environment they are running in. They store things like where your home directory is, what your username is, and where to look for executable programs.
+
+You can view all currently set environment variables by running:
+
+```bash
+env
+```
+
+Or check the value of a specific one:
+
+```bash
+echo $HOME
+```
+
+## Local vs Global Environment Variables
+
+**Local variables** exist only in your current shell session and are not passed on to any programs or scripts you run from it:
+
+```bash
+MY_VAR="hello"
+```
+
+**Exported variables** are available to the current shell and any child processes it starts:
+
+```bash
+export MY_VAR="hello"
+```
+
+The difference matters when writing scripts. If a script needs access to a variable, that variable must be exported.
+
+## Important Environment Variables to Know
+
+**PATH** is a colon separated list of directories the shell searches through when you type a command:
+
+```bash
+echo $PATH
+```
+
+**HOME** points to your home directory:
+
+```bash
+echo $HOME
+```
+
+**USER** stores your current username:
+
+```bash
+echo $USER
+```
+
+**SHELL** stores the path to your default shell:
+
+```bash
+echo $SHELL
+```
+
+## Final Thoughts
+
+Understanding init files and environment variables gives you real control over how your terminal behaves. Once you know where your shell reads its configuration from, customizing your environment becomes straightforward. If you want to go further, check out [Variables, Expansions, and Shell Scripts]({{site}}/blog/understanding-the-linux-shell-variables-expansions-and-shell-scripts) and [Aliases, Special Parameters, and Security]({{site}}/blog/understanding-the-linux-shell-aliases-special-parameters-and-security) for more on working effectively in the shell.

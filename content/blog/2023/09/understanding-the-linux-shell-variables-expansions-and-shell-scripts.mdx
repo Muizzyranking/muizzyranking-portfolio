@@ -1,0 +1,134 @@
+---
+title: 'Understanding the Linux Shell: Variables, Expansions, and Shell Scripts'
+day: 9
+summary: >-
+  Variables and expansions give your shell scripts the ability to work with
+  dynamic data, perform calculations, and capture command output, making them
+  far more flexible and powerful.
+categories:
+    - Develper tools
+    - Linux
+    - Command line
+    - Software engineering
+    - Shell
+---
+## Part 2: 
+
+**Slug:** 
+Shell scripting is one of those skills that looks complicated from the outside but becomes very approachable once you understand the building blocks. Variables and expansions are the foundation of almost every script you will write. In this post, we are going to cover what they are, how they work, and how to put them together in a real script.
+
+## Variables in the Shell
+
+A variable is a name that holds a value. You create one by assigning a value to a name:
+
+```bash
+name="Alice"
+```
+
+To access the value, prefix the variable name with a dollar sign:
+
+```bash
+echo $name
+```
+
+A few rules to keep in mind: there should be no spaces around the equals sign when assigning a value, and variable names are case sensitive. By convention, environment variables use uppercase names and local script variables use lowercase.
+
+## Variable Expansions
+
+Variable expansions are the different ways you can use and manipulate variable values in the shell.
+
+**Basic expansion** retrieves the value of a variable:
+
+```bash
+echo $name
+```
+
+**Brace expansion** wraps the variable name in curly braces. This is useful when the variable name needs to be clearly separated from surrounding text:
+
+```bash
+echo "The backup directory is /backup/${name}_backup"
+```
+
+**Arithmetic expansion** lets you perform calculations directly in the shell using double parentheses:
+
+```bash
+count=10
+result=$((count * 2))
+echo $result
+```
+
+**Command substitution** runs a command and uses its output as a value:
+
+```bash
+current_date=$(date)
+echo "Today is $current_date"
+```
+
+This is particularly useful in scripts where you need to capture the output of a command and use it later.
+
+## Writing a Simple Shell Script
+
+A shell script is a file containing a series of shell commands that run in sequence. Scripts are useful for automating repetitive tasks or building tools you can reuse.
+
+To create a script, start with a shebang line that tells the system which interpreter to use:
+
+```bash
+#!/bin/bash
+```
+
+Here is a simple script that calculates the area of a rectangle:
+
+```bash
+#!/bin/bash
+
+echo "Enter the length of the rectangle:"
+read length
+
+echo "Enter the width of the rectangle:"
+read width
+
+area=$((length * width))
+
+echo "The area of a rectangle with length $length and width $width is $area square units."
+```
+
+Breaking this down: the `read` command takes input from the user and stores it in a variable. The arithmetic expansion calculates the area. The final `echo` uses variable expansion to include all three values in the output.
+
+To run the script, first make it executable:
+
+```bash
+chmod +x script.sh
+```
+
+Then run it:
+
+```bash
+./script.sh
+```
+
+## Best Practices for Variables in Scripts
+
+**Use descriptive names.** A variable called `length` is much clearer than one called `l`. The small saving in typing is not worth the confusion.
+
+**Use uppercase for constants.** If a variable holds a value that should not change, write it in uppercase:
+
+```bash
+PI=3.14159
+```
+
+**Use braces when in doubt.** Wrapping variable names in curly braces avoids ambiguity, especially in more complex expressions:
+
+```bash
+echo "${name}_backup"
+```
+
+**Comment your scripts.** Add comments to explain what your variables are for and what each section does:
+
+```bash
+# Calculate the total price including tax
+total=$((price + tax))
+```
+
+## Final Thoughts
+
+Variables and expansions are at the heart of shell scripting. Once you are comfortable with them, you can start building scripts that do real, useful work. If you are interested in more shell fundamentals, [Init Files and Environment Variables]({{site}}/blog/understanding-the-linux-shell-init-files-and-environment-variables) and [Aliases, Special Parameters, and Security]({{site}}/blog/understanding-the-linux-shell-aliases-special-parameters-and-security) cover other important areas worth knowing.

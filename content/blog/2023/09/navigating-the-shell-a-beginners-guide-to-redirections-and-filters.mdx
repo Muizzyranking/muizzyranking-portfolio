@@ -1,0 +1,125 @@
+---
+title: 'Navigating the Shell: A Beginner''s Guide to Redirections and Filters'
+day: 6
+summary: >-
+  Shell redirection lets you control where your data comes from and where it
+  goes, and filters give you the ability to process and extract exactly what you
+  need from that data.
+categories:
+  - Developer tools
+  - Command line
+  - Linux
+  - Software engineering
+  - Shell
+---
+If you have been following this series, you already know how to navigate the file system and work with files from the command line. In this post, we are going a step further: learning how to control where your data goes and how to filter through it efficiently. These are skills you will use constantly as a software engineer.
+
+## What is Shell Redirection?
+
+Every command you run in the shell has three default data streams:
+
+**Standard input (stdin)** is the data going into a command, usually from your keyboard.
+
+**Standard output (stdout)** is the data a command produces, usually printed to your terminal.
+
+**Standard error (stderr)** is where error messages go, also printed to your terminal by default.
+
+Redirection lets you change where these streams come from or go to. Instead of output printing to your screen, you can send it to a file. Instead of typing input manually, you can read it from a file.
+
+## Redirecting Output
+
+The `>` operator redirects the output of a command into a file. If the file does not exist, it will be created. If it does exist, it will be overwritten:
+
+```bash
+echo "Hello, World!" > output.txt
+```
+
+If you want to add to a file without overwriting what is already there, use `>>` instead:
+
+```bash
+echo "Appended text" >> output.txt
+```
+
+This is useful for logging or building up a file over time.
+
+## Redirecting Input
+
+The `<` operator redirects input into a command from a file instead of the keyboard. For example, to sort a list of names stored in a file:
+
+```bash
+sort < names.txt
+```
+
+This reads the contents of `names.txt` and passes them to `sort` as input.
+
+## A Note on File Permissions
+
+When using redirection, make sure you have the right permissions for the files involved. If you try to write to a file in a directory where you do not have write access, you will get a permission denied error. You can check file permissions with:
+
+```bash
+ls -l filename
+```
+
+The output shows who owns the file and what level of access different users have.
+
+## Common Filter Commands
+
+Filters are commands that take input, process it in some way, and produce output. They are most useful when combined with redirection and pipes, which we will cover in Part 2.
+
+**`head`** shows the first ten lines of a file by default. Useful for quickly checking what is in a file:
+
+```bash
+head filename.txt
+```
+
+**`tail`** shows the last ten lines. Particularly useful for checking log files:
+
+```bash
+tail filename.txt
+```
+
+**`sort`** arranges the lines in a file alphabetically or numerically:
+
+```bash
+sort names.txt
+```
+
+**`uniq`** removes duplicate lines from sorted data. It works best after running `sort`:
+
+```bash
+sort emails.txt | uniq
+```
+
+**`wc`** counts the number of lines, words, and characters in a file:
+
+```bash
+wc story.txt
+```
+
+**`grep`** searches for a specific pattern in a file and returns the matching lines:
+
+```bash
+grep "error" log.txt
+```
+
+**`tr`** translates or deletes characters. For example, to convert text to uppercase:
+
+```bash
+echo "hello" | tr 'a-z' 'A-Z'
+```
+
+**`find`** searches for files and directories in a given location:
+
+```bash
+find /documents -name "report.pdf"
+```
+
+**`cut`** extracts specific fields or characters from each line. For example, to extract the first and third columns from a CSV file:
+
+```bash
+cut -d',' -f1,3 data.csv
+```
+
+## Final Thoughts
+
+Redirection and filters are some of the most practical tools in the shell. Once you understand how data flows between commands and files, you start to see how powerful the command line really is. In Part 2, we will build on this by introducing pipes, special characters, and text manipulation tools that let you chain everything together.

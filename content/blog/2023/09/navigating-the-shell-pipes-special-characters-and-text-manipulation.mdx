@@ -1,0 +1,165 @@
+---
+title: 'Navigating the Shell: Pipes, Special Characters, and Text Manipulation'
+day: 7
+summary: >-
+  Pipes let you chain commands together to process data in one go, and
+  understanding special characters and text manipulation tools gives you precise
+  control over how that data is handled.
+categories:
+  - Developer tools
+  - Software engineering
+  - Linux
+  - Command line
+  - Shell
+---
+In [Part 1]({{site}}/blog/navigating-the-shell-a-beginners-guide-to-redirections-and-filters), we covered redirection and filters. In this post, we are taking things further by looking at pipes, special characters, and text manipulation tools. These are what make the command line truly powerful, allowing you to chain commands together and process data in flexible ways.
+
+## The Pipe Operator
+
+The pipe operator `|` connects two commands by sending the output of one directly into the input of the next. Instead of saving intermediate results to a file, data flows straight from one command to another.
+
+For example, to list the contents of a directory and search for a specific file:
+
+```bash
+ls | grep "report"
+```
+
+Or to sort a file and remove duplicates in one step:
+
+```bash
+sort names.txt | uniq
+```
+
+You can chain as many commands as you need. Each one receives the output of the previous and passes its own output to the next.
+
+## Practical Examples Using Pipes
+
+**Counting word frequency in a file:**
+
+```bash
+cat article.txt | grep -oE '\w+' | sort | uniq -c | sort -nr
+```
+
+This reads the file, extracts individual words, sorts them, counts each unique word, and sorts the results by frequency.
+
+**Finding the largest files in a directory:**
+
+```bash
+find /path/to/directory -name "*.pdf" | xargs du -h | sort -rh
+```
+
+This finds all PDF files, checks their sizes, and sorts them from largest to smallest.
+
+**Analyzing a log file:**
+
+```bash
+cat server.log | grep -oE 'GET /[^ ]+' | sort | uniq -c | sort -nr > popular_pages.txt
+```
+
+This extracts URLs from a log file, counts how often each one appears, and saves the results to a file.
+
+## Special Characters in the Shell
+
+Special characters have specific meanings in the shell. Understanding them helps you write more precise commands and avoid unexpected behavior.
+
+**Whitespace** separates commands and their arguments. For example:
+
+```bash
+ls -l
+```
+
+**Single quotes** (`'`) preserve the exact text inside them, including any special characters or variables:
+
+```bash
+echo 'Hello, $USER'
+```
+
+This prints `Hello, $USER` literally, without substituting the variable.
+
+**Double quotes** (`"`) preserve most characters but still allow variable substitution:
+
+```bash
+echo "Hello, $USER"
+```
+
+This prints your actual username in place of `$USER`.
+
+**Backslash** (`\`) escapes a special character, making it literal:
+
+```bash
+echo "This is a \"quoted\" word."
+```
+
+**Hash** (`#`) starts a comment. Anything after it on the same line is ignored by the shell:
+
+```bash
+# This is a comment
+```
+
+**Semicolon** (`;`) lets you run multiple commands on a single line, one after the other:
+
+```bash
+command1 ; command2
+```
+
+**Tilde** (`~`) is a shortcut for your home directory:
+
+```bash
+cd ~
+```
+
+## Text Manipulation Tools
+
+Beyond the filters covered in Part 1, there are a few more tools worth knowing for working with text directly.
+
+**`sed`** is a stream editor that can find and replace text, delete lines, or print specific lines from a file. To print the fifth line of a file:
+
+```bash
+sed -n '5p' story.txt
+```
+
+To replace every occurrence of the word "old" with "new":
+
+```bash
+sed 's/old/new/g' filename.txt
+```
+
+**`awk`** is a more powerful text processing tool that works on structured data. To print the fifth line of a file:
+
+```bash
+awk 'NR == 5' story.txt
+```
+
+To print the first and third columns of a space separated file:
+
+```bash
+awk '{print $1, $3}' data.txt
+```
+
+**`rev`** reverses the characters on each line. Simple but occasionally useful:
+
+```bash
+echo "hello" | rev
+```
+
+This outputs `olleh`.
+
+**`cat`** can also be used to concatenate multiple files and print the combined output:
+
+```bash
+cat file1.txt file2.txt
+```
+
+## Putting It All Together
+
+The real power of the shell comes from combining these tools. Here is an example that cleans up a messy CSV file:
+
+```bash
+cat messy_data.csv | sed 's/ *, */,/g' | awk -F ',' '{print $1,$3,$2}' > clean_data.csv
+```
+
+This reads the file, cleans up spacing around commas, reorders the columns, and saves the result to a new file. Each command does one specific job, and together they handle a task that would take much longer to do manually.
+
+## Final Thoughts
+
+Pipes, special characters, and text manipulation tools are what turn the shell from a simple command runner into a genuinely powerful environment for processing data. The best way to get comfortable with them is to start using them on real files and real problems. Start small, chain two commands together, and build from there.
