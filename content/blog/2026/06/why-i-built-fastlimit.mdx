@@ -1,0 +1,107 @@
+---
+title: 'Why I Built My Own Rate Limiting Library for FastAPI'
+day: 20
+summary: >-
+  I was using SlowAPI for rate limiting in a FastAPI project and kept running
+  into the same friction points. So I built fastlimit — here is what bothered
+  me and what I did about it.
+categories:
+  - python
+  - fastapi
+  - backend
+  - open-source
+---
+
+I was not planning to build a rate limiting library. I had a FastAPI project, I needed rate limiting, I reached for SlowAPI, which is the most popular choice for fastapi, and wired it up. Took maybe 20 minutes.
+
+Then I started actually using it.
+
+The first thing that got to me was the `request: Request` requirement. SlowAPI's decorator needs access to the request to extract the client IP or user ID, and the only way it can get that is if your route function accepts it as a parameter. So every rate-limited route ends up looking like this:
+
+```python
+@app.get("/items")
+@limiter.limit("10/minute")
+async def get_items(request: Request):
+    return await fetch_items()
+```
+
+That `request: Request` is not doing anything. `fetch_items()` does not use it. It's there purely because SlowAPI needs it. Small thing, but it bothered me — I like function signatures that say exactly what they need, and this one was lying.
+
+I could live with that. The thing I could not live with was the header injection.
+
+Rate limit headers are genuinely useful — `X-RateLimit-Remaining` tells clients when to back off, `Retry-After` tells them how long to wait. Standard stuff. So I enabled SlowAPI's header injection and immediately hit a wall: every rate-limited route now had to return a `Response` object directly.
+
+Not a dict. Not a Pydantic model. A `Response`. The moment you enable header injection, SlowAPI expects to work with an actual response object, and if your route returns anything else it just breaks. So I was suddenly doing this:
+
+```python
+@app.get("/items")
+@limiter.limit("10/minute")
+async def get_items(request: Request, response: Response):
+    items = await fetch_items()
+    return JSONResponse(content=jsonable_encoder(items))
+```
+
+Which is annoying because one of the things I actually like about FastAPI is that you declare a return type, FastAPI handles the serialization, and your OpenAPI schema just works. SlowAPI's header injection breaks all of that. You end up choosing between headers or clean return types.
+
+I disabled header injection and kept moving. But I kept thinking about it.
+
+The thing that finally pushed me over was wanting different rate limits for authenticated vs anonymous users on the same endpoint. I had a search endpoint that was open to everyone — anonymous users should get 10 requests per minute (enough to poke around, not enough to scrape), authenticated users should get 200 (they're paying, they have legitimate high-volume use cases). SlowAPI gives you one limit per endpoint. To get different limits for different users you end up writing custom key functions and multiple decorators and honestly it's just not clean.
+
+I wanted to write this:
+
+```python
+@router.get("/search", dependencies=[rate_limit(ip="10/min", user="200/min")])
+async def search(q: str) -> list[SearchResult]:
+    return await do_search(q)
+```
+
+And have it just work — anonymous callers hit the IP bucket, authenticated users hit their own separate bucket, neither affecting the other.
+
+So I built it.
+
+---
+
+fastlimit solves the three specific things that were bothering me.
+
+Headers are injected through FastAPI's `Response` dependency, which gets passed into the rate limit dependency itself, not your route function. Your route can return a Pydantic model, a dict, a list, whatever, and the headers are already set before your handler even runs. No forced `Response` return type.
+
+The `request: Request` problem goes away entirely. The dependency handles the request internally. Your function signature stays clean.
+
+The dual bucket thing, anonymous vs authenticated, is a first-class feature. When a request has a user ID (from whatever your auth middleware puts on `request.state`), the user bucket applies. When it's anonymous, the IP bucket applies. They're independent. An authenticated user is never throttled by the stricter anonymous IP limit.
+
+Setup looks like this:
+
+```python
+# once in main.py
+limiter = FastLimit(
+    redis_url="redis://localhost:6379",
+    user_id_func=lambda req: getattr(req.state, "user_id", None),
+)
+limiter.init_app(app)
+
+# in any route file — no limiter import needed
+@router.get("/search", dependencies=[rate_limit(ip="10/min", user="200/min")])
+async def search(q: str) -> list[SearchResult]:
+    return await do_search(q)
+```
+
+The limiter lives on `app.state` so route files never need to import it. `rate_limit` is a standalone function that looks up the limiter at request time.
+
+I also kept a decorator style for people who prefer it:
+
+```python
+@router.get("/feed")
+@limit("100/min")
+async def feed() -> FeedResponse:
+    return await get_feed()
+```
+
+Still no `Request` in the signature. Still returns a Pydantic model. The decorator works by overriding `__signature__` on the wrapper function; FastAPI discovers the hidden dependency at startup, resolves it on each request, and your function never sees it.
+
+---
+
+Honestly, I am not sure fastlimit will work for everyone's use case, SlowAPI has a broader backend ecosystem (Memcached and a few others) and has been around longer. If those things matter to you, SlowAPI is probably still the right call.
+
+But if you've hit the same walls I did; `request: Request` everywhere, header injection forcing `Response` returns, no clean way to separate anonymous and authenticated limits, fastlimit is what I wished existed when I was fighting with those problems.
+
+[Source on GitHub](https://github.com/muizzyranking/fastlimit). [Docs here](https://muizzyranking.github.io/fastlimit).
