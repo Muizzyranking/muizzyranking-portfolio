@@ -1,3 +1,19 @@
+- company: "HNG Internship — Anvila & Insighta Labs"
+  role: "Tech Lead / Backend Engineer"
+  type: "Internship"
+  location: "Remote"
+  period:
+    start: "Apr 2026"
+    end: "Jun 2026"
+  summary: "Tech lead over an 11-engineer backend and frontend team building Anvila, an AI-agent manifest generator, shipped in under a month. Alongside that, built Insighta Labs solo — a demographic-intelligence API with dual OAuth and a rule-based natural-language query parser."
+  highlights:
+    - "Led both backend and frontend delivery — 4 backend engineers, 7 frontend — while remaining the top individual contributor on the frontend myself."
+    - "Owned database design across the entire team; every engineer extended schemas I originally built, keeping the data layer consistent as the team scaled."
+    - "Built the prompt-to-manifest generation pipeline and its event-publishing layer — the path that turns a user's prompt into a set of customized AI-agent manifest files. 30+ manifests generated in production use."
+    - "Owned all frontend-to-API integration and built several of the marketing pages."
+    - "Independently built Insighta Labs — dual OAuth flow (browser cookie-based, and a full CLI PKCE flow with a local callback server), short-lived JWTs paired with single-use hashed refresh tokens, and a rule-based natural-language query parser for filtering people by age, gender, and country from plain text."
+  stack: [Python, FastAPI, Next.js, PostgreSQL, Redis, OAuth, JWT]
+
 - company: "Taskingdom"
   role: "Backend Developer"
   type: "Contract"
@@ -29,7 +45,7 @@
   stack: [Python, Django, Django REST Framework, PostgreSQL, Redis, Celery, Docker]
 
 - company: "HNG Internship — Sitelytics"
-  role: "Backend Engineer (Finalist)"
+  role: "Backend Engineer"
   type: "Internship"
   location: "Remote"
   period:
