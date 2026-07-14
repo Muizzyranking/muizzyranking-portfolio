@@ -6,6 +6,7 @@ status: "complete"
 repo: "https://github.com/Muizzyranking/flint"
 featured: true
 year: "2026"
+datePublished: "2026-07-12"
 live: ""
 ---
 
@@ -17,22 +18,22 @@ When a job comes in, the scheduler polls PostgreSQL every second for due jobs an
 
 ## Challenges
 
-**Preventing a job from being claimed twice**
+### Preventing a job from being claimed twice
 Multiple worker coroutines pop from the same in-memory heap. If two coroutines grab the same job ID, that job runs twice — a webhook fires twice, an email sends twice.
 
 The fix is two layers. First, an `asyncio.Lock` inside the heap serializes all `pop()` calls, so two coroutines can't receive the same ID from the heap in the first place. Second, even if that somehow failed, the claim itself is an atomic Postgres update: `UPDATE jobs SET status = 'processing' WHERE id = :job_id AND status = 'pending' AND worker_id IS NULL RETURNING id`. Row-level locking guarantees exactly one update wins; the other gets zero rows back and drops the job. No Redis `SETNX`, no application-level semaphore. The database was already the source of truth for job state, so making it the arbiter of the claim is free — reaching for a second locking system would just be another thing that can fail.
 
-**Starving low-priority jobs**
+### Starving low-priority jobs
 A steady stream of high-priority jobs will starve low-priority ones indefinitely if priority is the only ordering signal. That's not a bug you notice until a low-priority job has been sitting for an hour.
 
 The fix is priority aging. A background task runs every 30 seconds and decrements `effective_priority` on jobs that have waited past a threshold — medium jobs after 2 minutes, low jobs after 5 minutes, 0.1 per cycle, floored at 1.0 (High). Any job is mathematically guaranteed to reach High priority within a bounded time window regardless of queue pressure. The heap doesn't get rebuilt for this — a job's old heap entry is marked removed in place and a new one is pushed, so re-scoring stays O(log n) instead of O(n).
 
-**Cancelling a job that's already running**
+### Cancelling a job that's already running
 A pending job is easy to cancel — just mark it cancelled before anyone picks it up. A job mid-execution is not: if a handler has already sent an HTTP request or written a file, you can't un-send it. Killing the coroutine outright would leave that external side effect in an inconsistent state.
 
 The fix is cooperative cancellation. The API sets a `cancellation_requested` flag in Postgres; the worker checks that flag at defined checkpoints — before calling the handler, after it returns, and at pause points inside long-running handlers. The cancellation takes effect at the next checkpoint, not instantly, and that's documented behavior, not a gap: side effects that already happened can't be rolled back regardless of how forcefully you kill the process.
 
-**Retrying a failed step in a multi-job workflow**
+### Retrying a failed step in a multi-job workflow
 Jobs can depend on each other in a DAG. When a job fails permanently and goes to the DLQ, everything downstream gets cascade-cancelled via BFS — otherwise those jobs wait forever for a dependency that will never complete. The obvious follow-up problem: once an engineer fixes the root cause and retries the failed root job, do they now have to manually re-trigger every job that got cancelled downstream?
 
 The fix is cascade retry. Retrying a DLQ root job walks the same dependency graph via BFS and resets every downstream cancelled job back to pending automatically. The whole workflow re-runs from the fixed root with zero manual intervention on each downstream step. The alternative — leaving downstream jobs cancelled and making the engineer retry each one — defeats the point of declaring a dependency graph in the first place.
