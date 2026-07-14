@@ -177,7 +177,7 @@ input:focus-visible {
 /* Mono eyebrow — used on every section heading */
 .eyebrow {
   font-family: var(--font-mono);
-  font-size: 0.68rem;
+  font-size: 0.8rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--color-text-muted);
