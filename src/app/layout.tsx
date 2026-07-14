@@ -9,6 +9,7 @@ import VimCommandLine from "@/components/ui/VimCommandLine";
 import { jetbrainsMono, spaceGrotesk } from "@/lib/font";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://muizzyranking.me"),
   title: {
     default: "Muiz Oyebowale (Muizzyranking) — Backend Engineer",
     template: "%s | Muiz Oyebowale",
