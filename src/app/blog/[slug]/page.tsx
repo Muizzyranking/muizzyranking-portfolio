@@ -122,6 +122,8 @@ export default async function PostPage({ params }: Props) {
               </Link>
               <a
                 href="https://twitter.com/intent/tweet"
+                target="_blank"
+                rel="noopener noreferrer"
                 style={{
                   fontFamily: "var(--font-mono)",
                   fontSize: "0.78rem",
