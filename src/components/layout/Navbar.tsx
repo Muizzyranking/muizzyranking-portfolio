@@ -90,19 +90,20 @@ export default function Navbar() {
               })}
             </ul>
 
-            {/* Resume download CTA */}
+            {/* Resume CTA — opens PDF in new tab */}
             <m.a
-              href="/resume.pdf"
-              download
+              href="/Muiz-Oyebowale-Resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5, duration: 0.4 }}
               className="nav-resume-btn hidden sm:inline-flex items-center gap-[0.4rem] font-mono text-[0.72rem] tracking-[0.1em] text-accent no-underline border border-accent-dim py-[0.4rem] px-4 ml-3 rounded-sm transition-[background,color] duration-200 hover:bg-accent hover:text-white"
             >
               résumé
-              {/* down arrow icon */}
+              {/* external link icon */}
               <svg width="11" height="11" viewBox="0 0 11 11" fill="none" aria-hidden="true">
-                <path d="M5.5 1v7M2 5.5l3.5 3.5L9 5.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M4.5 1.5h5v5M9.5 1.5L5 6" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </m.a>
 
@@ -150,8 +151,8 @@ export default function Navbar() {
             {label}
           </Link>
         ))}
-        <a href="/resume.pdf" download className="font-mono text-[0.9rem] tracking-[0.1em] text-accent no-underline py-3 mt-1">
-          résumé ↓
+        <a href="/Muiz-Oyebowale-Resume.pdf" target="_blank" rel="noopener noreferrer" className="font-mono text-[0.9rem] tracking-[0.1em] text-accent no-underline py-3 mt-1">
+          résumé ↗
         </a>
       </m.div>
     </>
