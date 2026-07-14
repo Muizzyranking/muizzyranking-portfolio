@@ -11,7 +11,6 @@ const ITEMS = [
   { name: "PyTorch", note: "For the model-building side of the pivot." },
   { name: "MLflow", note: "Experiment tracking. Starting to make sense." },
   { name: "Statistics", note: "Because hand-wavy intuition only gets you so far." },
-  { name: "Rust", note: "The borrow checker and I have reached an understanding." },
   { name: "AI Finance", note: "Where systems thinking meets numbers that matter." },
 ];
 
@@ -36,7 +35,6 @@ export default function Exploring() {
           className="eyebrow"
           style={{ marginBottom: "2rem" }}
         >
-          <span className="eyebrow__mark">[ 03 ]</span>
           Currently exploring
           <span className="eyebrow__rule" />
         </m.p>

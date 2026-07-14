@@ -31,6 +31,11 @@ const SETUP: Category[] = [
     category: "Terminal",
     items: [
       {
+        name: "kitty",
+        detail: "Reliable enough that the shiny new terminals still want to be it.",
+        primary: true,
+      },
+      {
         name: "Zsh",
         detail: "With enough plugins to make purists uncomfortable.",
         primary: true,
@@ -80,7 +85,6 @@ export default function DailyDriver() {
           className="eyebrow"
           style={{ marginBottom: "2rem" }}
         >
-          <span className="eyebrow__mark">[ 02 ]</span>
           Daily driver
           <span className="eyebrow__rule" />
         </m.p>
@@ -112,73 +116,25 @@ export default function DailyDriver() {
             <m.div
               key={category}
               variants={staggerItem}
-              style={{
-                display: "grid",
-                gridTemplateColumns: "180px 1fr",
-                borderTop: "1px solid var(--color-border-subtle)",
-                paddingBlock: "1.75rem",
-                gap: "2rem",
-                alignItems: "start",
-              }}
               className="setup-row"
             >
-              <p
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "0.68rem",
-                  letterSpacing: "0.16em",
-                  textTransform: "uppercase",
-                  color: "var(--color-accent)",
-                  paddingTop: "0.15rem",
-                }}
-              >
+              <p className="setup-row__category">
                 {category}
               </p>
 
-              <div style={{ display: "flex", flexDirection: "column", gap: "0.7rem" }}>
+              <div className="setup-row__items">
                 {items.map(({ name, detail, primary }) => (
                   <div
                     key={name}
-                    style={{
-                      display: "flex",
-                      alignItems: "baseline",
-                      gap: "1rem",
-                      flexWrap: "wrap",
-                    }}
+                    className="setup-item"
                   >
-                    <span
-                      style={{
-                        fontFamily: "var(--font-mono)",
-                        fontSize: "0.85rem",
-                        fontWeight: primary ? 600 : 400,
-                        color: primary ? "var(--color-text-primary)" : "var(--color-text-secondary)",
-                        minWidth: "140px",
-                        flexShrink: 0,
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: "0.4rem",
-                      }}
-                    >
+                    <span className={`setup-item__name ${primary ? "setup-item__name--primary" : ""}`}>
                       {name}
                       {primary && (
-                        <span
-                          style={{
-                            display: "inline-block",
-                            width: "5px",
-                            height: "5px",
-                            borderRadius: "50%",
-                            background: "var(--color-accent)",
-                          }}
-                        />
+                        <span className="setup-item__dot" />
                       )}
                     </span>
-                    <span
-                      style={{
-                        fontSize: "0.85rem",
-                        color: "var(--color-text-muted)",
-                        lineHeight: 1.55,
-                      }}
-                    >
+                    <span className="setup-item__detail">
                       {detail}
                     </span>
                   </div>
@@ -190,10 +146,82 @@ export default function DailyDriver() {
       </div>
 
       <style>{`
-        @media (max-width: 640px) {
+        .setup-row {
+          display: grid;
+          grid-template-columns: 180px 1fr;
+          border-top: 1px solid var(--color-border-subtle);
+          padding-block: 1.75rem;
+          gap: 2rem;
+          align-items: start;
+        }
+        .setup-row__category {
+          font-family: var(--font-mono);
+          font-size: 0.68rem;
+          letter-spacing: 0.16em;
+          text-transform: uppercase;
+          color: var(--color-accent);
+          padding-top: 0.15rem;
+        }
+        .setup-row__items {
+          display: flex;
+          flex-direction: column;
+          gap: 0.7rem;
+        }
+        .setup-item {
+          display: flex;
+          align-items: baseline;
+          gap: 1rem;
+        }
+        .setup-item__name {
+          font-family: var(--font-mono);
+          font-size: 0.85rem;
+          font-weight: 400;
+          color: var(--color-text-secondary);
+          min-width: 140px;
+          flex-shrink: 0;
+          display: inline-flex;
+          align-items: center;
+          gap: 0.4rem;
+        }
+        .setup-item__name--primary {
+          font-weight: 600;
+          color: var(--color-text-primary);
+        }
+        .setup-item__dot {
+          display: inline-block;
+          width: 5px;
+          height: 5px;
+          border-radius: 50%;
+          background: var(--color-accent);
+        }
+        .setup-item__detail {
+          font-size: 0.85rem;
+          color: var(--color-text-muted);
+          line-height: 1.55;
+        }
+
+        @media (max-width: 700px) {
           .setup-row {
             grid-template-columns: 1fr !important;
-            gap: 0.75rem !important;
+            gap: 0.5rem !important;
+            padding-block: 1.25rem !important;
+          }
+          .setup-row__category {
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--color-border-subtle);
+          }
+          .setup-item {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 0.5rem 1rem;
+            align-items: baseline;
+          }
+          .setup-item__name {
+            min-width: auto !important;
+            white-space: nowrap;
+          }
+          .setup-item__detail {
+            text-align: left;
           }
         }
       `}</style>

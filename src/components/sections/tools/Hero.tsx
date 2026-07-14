@@ -87,32 +87,6 @@ export default function ToolsHero() {
           The languages, frameworks, and tools I&apos;d install on a fresh machine within the first hour. Not a buzzword list — what I actually use,
           ranked roughly by how often I touch it.
         </m.p>
-
-        {/* Terminal block — flavor */}
-        <m.div
-          custom={3}
-          initial="hidden"
-          animate="visible"
-          variants={fadeUp}
-          style={{
-            display: "inline-flex",
-            flexDirection: "column",
-            gap: "0.25rem",
-            fontFamily: "var(--font-mono)",
-            fontSize: "0.78rem",
-            background: "var(--color-bg-elevated)",
-            border: "1px solid var(--color-border)",
-            borderRadius: "var(--radius-md)",
-            padding: "0.75rem 1rem",
-            color: "var(--color-text-muted)",
-          }}
-        >
-          <span>
-            <span style={{ color: "var(--color-accent)" }}>$</span> which nvim
-          </span>
-          <span style={{ opacity: 0.7 }}>/usr/bin/nvim</span>
-          <span style={{ opacity: 0.5 }}>{"// home. sweet. home."}</span>
-        </m.div>
       </div>
     </section>
   );
