@@ -27,7 +27,6 @@ export default function AboutCTA() {
           className="eyebrow"
           style={{ marginBottom: "3rem" }}
         >
-          <span className="eyebrow__mark">[ 06 ]</span>
           What&apos;s next
           <span className="eyebrow__rule" />
         </m.p>
@@ -264,17 +263,18 @@ export default function AboutCTA() {
             >
               Bonus points if it doesn&apos;t start with &ldquo;circling back.&rdquo;
             </p>
-            <div className="flex flex-wrap gap-2" style={{ marginTop: "0.5rem" }}>
+            <div className="flex flex-wrap items-center gap-3" style={{ marginTop: "0.5rem" }}>
               <a
                 href={`mailto:${EMAIL}`}
                 style={{
                   fontFamily: "var(--font-mono)",
-                  fontSize: "0.78rem",
+                  fontSize: "0.88rem",
                   color: "var(--color-accent)",
                   letterSpacing: "0.06em",
                   display: "inline-flex",
                   alignItems: "center",
                   gap: "0.4rem",
+                  transition: "opacity 0.2s",
                 }}
                 className="group"
               >
@@ -283,16 +283,23 @@ export default function AboutCTA() {
               </a>
               <span style={{ color: "var(--color-text-muted)", opacity: 0.4 }}>·</span>
               <a
-                href="/resume.pdf"
-                download
+                href="/Muiz-Oyebowale-Resume.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
                 style={{
                   fontFamily: "var(--font-mono)",
-                  fontSize: "0.78rem",
+                  fontSize: "0.88rem",
                   color: "var(--color-text-muted)",
                   letterSpacing: "0.06em",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "0.3rem",
+                  transition: "color 0.2s",
                 }}
+                className="hover:text-text-primary"
               >
-                résumé ↓
+                résumé
+                <span className="transition-transform duration-200 group-hover:translate-x-0.5">↗</span>
               </a>
             </div>
           </m.div>

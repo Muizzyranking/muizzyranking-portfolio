@@ -36,7 +36,6 @@ export default function Journey({ milestones }: { milestones: Milestone[] }) {
           className="eyebrow"
           style={{ marginBottom: "3rem" }}
         >
-          <span className="eyebrow__mark">[ 03 ]</span>
           The journey
           <span className="eyebrow__rule" />
         </m.p>

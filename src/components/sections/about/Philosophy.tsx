@@ -45,7 +45,6 @@ export default function Philosophy() {
           className="eyebrow"
           style={{ marginBottom: "3rem" }}
         >
-          <span className="eyebrow__mark">[ 02 ]</span>
           How I think
           <span className="eyebrow__rule" />
         </m.p>

@@ -47,15 +47,6 @@ const TRACKS = [
     reading: ["Designing ML Systems — Chip Huyen", "Made With ML"],
     note: "// the infra part I get. the model part: getting there.",
   },
-  {
-    area: "Rust",
-    stage: "reading" as Stage,
-    description:
-      "I like Rust because it refuses to let you be sloppy. The borrow checker is a strict code reviewer who never takes a day off. I respect it. I also occasionally want to argue with it.",
-    items: ["Ownership & borrowing", "Error handling (Result, Option)", "Traits & generics", "Async Rust (tokio)", "CLI tooling with clap"],
-    reading: ["The Rust Book", "Rust by Practice", "Error Handling in Rust"],
-    note: "// current status: the borrow checker and I have an understanding",
-  },
 ];
 
 function StageIndicator({ current }: { current: Stage }) {
@@ -113,7 +104,6 @@ export default function Roadmap() {
           className="eyebrow"
           style={{ marginBottom: "3rem" }}
         >
-          <span className="eyebrow__mark">[ 04 ]</span>
           What I&apos;m learning
           <span className="eyebrow__rule" />
         </m.p>

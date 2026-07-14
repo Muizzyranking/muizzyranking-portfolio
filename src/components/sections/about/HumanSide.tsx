@@ -40,7 +40,6 @@ export default function HumanSide() {
           className="eyebrow"
           style={{ marginBottom: "3rem" }}
         >
-          <span className="eyebrow__mark">[ 05 ]</span>
           The human side
           <span className="eyebrow__rule" />
         </m.p>

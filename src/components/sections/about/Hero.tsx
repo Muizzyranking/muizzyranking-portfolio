@@ -197,7 +197,7 @@ export default function AboutHero() {
               flexShrink: 0,
             }}
           >
-            <Image src="/muizzy.png" alt="Muiz Oyebowale" fill sizes="(max-width: 700px) 85vw, 260px" style={{ objectFit: "cover" }} quality={90} />
+            <Image src="/muizzy.jpg" alt="Muiz Oyebowale" fill sizes="(max-width: 700px) 85vw, 260px" style={{ objectFit: "cover", objectPosition: "center center" }} quality={90} />
 
             {[
               { top: "10px", left: "10px", borderTop: "1px solid", borderLeft: "1px solid" },

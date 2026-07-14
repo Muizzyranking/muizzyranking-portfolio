@@ -26,7 +26,6 @@ export default function Origin() {
           className="eyebrow"
           style={{ marginBottom: "3rem" }}
         >
-          <span className="eyebrow__mark">[ 01 ]</span>
           Origin
           <span className="eyebrow__rule" />
         </m.p>
