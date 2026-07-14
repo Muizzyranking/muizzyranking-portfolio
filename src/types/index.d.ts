@@ -17,6 +17,7 @@ export type Project = {
   summary: string;
   status: "complete" | "in-progress" | "archived";
   year: string;
+  datePublished: string;
   stack: string[];
   repo: string;
   live: string;

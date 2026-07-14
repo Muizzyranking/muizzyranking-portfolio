@@ -16,6 +16,7 @@ function readProjectMeta(filename: string): Project {
     summary: data.summary ?? "",
     status: data.status ?? "complete",
     year: data.year ?? "",
+    datePublished: data.datePublished ?? "",
     stack: data.stack ?? [],
     repo: data.repo ?? "",
     live: data.live ?? "",
@@ -30,7 +31,7 @@ export function listAllProjectsForEditor(): Project[] {
     .readdirSync(projectsDir)
     .filter((f) => f.endsWith(".mdx"))
     .map(readProjectMeta)
-    .sort((a, b) => Number(b.year) - Number(a.year));
+    .sort((a, b) => b.datePublished.localeCompare(a.datePublished));
 }
 
 export function getAllProjects(): Project[] {
@@ -69,6 +70,7 @@ export function getProjectBySlugIncludingDrafts(slug: string): {
       summary: data.summary ?? "",
       status: data.status ?? "complete",
       year: data.year ?? "",
+      datePublished: data.datePublished ?? "",
       stack: data.stack ?? [],
       repo: data.repo ?? "",
       live: data.live ?? "",
