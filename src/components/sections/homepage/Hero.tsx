@@ -2,21 +2,18 @@
 
 import { m } from "framer-motion";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { fadeUp } from "@/lib/motion";
 import "@/styles/homepage/hero.css";
 
-const LINES = ["currently rewriting my Neovim config.", "it was fine.", "it is not fine.", "anyway. welcome."];
-
-const META = [
-  { label: "Status", value: "Open to work", pulse: true },
-  { label: "Pivoting", value: "Backend → AI/ML" },
-  { label: "Editor", value: "Neovim. Always." },
-  { label: "Dad jokes", value: "∞ remaining" },
+const LINES = [
+  "pushing to production.",
+  "tests passed.",
+  "deploy succeeded.",
+  "anyway. welcome.",
 ];
 
 export default function Hero() {
-  const glowRef = useRef<HTMLDivElement>(null);
   const [displayed, setDisplayed] = useState("");
   const [lineIdx, setLineIdx] = useState(0);
   const [charIdx, setCharIdx] = useState(0);
@@ -42,23 +39,8 @@ export default function Hero() {
     setDone(true);
   }, [charIdx, lineIdx, target, done]);
 
-  useEffect(() => {
-    const hero = glowRef.current?.parentElement;
-    if (!hero) return;
-    const handleMove = (e: MouseEvent) => {
-      if (!glowRef.current) return;
-      const rect = hero.getBoundingClientRect();
-      const x = ((e.clientX - rect.left) / rect.width) * 100;
-      const y = ((e.clientY - rect.top) / rect.height) * 100;
-      glowRef.current.style.background = `radial-gradient(700px circle at ${x}% ${y}%, color-mix(in srgb, var(--color-accent) 9%, transparent), transparent 65%)`;
-    };
-    hero.addEventListener("mousemove", handleMove);
-    return () => hero.removeEventListener("mousemove", handleMove);
-  }, []);
-
   return (
     <section className="hero-section">
-      <div ref={glowRef} className="hero-glow" />
       <div className="hero-grid-bg" />
       <m.div
         initial={{ scaleX: 0, opacity: 0 }}
@@ -68,72 +50,49 @@ export default function Hero() {
       />
 
       <div className="container-main hero-container">
-        <div className="hero-grid">
-          {/* LEFT */}
-          <div className="hero-content">
-            <m.p custom={0} initial="hidden" animate="visible" variants={fadeUp} className="hero-role">
-              <span className="hero-role-bracket">[ ]</span>
-              Backend Engineer
-              <span className="hero-role-line" />
-            </m.p>
+        <div className="hero-content">
+          <m.p custom={0} initial="hidden" animate="visible" variants={fadeUp} className="hero-role">
+            <span className="hero-role-bracket"> Backend Engineer</span>
+            <span className="hero-role-line" />
+          </m.p>
 
-            <m.h1 custom={1} initial="hidden" animate="visible" variants={fadeUp} className="hero-title">
-              <span className="hero-title-accent">Muiz</span>
-              <span className="hero-title-name">Oyebowale</span>
-            </m.h1>
+          <m.h1 custom={1} initial="hidden" animate="visible" variants={fadeUp} className="hero-title">
+            <span className="hero-title-name">
+              <span className="hero-title-accent">Muiz </span>Oyebowale
+            </span>
+          </m.h1>
 
-            <m.p custom={2} initial="hidden" animate="visible" variants={fadeUp} className="hero-subtitle">
-              I build the systems that hold everything together —
-              <br />
-              <span className="hero-subtitle-muted">now teaching them to think.</span>
-            </m.p>
+          <m.div custom={2} initial="hidden" animate="visible" variants={fadeUp} className="hero-tagline">
+            <p className="hero-subtitle">
+              I build the parts nobody sees, and that's exactly how I like it. I&apos;ve got your back<span className="hero-subtitle-accent">(end)</span>.
+            </p>
+            <p className="hero-subtitle-aside">
+              <span className="hero-subtitle-aside-marker">{"//"}</span>
+              not all heroes wear capes. some just write clean commits.
+            </p>
+          </m.div>
 
-            <m.div custom={3} initial="hidden" animate="visible" variants={fadeUp} className="hero-terminal">
-              <span className="hero-terminal-inner">
-                <span className="hero-terminal-prompt">$</span>
-                {displayed}
-                <m.span
-                  animate={{ opacity: [1, 0, 1] }}
-                  transition={{ repeat: Infinity, duration: 1, times: [0, 0.5, 0.5] }}
-                  className="hero-terminal-cursor"
-                >
-                  ▋
-                </m.span>
-              </span>
-            </m.div>
+          <m.div custom={3} initial="hidden" animate="visible" variants={fadeUp} className="hero-terminal">
+            <span className="hero-terminal-inner">
+              <span className="hero-terminal-prompt">$</span>
+              {displayed}
+              <m.span
+                animate={{ opacity: [1, 0, 1] }}
+                transition={{ repeat: Infinity, duration: 1, times: [0, 0.5, 0.5] }}
+                className="hero-terminal-cursor"
+              >
+                ▋
+              </m.span>
+            </span>
+          </m.div>
 
-            <m.div custom={4} initial="hidden" animate="visible" variants={fadeUp} className="hero-ctas">
-              <Link href="/projects" className="hero-btn-primary">
-                View Projects →
-              </Link>
-              <Link href="/about" className="hero-btn-secondary">
-                who&apos;s behind this →
-              </Link>
-            </m.div>
-          </div>
-
-          {/* RIGHT — meta */}
-          <m.div
-            initial={{ opacity: 0, x: 16 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.9, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            className="hero-meta"
-          >
-            {META.map(({ label, value, pulse }) => (
-              <div key={label}>
-                <p className="hero-meta-item-label">{label}</p>
-                <p className="hero-meta-item-value">
-                  {pulse && (
-                    <m.span
-                      animate={{ opacity: [1, 0.2, 1] }}
-                      transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-                      className="hero-meta-pulse"
-                    />
-                  )}
-                  {value}
-                </p>
-              </div>
-            ))}
+          <m.div custom={4} initial="hidden" animate="visible" variants={fadeUp} className="hero-ctas">
+            <Link href="/projects" className="hero-btn-primary">
+              View Projects →
+            </Link>
+            <Link href="/about" className="hero-btn-secondary">
+              who&apos;s behind this →
+            </Link>
           </m.div>
         </div>
       </div>

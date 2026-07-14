@@ -18,7 +18,6 @@ export default function Contact() {
     <section ref={ref} id="contact" className="py-[clamp(5rem,10vw,8rem)] bg-bg-elevated border-t border-border-subtle">
       <div className="container-main">
         <m.p variants={fadeUp} custom={0} initial="hidden" animate={inView ? "visible" : "hidden"} className="eyebrow mb-8">
-          <span className="eyebrow__mark">[ 05 ]</span>
           Contact
           <span className="eyebrow__rule" />
         </m.p>

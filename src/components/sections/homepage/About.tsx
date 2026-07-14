@@ -17,7 +17,7 @@ const SIDEBAR_CARDS = [
   },
   {
     label: "Currently exploring",
-    chips: ["LLMs", "MLOps", "Rust", "Statistics"],
+    chips: ["LLMs", "MLOps", "Statistics"],
   },
   {
     label: "Off the clock",
@@ -33,7 +33,6 @@ export default function About() {
     <section ref={ref} id="about" className="section-band">
       <div className="container-main">
         <m.p variants={fadeUp} custom={0} initial="hidden" animate={inView ? "visible" : "hidden"} className="eyebrow mb-8">
-          <span className="eyebrow__mark">[ 01 ]</span>
           About
           <span className="eyebrow__rule" />
         </m.p>

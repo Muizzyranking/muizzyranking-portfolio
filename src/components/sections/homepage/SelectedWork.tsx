@@ -127,7 +127,6 @@ export default function SelectedWork({ projects }: { projects: Project[] }) {
     <section ref={ref} id="work" className="section-band">
       <div className="container-main">
         <m.p variants={fadeUp} custom={0} initial="hidden" animate={inView ? "visible" : "hidden"} className="eyebrow mb-8">
-          <span className="eyebrow__mark">[ 02 ]</span>
           Selected work
           <span className="eyebrow__rule" />
         </m.p>
