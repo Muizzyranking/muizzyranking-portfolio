@@ -1,0 +1,42 @@
+---
+title: 'The Art of Git Is Dying'
+day: 06
+summary: >-
+  Commits used to tell the story of how software got built, funny messages
+  and all. Now a whole feature lands in one commit with thousands of lines,
+  and git has quietly turned into a sync button for GitHub instead of a
+  record of how the work actually happened.
+categories:
+  - git
+  - github
+  - version-control
+  - ai
+---
+
+I think the art of git is dying. Not git the tool, that's fine, it still does what it always did. I mean git as a practice. The thing where you actually thought about your commits, where the history of a project told you something about how it was built.
+
+There used to be a rhythm to it. You'd make a change, commit it, make another change, commit that too. Small pieces. And because they were small, they were honest. You could tell when someone was stuck, because you'd see three commits in a row like "fix bug," "fix bug again," "one more time." You could tell when someone finally got something working, because the next commit message would sound relieved. It wasn't just useful, it was kind of funny, and the funny part mattered because it meant a person was actually there, thinking, as they worked.
+
+That's mostly gone now. What I see instead is one commit. Sometimes two. An entire feature, thousands of lines, dropped in a single push with a message like "add dashboard." I've watched entire applications get built with maybe five commits total, each one enormous, touching a dozen files at once. Open the pull request and it's 3,000 additions, 100 deletions, one commit. That's the whole record of however many days it took to build.
+
+I worked with someone whose PR had over 5,000 additions and around 200 deletions. Two commits. One was the entire implementation. The other was updating the README. That was it. And looking at that, I remember thinking, this person isn't using git to track anything, they're using git commit and git push as a way to move code from their laptop to GitHub. That's the whole function it's serving for them.
+
+## what we actually lost
+
+Git was built to preserve history. That's not a nice-to-have feature, it's the reason the tool exists. A commit is supposed to be a small, reasoned checkpoint, something you could revert to if things went wrong. Small commits meant you could bisect a bug down to the exact change that caused it. You could read git blame and actually learn something, not just who wrote a line, but roughly when and why, because the commit sitting next to it would tell you what they were trying to do.
+
+Now git blame gives you a name and a date, and the date barely means anything. Yes, he wrote this code. On Tuesday. Along with four thousand other lines that probably represent several days of actual thinking, all squashed into the one moment someone finally ran git add . and pushed.
+
+Do people even revert to a specific commit anymore. I mean that as an honest question, not a rhetorical one. When your whole feature is one commit, reverting it means reverting the entire feature. There's no granularity left. You either keep everything or you throw it all away.
+
+## it's not really about AI
+
+I want to be careful here, because the easy take is "AI ruined git," and I don't think that's quite right. AI didn't force anyone to commit this way. What it did was make it a lot easier to generate a large, working chunk of code in one sitting, and we responded to that by not changing how we commit. We kept doing git add ., git commit -m "stuff", git push, except now "stuff" is ten times bigger than it used to be.
+
+Nothing about AI-assisted coding requires you to squash three days of iteration into one commit. You could still break the work into small, meaningful pieces even when a large part of the code came from a prompt. We're mostly choosing not to, partly because it's faster not to, and partly because the actual goal seems to have shifted. Getting the code onto GitHub, seeing the PR merged, that feels like the finish line now. The commit history is just the vehicle that gets you there, and once you've arrived, nobody looks at the vehicle again.
+
+That's the real shift, I think. Git has quietly turned into a delivery mechanism for GitHub instead of a record of how the software actually evolved. We're optimizing for "did the code get there" instead of "can someone understand how it got there." Those used to be roughly the same goal. Now they're not close.
+
+## I could be wrong about how bad this is
+
+Maybe some of this is nostalgia. Plenty of projects never had clean history to begin with, and plenty of teams ship perfectly good software without anyone reading a commit log from start to finish. I'm not saying every repo needs to read like a novel. But I do think we've lost something specific and useful, the ability to look at a project's history and actually reconstruct the thinking behind it, and I don't think we've replaced it with anything. We just stopped doing it, and kept calling what's left "history" anyway.
