@@ -15,19 +15,22 @@ const DAD_JOKES = [
 export default function HumanSide() {
   const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, SCROLL_REVEAL);
-  const [joke, setJoke] = useState<string>("Hold on, while I think of a good one...");
+  const [jokeIndex, setJokeIndex] = useState(0);
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    const randomJoke = DAD_JOKES[Math.floor(Math.random() * DAD_JOKES.length)];
-    setJoke(randomJoke);
+    setJokeIndex(Math.floor(Math.random() * DAD_JOKES.length));
+    setReady(true);
   }, []);
+
+  const joke = ready ? DAD_JOKES[jokeIndex] : "Hold on, while I think of a good one...";
+  const cycleJoke = () => setJokeIndex((i) => (i + 1) % DAD_JOKES.length);
 
   return (
     <section
       ref={ref}
       style={{
         padding: "clamp(4.5rem, 9vw, 7rem) 0",
-        background: "var(--color-surface)",
         borderBottom: "1px solid var(--color-border-subtle)",
       }}
     >
@@ -116,7 +119,7 @@ export default function HumanSide() {
                 lineHeight: 1.7,
               }}
             >
-              I watch everything — live action, animated, sequels that probably shouldn&apos;t exist. I have opinions about which Spider-Man was
+              I watch everything: live action, animated, sequels that probably shouldn&apos;t exist. I have opinions about which Spider-Man was
               objectively the best. They are correct.
             </p>
             <div
@@ -213,15 +216,23 @@ export default function HumanSide() {
             </div>
           </m.div>
 
-          <m.div
+          <m.button
+            type="button"
             variants={staggerItem}
+            onClick={cycleJoke}
+            aria-label="Show the next dad joke"
             style={{
               gridColumn: "span 5",
               background: "var(--color-background)",
               padding: "2rem",
               borderRight: "1px solid var(--color-border)",
+              borderBottom: "1px solid var(--color-border)",
+              cursor: "pointer",
+              font: "inherit",
+              textAlign: "left",
+              color: "inherit",
             }}
-            className="bento-narrow"
+            className="bento-narrow dad-joke-card"
           >
             <p
               style={{
@@ -233,7 +244,7 @@ export default function HumanSide() {
                 marginBottom: "0.75rem",
               }}
             >
-              Free sample
+              Dad jokes free sample
             </p>
             <p
               style={{
@@ -255,9 +266,9 @@ export default function HumanSide() {
             >
               {"// there are more where that came from."}
               <br />
-              {"// you have been warned."}
+              {"// hint: click"}
             </p>
-          </m.div>
+          </m.button>
 
           <m.div
             variants={staggerItem}
@@ -320,6 +331,17 @@ export default function HumanSide() {
       </div>
 
       <style>{`
+        .dad-joke-card {
+          transition: border-color 0.2s ease;
+        }
+        .dad-joke-card:hover,
+        .dad-joke-card:focus-visible {
+          border-color: var(--color-accent) !important;
+        }
+        .dad-joke-card:focus-visible {
+          outline: 2px solid var(--color-accent);
+          outline-offset: -2px;
+        }
         @media (max-width: 760px) {
           .bento-wide, .bento-narrow {
             grid-column: span 12 !important;
