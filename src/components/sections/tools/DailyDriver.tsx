@@ -113,30 +113,17 @@ export default function DailyDriver() {
           style={{ display: "flex", flexDirection: "column" }}
         >
           {SETUP.map(({ category, items }) => (
-            <m.div
-              key={category}
-              variants={staggerItem}
-              className="setup-row"
-            >
-              <p className="setup-row__category">
-                {category}
-              </p>
+            <m.div key={category} variants={staggerItem} className="setup-row">
+              <p className="setup-row__category">{category}</p>
 
               <div className="setup-row__items">
                 {items.map(({ name, detail, primary }) => (
-                  <div
-                    key={name}
-                    className="setup-item"
-                  >
+                  <div key={name} className="setup-item">
                     <span className={`setup-item__name ${primary ? "setup-item__name--primary" : ""}`}>
                       {name}
-                      {primary && (
-                        <span className="setup-item__dot" />
-                      )}
+                      {primary && <span className="setup-item__dot" />}
                     </span>
-                    <span className="setup-item__detail">
-                      {detail}
-                    </span>
+                    <span className="setup-item__detail">{detail}</span>
                   </div>
                 ))}
               </div>

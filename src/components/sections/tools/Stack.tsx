@@ -74,10 +74,7 @@ export default function Stack() {
   const inView = useInView(ref, SCROLL_REVEAL);
 
   return (
-    <section
-      ref={ref}
-      className="section-band section-band--elevated"
-    >
+    <section ref={ref} className="section-band section-band--elevated">
       <div className="container-main">
         <m.p
           variants={fadeUp}
@@ -119,11 +116,7 @@ export default function Stack() {
           }}
         >
           {GROUPS.map(({ label, blurb, tags }) => (
-            <m.div
-              key={label}
-              variants={staggerItem}
-              className="stack-section"
-            >
+            <m.div key={label} variants={staggerItem} className="stack-section">
               {/* Section header */}
               <div className="stack-section__header">
                 <span className="stack-section__prompt">$</span>
@@ -141,10 +134,7 @@ export default function Stack() {
                 {tags.map((t, i) => {
                   const tier = TIER_CONFIG[t.tier];
                   return (
-                    <span
-                      key={`${t.name}-${i}`}
-                      className={`stack-tag ${tier.className}`}
-                    >
+                    <span key={`${t.name}-${i}`} className={`stack-tag ${tier.className}`}>
                       <span className="stack-tag__icon">{tier.symbol}</span>
                       {t.name}
                     </span>
