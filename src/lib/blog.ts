@@ -1,10 +1,10 @@
 import fs from "node:fs";
 import path from "node:path";
-import GithubSlugger from "github-slugger";
 import matter from "gray-matter";
 import yaml from "js-yaml";
 import readingTime from "reading-time";
-import type { Category, Post, PostMeta, RawPost, TocItem } from "@/types";
+import { extractToc } from "@/lib/mdx";
+import type { Category, Post, PostMeta, RawPost } from "@/types";
 
 const BLOG_DIR = path.join(process.cwd(), "content/blog");
 const INJECTIONS_FILE = path.join(BLOG_DIR, "_injections.yml");
@@ -63,27 +63,6 @@ export function computePublishedAt(year: number, month: number, day: number, tim
 
 export function formatHumanDate(d: Date): string {
   return d.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
-}
-
-// TOC extraction
-export function extractToc(body: string): TocItem[] {
-  const slugger = new GithubSlugger();
-  const items: TocItem[] = [];
-  let inFence = false;
-  for (const line of body.split("\n")) {
-    if (/^\s*```/.test(line)) {
-      inFence = !inFence;
-      continue;
-    }
-    if (inFence) continue;
-    const m = line.match(/^(#{2,3})\s+(.+?)\s*#*\s*$/);
-    if (!m) continue;
-    const level = m[1].length as 2 | 3;
-    const text = m[2];
-    const id = slugger.slug(text);
-    items.push({ level, text, id });
-  }
-  return items;
 }
 
 // File walking + parsing
@@ -254,4 +233,22 @@ export function getCategoryBySlug(slug: string): Category | null {
 
 export function getPostsByCategory(slug: string): PostMeta[] {
   return getAllPosts().filter((p) => p.categories.some((c) => c.slug === slug));
+}
+
+export function getRelatedPosts(slug: string, n = 3): PostMeta[] {
+  const all = getAllPosts();
+  const post = all.find((p) => p.slug === slug);
+  if (!post) return [];
+  const sharesCategory = (candidate: PostMeta) => candidate.categories.some((c) => post.categories.some((pc) => pc.slug === c.slug));
+  const related = all.filter((p) => p.slug !== slug && sharesCategory(p));
+  if (related.length >= n) return related.slice(0, n);
+  const fill = all.filter((p) => p.slug !== slug && !related.includes(p));
+  return [...related, ...fill].slice(0, n);
+}
+
+export function getAdjacentPosts(slug: string): { prev: PostMeta | null; next: PostMeta | null } {
+  const all = getAllPosts();
+  const idx = all.findIndex((p) => p.slug === slug);
+  if (idx === -1) return { prev: null, next: null };
+  return { prev: all[idx + 1] ?? null, next: all[idx - 1] ?? null };
 }
