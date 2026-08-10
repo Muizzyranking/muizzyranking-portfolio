@@ -8,6 +8,7 @@ export type Challenge = {
 export type ProjectContent = {
   overview: string;
   challenges: Challenge[];
+  outcomes: string;
   learned: string;
 };
 
@@ -19,8 +20,10 @@ export type Project = {
   year: string;
   datePublished: string;
   stack: string[];
+  role?: string;
   repo: string;
   live: string;
+  screenshots?: string[];
   featured: boolean;
   draft: boolean;
 };
@@ -29,7 +32,6 @@ export type Experience = {
   company: string;
   role: string;
   type: string;
-  location: string;
   period: {
     start: string;
     end: string;

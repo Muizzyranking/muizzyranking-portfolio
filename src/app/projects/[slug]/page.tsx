@@ -1,9 +1,14 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import ProjectDetail from "@/components/ui/ProjectDetails";
-import { getAllProjects, getProjectBySlug } from "@/lib/projects";
+import ProjectCaseStudy from "@/components/sections/projects/ProjectCaseStudy";
+import { getAllProjects, getPrevNextProject, getProjectBySlug, getRelatedProjects } from "@/lib/projects";
+import { site } from "@/lib/site";
 
 type Props = { params: Promise<{ slug: string }> };
+
+export async function generateStaticParams() {
+  return getAllProjects().map((p) => ({ slug: p.slug }));
+}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
@@ -11,19 +16,27 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!project) return { title: "Project not found" };
 
+  const url = `${site.url}/projects/${project.meta.slug}`;
   return {
-    title: `${project.meta.title} — Muiz Oyebowale`,
+    title: project.meta.title,
     description: project.meta.summary,
+    alternates: { canonical: url },
     openGraph: {
+      type: "article",
       title: project.meta.title,
       description: project.meta.summary,
+      url,
+      publishedTime: project.meta.datePublished,
+      authors: ["Muiz Oyebowale"],
+      tags: project.meta.stack,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: project.meta.title,
+      description: project.meta.summary,
+      creator: "@muizzyranking",
     },
   };
-}
-
-export async function generateStaticParams() {
-  const projects = getAllProjects();
-  return projects.map((p) => ({ slug: p.slug }));
 }
 
 export default async function ProjectPage({ params }: Props) {
@@ -32,5 +45,13 @@ export default async function ProjectPage({ params }: Props) {
 
   if (!project) notFound();
 
-  return <ProjectDetail meta={project.meta} parsed={project.parsed} />;
+  return (
+    <ProjectCaseStudy
+      meta={project.meta}
+      parsed={project.parsed}
+      related={getRelatedProjects(slug)}
+      prev={getPrevNextProject(slug).prev}
+      next={getPrevNextProject(slug).next}
+    />
+  );
 }

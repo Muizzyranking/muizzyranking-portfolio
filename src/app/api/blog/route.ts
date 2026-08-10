@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { getAllPosts } from "@/lib/blog";
-
-const SITE_URL = "https://muizzyranking.me";
+import { site } from "@/lib/site";
 
 export const revalidate = 3600;
 
@@ -15,7 +14,7 @@ export async function GET(req: Request) {
     title: p.title,
     slug: p.slug,
     summary: p.summary,
-    url: `${SITE_URL}/blog/${p.slug}`,
+    url: `${site.url}/blog/${p.slug}`,
     publishedAt: p.publishedAt,
     publishedAtIso: p.publishedAtIso,
     categories: p.categories.map((c) => c.label),

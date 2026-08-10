@@ -1,14 +1,16 @@
+import { site } from "@/lib/site";
+
 export default function JsonLd() {
   const schema = {
     "@context": "https://schema.org",
     "@type": "Person",
-    name: "Muiz Oyebowale",
-    alternateName: "Muizzyranking",
-    url: "https://muizzyranking.me",
-    jobTitle: "Backend Engineer",
-    description: "Backend engineer building systems that have to be correct. Python, Django, distributed systems.",
-    image: "https://www.muizzyranking.me/opengraph-image",
-    email: "mailto:oyebowaleabdulmuiz@gmail.com",
+    name: site.name,
+    alternateName: site.handle,
+    url: site.url,
+    jobTitle: site.title,
+    description: site.description,
+    image: `${site.url}/opengraph-image`,
+    email: `mailto:${site.email}`,
     knowsAbout: [
       "Backend Engineering",
       "Python",
@@ -21,12 +23,7 @@ export default function JsonLd() {
       "API Development",
       "Distributed Systems",
     ],
-    address: {
-      "@type": "PostalAddress",
-      addressLocality: "Lagos",
-      addressCountry: "NG",
-    },
-    sameAs: ["https://github.com/Muizzyranking", "https://linkedin.com/in/muizzyrankin", "https://x.com/muizzyranking"],
+    sameAs: site.socials.map((s) => s.href),
   };
 
   return (

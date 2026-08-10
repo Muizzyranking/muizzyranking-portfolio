@@ -2,103 +2,51 @@ import Link from "next/link";
 import type { PostMeta } from "@/types";
 
 export default function PostHero({ post }: { post: PostMeta }) {
+  const words = post.readingTime.words.toLocaleString("en-US");
+
   return (
-    <div
-      style={{
-        position: "relative",
-        paddingTop: "clamp(6rem, 14vw, 10rem)",
-        paddingBottom: "clamp(2.5rem, 5vw, 4rem)",
-        borderBottom: "1px solid var(--color-border-subtle)",
-        overflow: "hidden",
-      }}
-    >
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          backgroundImage: `
-              linear-gradient(var(--color-border-subtle) 1px, transparent 1px),
-              linear-gradient(90deg, var(--color-border-subtle) 1px, transparent 1px)
-            `,
-          backgroundSize: "48px 48px",
-          opacity: 0.3,
-          pointerEvents: "none",
-          maskImage: "radial-gradient(ellipse 80% 100% at 50% 0%, black 30%, transparent 100%)",
-          WebkitMaskImage: "radial-gradient(ellipse 80% 100% at 50% 0%, black 30%, transparent 100%)",
-        }}
-      />
+    <header className="container-main pt-[clamp(5rem,10vw,8rem)] pb-[clamp(2.5rem,5vw,4rem)] border-b border-border-subtle">
+      <Link
+        href="/blog"
+        className="group inline-flex items-center gap-2 font-mono text-[0.72rem] tracking-[0.08em] text-text-muted uppercase mb-8 hover:text-text-primary"
+      >
+        <span className="transition-transform duration-150 ease-out group-hover:-translate-x-1" aria-hidden="true">
+          ←
+        </span>
+        all writing
+      </Link>
 
-      <div className="container-main" style={{ position: "relative", zIndex: 2 }}>
-        <div className="eyebrow" style={{ marginBottom: "2rem" }}>
-          <Link href="/blog" className="eyebrow__mark" style={{ textDecoration: "none" }}>
-            ~/blog
-          </Link>
-          <span className="eyebrow__rule" />
-          <span>{post.publishedAt}</span>
-          <span style={{ color: "var(--color-text-muted)", opacity: 0.5 }}>·</span>
-          <span>{post.readingTime.text}</span>
+      {post.categories.length > 0 && (
+        <div className="flex gap-1.5 flex-wrap mb-5">
+          {post.categories.map((c) => (
+            <Link
+              key={c.slug}
+              href={`/blog/category/${c.slug}`}
+              className="font-mono text-[0.66rem] text-text-muted border border-border-subtle rounded-sm px-2 py-[0.2rem] transition-colors duration-150 hover:text-text-primary hover:border-accent-dim"
+            >
+              {c.label}
+            </Link>
+          ))}
         </div>
+      )}
 
-        <h1
-          style={{
-            fontFamily: "var(--font-display)",
-            fontSize: "clamp(2.1rem, 5vw, 3.75rem)",
-            fontWeight: 700,
-            letterSpacing: "-0.045em",
-            lineHeight: 1.05,
-            maxWidth: "22ch",
-            marginBottom: "1.25rem",
-            color: "var(--color-text-primary)",
-          }}
-        >
-          {post.title}
-        </h1>
+      <h1 className="font-display font-bold tracking-[-0.02em] leading-[1.06] text-[clamp(2.1rem,5vw,3.5rem)] text-text-primary mb-5 max-w-[24ch]">
+        {post.title}
+      </h1>
 
-        {post.summary && (
-          <p
-            style={{
-              fontSize: "clamp(1rem, 1.9vw, 1.15rem)",
-              color: "var(--color-text-secondary)",
-              lineHeight: 1.6,
-              maxWidth: "58ch",
-              marginBottom: "1.5rem",
-            }}
-          >
-            {post.summary}
-          </p>
-        )}
+      {post.summary && <p className="text-text-secondary text-[clamp(1rem,1.8vw,1.15rem)] leading-[1.65] max-w-[62ch] mb-6">{post.summary}</p>}
 
-        {post.categories.length > 0 && (
-          <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap" }}>
-            {post.categories.map((c) => (
-              <Link
-                key={c.slug}
-                href={`/blog/category/${c.slug}`}
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "0.66rem",
-                  color: "var(--color-text-muted)",
-                  border: "1px solid var(--color-border-subtle)",
-                  borderRadius: "var(--radius-sm)",
-                  padding: "0.18rem 0.5rem",
-                  textDecoration: "none",
-                  transition: "color 0.2s, border-color 0.2s",
-                }}
-                className="cat-chip"
-              >
-                {c.label}
-              </Link>
-            ))}
-          </div>
-        )}
-      </div>
-
-      <style>{`
-        .cat-chip:hover {
-          color: var(--color-text-primary) !important;
-          border-color: var(--color-accent-dim) !important;
-        }
-      `}</style>
-    </div>
+      <p className="font-mono text-[0.72rem] tracking-[0.06em] text-text-muted">
+        {post.publishedAt}
+        <span className="mx-2 opacity-40" aria-hidden="true">
+          ·
+        </span>
+        {post.readingTime.text}
+        <span className="mx-2 opacity-40" aria-hidden="true">
+          ·
+        </span>
+        {words} words
+      </p>
+    </header>
   );
 }

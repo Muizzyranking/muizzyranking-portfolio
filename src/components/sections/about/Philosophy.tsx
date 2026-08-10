@@ -6,20 +6,20 @@ import { fadeUp, SCROLL_REVEAL, staggerContainer, staggerItem } from "@/lib/moti
 
 const VALUES = [
   {
-    title: "I listen — actually",
+    title: "I listen, actually",
     body: "Not the kind of listening where you're composing your reply. The kind where you catch the thing behind the thing they said. Details most people scroll past.",
   },
   {
     title: "Slow to start, thorough to finish",
-    body: "I ask questions that feel annoying in the moment and save time in the long run. You want this person on your team before the architecture is decided, not after.",
+    body: "I dig into the problem before the architecture is decided, not after. It feels slow at the start, and it saves time in the long run.",
   },
   {
     title: "I write code for the next person",
     body: "That person is often me, six months later. So: clear naming, honest comments, no clever tricks that only make sense at 2am.",
   },
   {
-    title: "Disagreement is a feature",
-    body: "I'll push back if something doesn't make sense. Respectfully. Persistently. I'll also change my mind the moment I see a better argument — ego doesn't survive good evidence.",
+    title: "I push back. I also change my mind.",
+    body: "If something doesn't add up, I'll say so, the way I'd want someone to for me. And when a better argument comes along, I take it. Ideas win because they're right, not because they were mine.",
   },
 ];
 
@@ -32,7 +32,6 @@ export default function Philosophy() {
       ref={ref}
       style={{
         padding: "clamp(4.5rem, 9vw, 7rem) 0",
-        background: "var(--color-bg-elevated)",
         borderBottom: "1px solid var(--color-border-subtle)",
       }}
     >
@@ -110,7 +109,7 @@ export default function Philosophy() {
                 marginBottom: "1.25rem",
               }}
             >
-              I ask why until it makes sense.
+              I understand the problem before I build the solution.
             </h2>
 
             <p
@@ -121,8 +120,8 @@ export default function Philosophy() {
                 marginBottom: "1rem",
               }}
             >
-              Not because I&apos;m difficult. Because I genuinely cannot move forward until I understand the thing underneath the thing. The root
-              cause. The actual reason a decision was made. The constraint that nobody documented but everyone assumed.
+              I don&apos;t write code until I understand the problem underneath it. The root cause. The actual reason a decision was made. The
+              constraint that nobody documented but everyone assumed.
             </p>
 
             <p
@@ -133,8 +132,8 @@ export default function Philosophy() {
                 marginBottom: "1rem",
               }}
             >
-              It makes me slower sometimes. It makes the work better, always. And once in a while, the why reveals that we&apos;re solving the wrong
-              problem entirely — which is the most valuable discovery you can make before you&apos;ve written any code.
+              It makes the start slower. It makes the work better, always. And once in a while, understanding the problem first reveals that
+              we&apos;re solving the wrong one entirely, which is the most valuable discovery you can make before you&apos;ve written any code.
             </p>
 
             <p
