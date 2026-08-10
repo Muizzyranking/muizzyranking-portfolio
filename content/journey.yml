@@ -5,7 +5,7 @@
 
 - year: "2022"
   title: "ALX & C"
-  body: "Joined ALX (full-stack, leaned backend) and wrote my first line of C. It slowed me down in a good way — memory, pointers, and what the machine is actually doing. Also picked up Python around this time."
+  body: "Joined ALX (full-stack, leaned backend) and wrote my first line of C. It slowed me down in a good way: memory, pointers, and what the machine is actually doing. Also picked up Python around this time."
   tag: "foundations"
 
 - year: "2022"
@@ -20,7 +20,7 @@
 
 - year: "2024"
   title: "Thinking in systems"
-  body: "Started seeing things less as features and more as systems — APIs, background jobs, data flow, and failure modes."
+  body: "Started seeing things less as features and more as systems. APIs, background jobs, data flow, and failure modes."
   tag: "systems"
 
 - year: "2025"

@@ -3,7 +3,7 @@ title: 'Why I Built My Own Rate Limiting Library for FastAPI'
 day: 20
 summary: >-
   I was using SlowAPI for rate limiting in a FastAPI project and kept running
-  into the same friction points. So I built fastlimit — here is what bothered
+  into the same friction points. So I built fastlimit: here is what bothered
   me and what I did about it.
 categories:
   - python
@@ -27,13 +27,13 @@ async def get_items(request: Request):
     return await fetch_items()
 ```
 
-That `request: Request` is not doing anything. `fetch_items()` does not use it. It's there purely because SlowAPI needs it. Small thing, but it bothered me — I like function signatures that say exactly what they need, and this one was lying.
+That `request: Request` is not doing anything. `fetch_items()` does not use it. It's there purely because SlowAPI needs it. Small thing, but it bothered me. I like function signatures that say exactly what they need, and this one was lying.
 
 ## The header injection problem
 
 I could live with that. The thing I could not live with was the header injection.
 
-Rate limit headers are genuinely useful — `X-RateLimit-Remaining` tells clients when to back off, `Retry-After` tells them how long to wait. Standard stuff. So I enabled SlowAPI's header injection and immediately hit a wall: every rate-limited route now had to return a `Response` object directly.
+Rate limit headers are genuinely useful. `X-RateLimit-Remaining` tells clients when to back off, `Retry-After` tells them how long to wait. Standard stuff. So I enabled SlowAPI's header injection and immediately hit a wall: every rate-limited route now had to return a `Response` object directly.
 
 Not a dict. Not a Pydantic model. A `Response`. The moment you enable header injection, SlowAPI expects to work with an actual response object, and if your route returns anything else it just breaks. So I was suddenly doing this:
 
@@ -51,7 +51,7 @@ I disabled header injection and kept moving. But I kept thinking about it.
 
 ## The breaking point: different limits for different users
 
-The thing that finally pushed me over was wanting different rate limits for authenticated vs anonymous users on the same endpoint. I had a search endpoint that was open to everyone — anonymous users should get 10 requests per minute (enough to poke around, not enough to scrape), authenticated users should get 200 (they're paying, they have legitimate high-volume use cases). SlowAPI gives you one limit per endpoint. To get different limits for different users you end up writing custom key functions and multiple decorators and honestly it's just not clean.
+The thing that finally pushed me over was wanting different rate limits for authenticated vs anonymous users on the same endpoint. I had a search endpoint that was open to everyone: anonymous users should get 10 requests per minute (enough to poke around, not enough to scrape), authenticated users should get 200 (they're paying, they have legitimate high-volume use cases). SlowAPI gives you one limit per endpoint. To get different limits for different users you end up writing custom key functions and multiple decorators and honestly it's just not clean.
 
 I wanted to write this:
 
@@ -61,7 +61,7 @@ async def search(q: str) -> list[SearchResult]:
     return await do_search(q)
 ```
 
-And have it just work — anonymous callers hit the IP bucket, authenticated users hit their own separate bucket, neither affecting the other.
+And have it just work. Anonymous callers hit the IP bucket, authenticated users hit their own separate bucket, neither affecting the other.
 
 So I built it.
 
@@ -79,7 +79,7 @@ The dual bucket thing, anonymous vs authenticated, is a first-class feature. Whe
 
 Under the hood, fastlimit supports three algorithms against Redis: sliding window, fixed window, and token bucket. Sliding window is the default, mainly because fixed window has that edge problem where a client can burst at the boundary between two windows and effectively get double the limit for a few seconds. Sliding window avoids that by weighting the previous window's count against how far into the current window you are, instead of just resetting the counter at a hard boundary.
 
-You're not locked into that default though — if your use case fits token bucket better (bursty traffic with a steady refill rate) or fixed window is good enough and you want the slightly cheaper Redis operations, you can set that per-limiter or per-route.
+You're not locked into that default though. If your use case fits token bucket better (bursty traffic with a steady refill rate) or fixed window is good enough and you want the slightly cheaper Redis operations, you can set that per-limiter or per-route.
 
 ## Setup
 
@@ -91,7 +91,7 @@ limiter = FastLimit(
 )
 limiter.init_app(app)
 
-# in any route file — no limiter import needed
+# in any route file, no limiter import needed
 @router.get("/search", dependencies=[rate_limit(ip="10/min", user="200/min")])
 async def search(q: str) -> list[SearchResult]:
     return await do_search(q)
@@ -108,7 +108,7 @@ async def feed() -> FeedResponse:
     return await get_feed()
 ```
 
-Still no `Request` in the signature. Still returns a Pydantic model. The decorator works by overriding `__signature__` on the wrapper function; FastAPI discovers the hidden dependency at startup, resolves it on each request, and your function never sees it. That part took longer to get right than I expected — FastAPI inspects the signature at startup to build its dependency graph, so the override has to happen before that inspection runs, not at call time.
+Still no `Request` in the signature. Still returns a Pydantic model. The decorator works by overriding `__signature__` on the wrapper function; FastAPI discovers the hidden dependency at startup, resolves it on each request, and your function never sees it. That part took longer to get right than I expected. FastAPI inspects the signature at startup to build its dependency graph, so the override has to happen before that inspection runs, not at call time.
 
 ## Where it stands right now
 
@@ -118,6 +118,6 @@ It's on PyPI, so `pip install fastlimit` works today. I've used it in one of my 
 
 Honestly, I am not sure fastlimit will work for everyone's use case. SlowAPI has a broader backend ecosystem (Memcached and a few others) and has been around a lot longer, so if those things matter to you, SlowAPI is probably still the right call.
 
-But if you've hit the same walls I did — `request: Request` everywhere, header injection forcing `Response` returns, no clean way to separate anonymous and authenticated limits — fastlimit is what I wished existed when I was fighting with those problems.
+But if you've hit the same walls I did: `request: Request` everywhere, header injection forcing `Response` returns, no clean way to separate anonymous and authenticated limits, then fastlimit is what I wished existed when I was fighting with those problems.
 
 [Source on GitHub](https://github.com/muizzyranking/fastlimit). [Docs here](https://muizzyranking.github.io/fastlimit).

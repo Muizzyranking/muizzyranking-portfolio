@@ -1,30 +1,28 @@
-- company: "HNG Internship — Anvila & Insighta Labs"
+- company: "HNG Internship, Anvila & Insighta Labs"
   role: "Tech Lead / Backend Engineer"
   type: "Internship"
-  location: "Remote"
   period:
     start: "Apr 2026"
     end: "Jun 2026"
-  summary: "Tech lead over an 11-engineer backend and frontend team building Anvila, an AI-agent manifest generator, shipped in under a month. Alongside that, built Insighta Labs solo — a demographic-intelligence API with dual OAuth and a rule-based natural-language query parser."
+  summary: "Tech lead over an 11-engineer backend and frontend team building Anvila, an AI-agent manifest generator, shipped in under a month. Alongside that, built Insighta Labs solo: a demographic-intelligence API with dual OAuth and a rule-based natural-language query parser."
   highlights:
-    - "Led both backend and frontend delivery — 4 backend engineers, 7 frontend — while remaining the top individual contributor on the frontend myself."
+    - "Led both backend and frontend delivery. 4 backend engineers, 7 frontend, while remaining the top individual contributor on the frontend myself."
     - "Owned database design across the entire team; every engineer extended schemas I originally built, keeping the data layer consistent as the team scaled."
-    - "Built the prompt-to-manifest generation pipeline and its event-publishing layer — the path that turns a user's prompt into a set of customized AI-agent manifest files. 30+ manifests generated in production use."
+    - "Built the prompt-to-manifest generation pipeline and its event-publishing layer. The path that turns a user's prompt into a set of customized AI-agent manifest files. 30+ manifests generated in production use."
     - "Owned all frontend-to-API integration and built several of the marketing pages."
-    - "Independently built Insighta Labs — dual OAuth flow (browser cookie-based, and a full CLI PKCE flow with a local callback server), short-lived JWTs paired with single-use hashed refresh tokens, and a rule-based natural-language query parser for filtering people by age, gender, and country from plain text."
+    - "Independently built Insighta Labs: dual OAuth flow (browser cookie-based, and a full CLI PKCE flow with a local callback server), short-lived JWTs paired with single-use hashed refresh tokens, and a rule-based natural-language query parser for filtering people by age, gender, and country from plain text."
   stack: [Python, FastAPI, Next.js, PostgreSQL, Redis, OAuth, JWT]
 
 - company: "Taskingdom"
   role: "Backend Developer"
   type: "Contract"
-  location: "Remote"
   period:
     start: "Jul 2025"
     end: "Jan 2026"
   summary: "Task-based gaming platform with real-money payouts. Four distinct user roles (regular, VIP, business, influencer), strict permission boundaries, and abuse-prevention logic that had to survive both ephemeral and long-lived tasks."
   highlights:
-    - "Designed the abuse-prevention layer — hybrid Redis-TTL + join-table storage strategy that prevented reward farming across task resets, regardless of whether tasks were short-lived or non-expiring."
-    - "Built the webhook layer linking third-party game outcomes to internal payouts — game ends, condition checks, reward fires, all idempotent."
+    - "Designed the abuse-prevention layer: a hybrid Redis-TTL + join-table storage strategy that prevented reward farming across task resets, regardless of whether tasks were short-lived or non-expiring."
+    - "Built the webhook layer linking third-party game outcomes to internal payouts. Game ends, condition checks, reward fires, all idempotent."
     - "Co-designed core schemas (user, task, reward, role) and the permission system that enforces what each user type can see and do."
     - "Moved heavy operations onto Celery workers behind Redis. User-facing endpoints stopped paying for image processing and external API roundtrips."
   stack: [Python, Django, Django Ninja, PostgreSQL, Redis, Celery, Docker]
@@ -32,28 +30,26 @@
 - company: "Meerge Africa"
   role: "Backend Engineer"
   type: "Contract"
-  location: "Remote"
   period:
     start: "Dec 2024"
     end: "Jul 2025"
   summary: "Multi-service food commerce platform connecting vendors, suppliers, and delivery operations. I owned the Supplier service end to end and stepped in as acting lead when the engineering lead left."
   highlights:
-    - "Designed and led the Supplier service from scratch — supplier lifecycle with four explicit states (pending, approved, rejected, suspended), full audit logging, and admin tooling. 500+ suppliers, ~50 products each at pilot."
-    - "Acted as backend lead for 8 weeks across a 7-engineer team — reviewed architecture decisions, unblocked contributors, kept shipping. Also designed scoped JWT for safer service-to-service calls."
+    - "Designed and led the Supplier service from scratch: supplier lifecycle with four explicit states (pending, approved, rejected, suspended), full audit logging, and admin tooling. 500+ suppliers, ~50 products each at pilot."
+    - "Acted as backend lead for 8 weeks across a 7-engineer team. Reviewed architecture decisions, unblocked contributors, kept shipping. Also designed scoped JWT for safer service-to-service calls."
     - "Refactored bare-except blocks and swallowed exceptions into structured error handling with consistent response shapes and full logging. Silent failures became traceable, on-call became less painful."
     - "Reviewed PRs across all three backend services (Supplier, Delivery, Kitchens), keeping conventions consistent across an evolving codebase."
   stack: [Python, Django, Django REST Framework, PostgreSQL, Redis, Celery, Docker]
 
-- company: "HNG Internship — Sitelytics"
+- company: "HNG Internship, Sitelytics"
   role: "Backend Engineer"
   type: "Internship"
-  location: "Remote"
   period:
     start: "Oct 2025"
     end: "Dec 2025"
-  summary: "Finalist in a globally competitive engineering internship, contributing to Sitelytics — a website analysis platform for non-technical users. Selected among ~309 finalists from 22,000+ interns."
+  summary: "Finalist in a globally competitive engineering internship, contributing to Sitelytics, a website analysis platform for non-technical users. Selected among ~309 finalists from 22,000+ interns."
   highlights:
-    - "Built the Admin system from scratch as sole contributor — role-based access control, user monitoring, scan tracking, admin-managed content."
+    - "Built the Admin system from scratch as sole contributor: role-based access control, user monitoring, scan tracking, admin-managed content."
     - "Built the platform notification system end to end (retrieval, deletion, email delivery) and the helper utilities that standardized notifications across services, removing the inconsistent handling that existed before."
     - "Contributed to the async website-scanning pipeline using background workers and Server-Sent Events for real-time scan progress in the UI."
     - "Reviewed code across a 15-engineer backend team; held the bar on consistency during fast iteration. Acted as temp team lead for one sprint."

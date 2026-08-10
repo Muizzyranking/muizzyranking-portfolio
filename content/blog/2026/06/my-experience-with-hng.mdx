@@ -2,8 +2,8 @@
 title: 'My Experience With HNG: Two Tasks That Stuck With Me'
 day: 13
 summary: >-
-  Looking back at two tasks from the internship — one solo backend stage on
-  Insighta Labs, one team project called Anvila — that ended up being harder
+  Looking back at two tasks from the internship, one solo backend stage on
+  Insighta Labs and one team project called Anvila, that ended up being harder
   than expected, and what I actually walked away with.
 categories:
   - backend
@@ -14,80 +14,80 @@ categories:
 
 I've worked on a lot of stages and tasks during this internship, but two of them kept coming back to me when I thought about what to write next. One was a solo stage task on Insighta Labs, the other was a team project called Anvila. Neither of them was the "biggest" thing I built, but both took longer than I expected, and both left me with something I still think about.
 
-## Insighta Labs — the task that took 4 days instead of 2
+## Insighta Labs: the task that took 4 days instead of 2
 
-To be clear, Insighta Labs is an analysis app. Admins upload and manage a demographic dataset (CSV uploads, deletions, that kind of thing), and analysts come in afterward to search through it — paginated browsing, a natural language query feature (rule-based, no AI involved), and CSV export of results. Both admins and analysts can work from a web portal or a CLI, and both clients share the same backend.
+To be clear, Insighta Labs is an analysis app. Admins upload and manage a demographic dataset (CSV uploads, deletions, that kind of thing), and analysts come in afterward to search through it: paginated browsing, a natural language query feature (rule-based, no AI involved), and CSV export of results. Both admins and analysts can work from a web portal or a CLI, and both clients share the same backend.
 
-The stage task covered a chunk of the backend, and auth was just one part of it — but it's the part that ended up taking most of my time, mainly because of one constraint: access tokens expire in 2 minutes, refresh tokens in 5.
+The stage task covered a chunk of the backend, and auth was just one part of it, but it's the part that ended up taking most of my time, mainly because of one constraint: access tokens expire in 2 minutes, refresh tokens in 5.
 
 ### What it was
 
-Auth needed to work for two different clients sharing the same GitHub OAuth backend — a web portal (cookie-based) and a CLI (PKCE flow). The web portal is straightforward — after GitHub OAuth completes, the backend sets HTTP-only cookies and the browser just carries them along. The CLI is the harder case. A CLI can't receive cookies the way a browser does, so after the OAuth dance finishes, the tokens need to land somewhere the CLI can actually pick them up.
+Auth needed to work for two different clients sharing the same GitHub OAuth backend: a web portal (cookie-based) and a CLI (PKCE flow). The web portal is straightforward. After GitHub OAuth completes, the backend sets HTTP-only cookies and the browser just carries them along. The CLI is the harder case. A CLI can't receive cookies the way a browser does, so after the OAuth dance finishes, the tokens need to land somewhere the CLI can actually pick them up.
 
 The approach was PKCE plus a one-time token (OTT) exchange. The CLI starts a small local server and sends a `code_challenge` and its local `redirect_uri` along with the initial auth request. The backend detects that this is a CLI request (not a browser one) and, instead of setting cookies after OAuth, generates a one-time token and redirects to the CLI's local server with that OTT as a query param. The CLI then exchanges the OTT for the real access and refresh tokens.
 
 ### The problem it was solving
 
-Two clients, one OAuth backend, and I didn't want to duplicate the auth logic for each. The OTT step exists specifically because handing raw access/refresh tokens around as URL query params felt wrong — they'd end up in browser history, logs, redirect chains, all of that. So instead, the thing that gets passed around in the open is a token that's single-use and short-lived on its own, and the actual credentials only get issued once the CLI exchanges it properly.
+Two clients, one OAuth backend, and I didn't want to duplicate the auth logic for each. The OTT step exists specifically because handing raw access/refresh tokens around as URL query params felt wrong. They'd end up in browser history, logs, redirect chains, all of that. So instead, the thing that gets passed around in the open is a token that's single-use and short-lived on its own, and the actual credentials only get issued once the CLI exchanges it properly.
 
 ### How I approached it
 
-I started by mapping out the flow on paper first — who initiates what, what gets stored where, what each client receives at each step. Honestly I think this is the only reason I didn't get completely lost, because once you add PKCE, OTT, and a 2-minute access token lifetime on top of a dual-client setup, there are a lot of small decisions that all interact with each other.
+I started by mapping out the flow on paper first: who initiates what, what gets stored where, what each client receives at each step. Honestly I think this is the only reason I didn't get completely lost, because once you add PKCE, OTT, and a 2-minute access token lifetime on top of a dual-client setup, there are a lot of small decisions that all interact with each other.
 
 ### What broke and how I fixed it
 
-Nothing broke in a dramatic "everything is on fire" way. It was more that the design kept revealing edge cases I hadn't accounted for. What happens if the CLI's local server isn't ready yet when the redirect comes back? What if the OTT gets used twice — accidentally, by a retry, or by someone replaying the URL? With a 2-minute access token, refresh has to actually work reliably, because users will hit expiry constantly, not occasionally.
+Nothing broke in a dramatic "everything is on fire" way. It was more that the design kept revealing edge cases I hadn't accounted for. What happens if the CLI's local server isn't ready yet when the redirect comes back? What if the OTT gets used twice: accidentally, by a retry, or by someone replaying the URL? With a 2-minute access token, refresh has to actually work reliably, because users will hit expiry constantly, not occasionally.
 
-I expected the whole task to take about 2 days. It ended up taking 4. Most of that extra time wasn't writing code — it was redesigning the OTT exchange step after I realized my first version didn't properly invalidate the token after one use, which obviously defeats the whole point of calling it "one-time."
+I expected the whole task to take about 2 days. It ended up taking 4. Most of that extra time wasn't writing code. It was redesigning the OTT exchange step after I realized my first version didn't properly invalidate the token after one use, which obviously defeats the whole point of calling it "one-time."
 
-I also tried leaning on AI for parts of this, and honestly it didn't help as much as I expected. The dual-client PKCE + OTT combination isn't a common enough pattern that suggestions were reliably correct — most of the actual figuring-out was me tracing through the flow myself.
+I also tried leaning on AI for parts of this, and honestly it didn't help as much as I expected. The dual-client PKCE + OTT combination isn't a common enough pattern that suggestions were reliably correct. Most of the actual figuring-out was me tracing through the flow myself.
 
-### Worth mentioning — the COPY thing
+### Worth mentioning: the COPY thing
 
 This wasn't the main task, but it's part of the same project so I'll mention it briefly. Insighta Labs needed to support bulk CSV uploads of up to 500k profile rows. My first version used SQLAlchemy ORM inserts, batched, and it took over 10 minutes for 500k rows. That's not "broken," just not workable.
 
-The fix was bypassing the ORM — using `asyncpg`'s `copy_records_to_table` to load everything into a staging table via PostgreSQL's native COPY protocol, then a single `INSERT ... SELECT ... ON CONFLICT DO NOTHING` to move it into the main table and dedupe in one pass. That got it under 40 seconds. I think this one stuck with me less for the difficulty and more because it was a reminder that the database can do a lot more than just "store and retrieve" if you let it.
+The fix was bypassing the ORM: using `asyncpg`'s `copy_records_to_table` to load everything into a staging table via PostgreSQL's native COPY protocol, then a single `INSERT ... SELECT ... ON CONFLICT DO NOTHING` to move it into the main table and dedupe in one pass. That got it under 40 seconds. I think this one stuck with me less for the difficulty and more because it was a reminder that the database can do a lot more than just "store and retrieve" if you let it.
 
 ### What I took away from it
 
-Short-lived tokens force you to actually build rotation and revocation properly — there's no skipping it, because the tokens expire too fast for sloppy handling to go unnoticed. I also think the OTT exchange taught me something about not passing sensitive things around just because a URL is convenient. A token that's single-use and expires in seconds is a very different risk than an access token sitting in a query param.
+Short-lived tokens force you to actually build rotation and revocation properly. There's no skipping it, because the tokens expire too fast for sloppy handling to go unnoticed. I also think the OTT exchange taught me something about not passing sensitive things around just because a URL is convenient. A token that's single-use and expires in seconds is a very different risk than an access token sitting in a query param.
 
 ### Why I picked this one
 
 Honestly, it's the one where "ask AI" didn't really save me, and the one where my time estimate was the most off. Both of those things made it stick.
 
-## Anvila — the team project where I learned SSE the hard way
+## Anvila: the team project where I learned SSE the hard way
 
-Anvila was the team project. We started with around 6 backend devs and 10 frontend devs, and by the time things settled, it was roughly 2 BEs and 4 FEs — I was part of that smaller group, and I was the team lead.
+Anvila was the team project. We started with around 6 backend devs and 10 frontend devs, and by the time things settled, it was roughly 2 BEs and 4 FEs. I was part of that smaller group, and I was the team lead.
 
 ### What it was
 
-Anvila is an AI app that generates "manifest files" from a prompt. Each generation produces 5 files plus a README — `soul.md`, `overview.md`, `heartbeat.md`, `dna.md`, and `identity.md` — which together can be used to customize an AI agent's persona. On top of that, the app pulls in relevant skills from ClawHub. Since we don't get exact skill names from the user's prompt, we get suggestions from Gemini and try to match them to the best fit in ClawHub's catalog.
+Anvila is an AI app that generates "manifest files" from a prompt. Each generation produces 5 files plus a README: `soul.md`, `overview.md`, `heartbeat.md`, `dna.md`, and `identity.md`, which together can be used to customize an AI agent's persona. On top of that, the app pulls in relevant skills from ClawHub. Since we don't get exact skill names from the user's prompt, we get suggestions from Gemini and try to match them to the best fit in ClawHub's catalog.
 
-My role was mostly backend-owned — I owned the DB models and the persona management (the manifest generation side of things) — but I also went into this planning to work full stack, owning the connections between BE and FE as well.
+My role was mostly backend-owned. I owned the DB models and the persona management (the manifest generation side of things), but I also went into this planning to work full stack, owning the connections between BE and FE as well.
 
 ### The problem it was solving
 
-Generating a persona isn't instant — it involves multiple files being generated over time, plus chat sessions where responses stream back. None of that works well with a normal request/response cycle, so the app uses Server-Sent Events to push updates to the frontend as things happen.
+Generating a persona isn't instant. It involves multiple files being generated over time, plus chat sessions where responses stream back. None of that works well with a normal request/response cycle, so the app uses Server-Sent Events to push updates to the frontend as things happen.
 
 ### How I approached it
 
-I came into this relatively new to frontend work, so a lot of this was learning while building. SSE on the backend wasn't too bad conceptually — open a stream, push events as state changes. The harder part was managing those connections properly: making sure they shut down cleanly, that we weren't leaking open connections, and that the events being sent actually matched what the frontend expected to receive.
+I came into this relatively new to frontend work, so a lot of this was learning while building. SSE on the backend wasn't too bad conceptually. Open a stream, push events as state changes. The harder part was managing those connections properly: making sure they shut down cleanly, that we weren't leaking open connections, and that the events being sent actually matched what the frontend expected to receive.
 
 ### What broke and how I fixed it
 
-The bug that stuck with me: when a chat session's title changed, the sidebar kept showing "Untitled" for that chat. The title was updating correctly in the data — just not in the sidebar.
+The bug that stuck with me: when a chat session's title changed, the sidebar kept showing "Untitled" for that chat. The title was updating correctly in the data, just not in the sidebar.
 
-I'll be honest, when I first started looking into this, I didn't know what the fix even was. It wasn't a clear error message or a stack trace pointing at a line — it was a UI staying stale while the underlying data had already changed. I went back and forth on it for a while before it clicked: the sidebar wasn't listening for the right event. The title update was happening, but nothing was broadcasting that change to the part of the UI that needed to react to it. Once I added a broadcast for the title-update event and made sure the sidebar's SSE listener picked it up, it started reflecting correctly.
+I'll be honest, when I first started looking into this, I didn't know what the fix even was. It wasn't a clear error message or a stack trace pointing at a line. It was a UI staying stale while the underlying data had already changed. I went back and forth on it for a while before it clicked: the sidebar wasn't listening for the right event. The title update was happening, but nothing was broadcasting that change to the part of the UI that needed to react to it. Once I added a broadcast for the title-update event and made sure the sidebar's SSE listener picked it up, it started reflecting correctly.
 
-What made this hard wasn't the fix itself — once I found it, it was a small change. It was that I had no idea going in what kind of fix it would even be. Was it a backend issue? A state management issue on the frontend? A connection that wasn't open when it needed to be? I had to rule things out one at a time.
+What made this hard wasn't the fix itself. Once I found it, it was a small change. It was that I had no idea going in what kind of fix it would even be. Was it a backend issue? A state management issue on the frontend? A connection that wasn't open when it needed to be? I had to rule things out one at a time.
 
 ### What I took away from it
 
-The biggest thing was realizing that with SSE, the "broken" thing is often not the data — it's that two parts of the UI are looking at different sources of truth and nothing is telling one of them to update. I think that's a pretty general lesson about real-time UIs, not just this specific bug.
+The biggest thing was realizing that with SSE, the "broken" thing is often not the data. It's that two parts of the UI are looking at different sources of truth and nothing is telling one of them to update. I think that's a pretty general lesson about real-time UIs, not just this specific bug.
 
-The other thing — and this is less about SSE specifically — working both ends at once for about a month was genuinely tiring in a way I didn't expect. It's not that either side was hard on its own. It's the constant switching: thinking in DB models and persona logic one hour, then switching to component state and event listeners the next. The mental overhead of context-switching across the stack was, I think, harder than either side individually.
+The other thing, and this is less about SSE specifically, working both ends at once for about a month was genuinely tiring in a way I didn't expect. It's not that either side was hard on its own. It's the constant switching: thinking in DB models and persona logic one hour, then switching to component state and event listeners the next. The mental overhead of context-switching across the stack was, I think, harder than either side individually.
 
 ### Why I picked this one
 
-Of everything on Anvila, the SSE/broadcasting work is what I'd point to as the thing that pushed me the most as someone newer to frontend. I went in not knowing what the solution would look like, and came out with a much better sense of how real-time state syncing actually breaks — and how to debug it when you can't just read an error message.
+Of everything on Anvila, the SSE/broadcasting work is what I'd point to as the thing that pushed me the most as someone newer to frontend. I went in not knowing what the solution would look like, and came out with a much better sense of how real-time state syncing actually breaks, and how to debug it when you can't just read an error message.
