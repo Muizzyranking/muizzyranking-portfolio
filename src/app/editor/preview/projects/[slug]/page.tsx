@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import ProjectDetail from "@/components/ui/ProjectDetails";
+import ProjectCaseStudy from "@/components/sections/projects/ProjectCaseStudy";
 import { getProjectBySlugIncludingDrafts } from "@/lib/projects";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -36,7 +36,7 @@ export default async function ProjectPreviewPage({ params }: Props) {
         <span style={{ color: "var(--color-text-muted)" }}>preview · {slug}</span>
       </div>
 
-      <ProjectDetail meta={project.meta} parsed={project.parsed} />
+      <ProjectCaseStudy meta={project.meta} parsed={project.parsed} related={[]} />
     </>
   );
 }

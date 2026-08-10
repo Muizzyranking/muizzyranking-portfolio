@@ -31,6 +31,7 @@ export default async function EditProjectPage({ params }: Props) {
       stack: Array.isArray(data.stack) ? data.stack.filter((s) => typeof s === "string") : [],
       repo: typeof data.repo === "string" ? data.repo : "",
       live: typeof data.live === "string" ? data.live : "",
+      screenshots: Array.isArray(data.screenshots) ? data.screenshots.filter((s) => typeof s === "string") : [],
       featured: Boolean(data.featured),
       draft: Boolean(data.draft),
     },
