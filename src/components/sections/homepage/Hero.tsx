@@ -1,105 +1,72 @@
 "use client";
 
-import { m } from "framer-motion";
+import { m, useReducedMotion } from "framer-motion";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { fadeUp } from "@/lib/motion";
-import "@/styles/homepage/hero.css";
-
-const LINES = [
-  "pushing to production.",
-  "tests passed.",
-  "deploy succeeded.",
-  "anyway. welcome.",
-];
+import { EASE } from "@/lib/motion";
 
 export default function Hero() {
-  const [displayed, setDisplayed] = useState("");
-  const [lineIdx, setLineIdx] = useState(0);
-  const [charIdx, setCharIdx] = useState(0);
-  const [done, setDone] = useState(false);
-  const target = LINES.slice(0, lineIdx + 1).join(" ");
-
-  useEffect(() => {
-    if (done) return;
-    if (charIdx < target.length) {
-      const timeout = setTimeout(
-        () => {
-          setDisplayed(target.slice(0, charIdx + 1));
-          setCharIdx((c) => c + 1);
-        },
-        charIdx < LINES[0].length ? 45 : 38,
-      );
-      return () => clearTimeout(timeout);
-    }
-    if (lineIdx < LINES.length - 1) {
-      const pause = setTimeout(() => setLineIdx((l) => l + 1), 1500 + lineIdx * 350);
-      return () => clearTimeout(pause);
-    }
-    setDone(true);
-  }, [charIdx, lineIdx, target, done]);
+  const reduce = useReducedMotion();
+  const from = reduce ? {} : { y: 12 };
 
   return (
-    <section className="hero-section">
-      <div className="hero-grid-bg" />
+    <section className="container-main text-center pt-[clamp(5rem,11vw,8.5rem)] pb-[clamp(4rem,8vw,6rem)]">
       <m.div
-        initial={{ scaleX: 0, opacity: 0 }}
-        animate={{ scaleX: 1, opacity: 1 }}
-        transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
-        className="hero-rule"
-      />
+        initial={{ opacity: 0, ...from }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.45, ease: EASE }}
+        className="font-mono text-[0.72rem] font-semibold tracking-[0.12em] uppercase text-text-muted mb-[clamp(2.5rem,6vw,4rem)]"
+      >
+        Backend Engineer
+      </m.div>
 
-      <div className="container-main hero-container">
-        <div className="hero-content">
-          <m.p custom={0} initial="hidden" animate="visible" variants={fadeUp} className="hero-role">
-            <span className="hero-role-bracket"> Backend Engineer</span>
-            <span className="hero-role-line" />
-          </m.p>
+      <m.h1
+        initial={{ opacity: 0, ...from }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.45, ease: EASE }}
+        className="font-display font-bold tracking-[-0.02em] leading-[1.05] text-[clamp(3rem,9vw,6.5rem)] text-text-primary mb-[clamp(2.5rem,6vw,4rem)]"
+      >
+        Muiz <span className="inline-block italic px-[0.12em] rounded-sm bg-accent text-background">Oyebowale</span>
+      </m.h1>
 
-          <m.h1 custom={1} initial="hidden" animate="visible" variants={fadeUp} className="hero-title">
-            <span className="hero-title-name">
-              <span className="hero-title-accent">Muiz </span>Oyebowale
-            </span>
-          </m.h1>
+      <m.p
+        initial={{ opacity: 0, ...from }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.45, ease: EASE, delay: 0.06 }}
+        className="text-text-secondary text-[clamp(1.2rem,2.3vw,1.6rem)] leading-[1.5] max-w-[44ch] mx-auto mb-4"
+      >
+        I build the parts nobody sees, and that&apos;s exactly how I like it. I&apos;ve got your back
+        <span className="italic text-accent">end</span>.
+      </m.p>
 
-          <m.div custom={2} initial="hidden" animate="visible" variants={fadeUp} className="hero-tagline">
-            <p className="hero-subtitle">
-              I build the parts nobody sees, and that's exactly how I like it. I&apos;ve got your back<span className="hero-subtitle-accent">(end)</span>.
-            </p>
-            <p className="hero-subtitle-aside">
-              <span className="hero-subtitle-aside-marker">{"//"}</span>
-              not all heroes wear capes. some just write clean commits.
-            </p>
-          </m.div>
+      <m.p
+        initial={{ opacity: 0, ...from }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.45, ease: EASE, delay: 0.06 }}
+        className="text-text-muted text-[1rem] leading-[1.7] max-w-[46ch] mx-auto mb-10"
+      >
+        not all heroes wears cape, some quietly build infrastructure that keeps working when it matters.
+      </m.p>
 
-          <m.div custom={3} initial="hidden" animate="visible" variants={fadeUp} className="hero-terminal">
-            <span className="hero-terminal-inner">
-              <span className="hero-terminal-prompt">$</span>
-              {displayed}
-              <m.span
-                animate={{ opacity: [1, 0, 1] }}
-                transition={{ repeat: Infinity, duration: 1, times: [0, 0.5, 0.5] }}
-                className="hero-terminal-cursor"
-              >
-                ▋
-              </m.span>
-            </span>
-          </m.div>
-
-          <m.div custom={4} initial="hidden" animate="visible" variants={fadeUp} className="hero-ctas">
-            <Link href="/projects" className="hero-btn-primary">
-              View Projects →
-            </Link>
-            <Link href="/about" className="hero-btn-secondary">
-              who&apos;s behind this →
-            </Link>
-          </m.div>
-        </div>
-      </div>
-
-      <m.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5, duration: 0.8 }} className="hero-scroll">
-        <span className="hero-scroll-text">scroll</span>
-        <m.div animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }} className="hero-scroll-line" />
+      <m.div
+        initial={{ opacity: 0, ...from }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.45, ease: EASE, delay: 0.12 }}
+        className="flex items-center justify-center gap-3 flex-wrap"
+      >
+        <Link
+          href="/about"
+          className="inline-flex items-center gap-2 rounded-md bg-accent px-6 py-3 text-[0.95rem] font-semibold text-accent-foreground transition-colors duration-150 hover:bg-accent-dim"
+        >
+          about me
+          <span aria-hidden="true">→</span>
+        </Link>
+        <Link
+          href="/projects"
+          className="inline-flex items-center gap-2 rounded-md border border-border bg-transparent px-6 py-3 text-[0.95rem] font-semibold text-text-primary transition-colors duration-150 hover:border-accent-dim"
+        >
+          projects
+          <span aria-hidden="true">→</span>
+        </Link>
       </m.div>
     </section>
   );
