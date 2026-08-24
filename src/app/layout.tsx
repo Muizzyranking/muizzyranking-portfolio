@@ -3,12 +3,9 @@ import "./globals.css";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { domAnimation, LazyMotion, MotionConfig } from "framer-motion";
 import { ThemeProvider } from "next-themes";
-import Footer from "@/components/layout/Footer";
-import JsonLd from "@/components/layout/JsonLd";
-import Navbar from "@/components/layout/Navbar";
-import { getAllPosts } from "@/lib/blog";
+import CustomCursor from "@/components/layout/CustomCursor";
+import MusicProvider from "@/components/music/MusicProvider";
 import { fontVariables } from "@/lib/font";
-import { getAllProjects } from "@/lib/projects";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -62,10 +59,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning className={fontVariables}>
-      <head>
-        <JsonLd />
-      </head>
-      <body className="antialiased">
+      <body className="antialiased" suppressHydrationWarning>
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-accent focus:px-4 focus:py-2 focus:text-sm focus:text-accent-foreground focus:font-semibold"
@@ -75,14 +69,8 @@ export default function RootLayout({
         <ThemeProvider attribute="data-theme" defaultTheme="light" enableSystem>
           <MotionConfig reducedMotion="user">
             <LazyMotion features={domAnimation} strict>
-              <Navbar
-                projects={getAllProjects().map((p) => ({ slug: p.slug, title: p.title }))}
-                posts={getAllPosts().map((p) => ({ slug: p.slug, title: p.title }))}
-              />
-              <main id="main" tabIndex={-1}>
-                {children}
-              </main>
-              <Footer />
+              <CustomCursor />
+              <MusicProvider>{children}</MusicProvider>
             </LazyMotion>
           </MotionConfig>
         </ThemeProvider>
