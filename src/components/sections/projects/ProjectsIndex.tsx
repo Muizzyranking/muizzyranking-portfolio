@@ -37,8 +37,8 @@ export default function ProjectsIndex({ projects, stack }: { projects: Project[]
       </header>
 
       <div className="container-main pb-[clamp(4rem,8vw,7rem)]">
-        <div className="flex flex-col gap-5 border-t border-border-subtle pt-7 mb-10">
-          <div className="flex items-center justify-between gap-4 flex-wrap">
+        <div className="card mb-10 p-6 sm:p-7">
+          <div className="flex items-center justify-between gap-4 flex-wrap mb-5">
             <fieldset className="flex flex-wrap gap-2">
               <legend className="sr-only">Filter by status</legend>
               {STATUS_FILTERS.map((f) => {
@@ -49,10 +49,10 @@ export default function ProjectsIndex({ projects, stack }: { projects: Project[]
                     type="button"
                     onClick={() => setStatus(f.key)}
                     aria-pressed={active}
-                    className={`font-mono text-[0.72rem] tracking-[0.06em] rounded-sm px-3 py-1.5 transition-colors duration-150 ${
+                    className={`rounded-full px-4 py-2 font-mono text-[0.75rem] font-semibold tracking-[0.04em] transition-colors duration-150 ${
                       active
-                        ? "bg-accent text-accent-foreground"
-                        : "text-text-muted border border-border hover:border-accent-dim hover:text-text-primary"
+                        ? "bg-accent text-accent-foreground shadow-[0_6px_16px_-8px_color-mix(in_srgb,var(--color-accent)_70%,transparent)]"
+                        : "border border-border bg-surface-raised text-text-secondary hover:border-accent hover:text-accent"
                     }`}
                   >
                     {f.label}
@@ -60,32 +60,34 @@ export default function ProjectsIndex({ projects, stack }: { projects: Project[]
                 );
               })}
             </fieldset>
-            <span className="font-mono text-[0.7rem] text-text-muted">
+            <span className="font-mono text-[0.72rem] font-medium tracking-[0.06em] text-text-secondary uppercase">
               {filtered.length} {filtered.length === 1 ? "project" : "projects"}
             </span>
           </div>
 
           {stack.length > 0 && (
-            <fieldset className="flex flex-wrap gap-2">
+            <fieldset>
               <legend className="sr-only">Filter by stack</legend>
-              {stack.map((s) => {
-                const active = activeStack === s;
-                return (
-                  <button
-                    key={s}
-                    type="button"
-                    onClick={() => setActiveStack(active ? null : s)}
-                    aria-pressed={active}
-                    className={`font-mono text-[0.68rem] rounded-sm px-2.5 py-1 transition-colors duration-150 ${
-                      active
-                        ? "bg-accent-subtle text-accent border border-accent-dim"
-                        : "text-text-muted bg-surface border border-border-subtle hover:border-accent-dim hover:text-text-primary"
-                    }`}
-                  >
-                    {s}
-                  </button>
-                );
-              })}
+              <div className="flex flex-wrap gap-2">
+                {stack.map((s) => {
+                  const active = activeStack === s;
+                  return (
+                    <button
+                      key={s}
+                      type="button"
+                      onClick={() => setActiveStack(active ? null : s)}
+                      aria-pressed={active}
+                      className={`rounded-full px-3.5 py-1.5 font-mono text-[0.72rem] font-semibold transition-colors duration-150 ${
+                        active
+                          ? "bg-accent text-accent-foreground"
+                          : "border border-border bg-surface-raised text-text-secondary hover:border-accent hover:text-accent"
+                      }`}
+                    >
+                      {s}
+                    </button>
+                  );
+                })}
+              </div>
             </fieldset>
           )}
         </div>

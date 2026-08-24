@@ -1,3 +1,6 @@
+"use client";
+
+import Image from "next/image";
 import Link from "next/link";
 import type { Project } from "@/types";
 
@@ -14,34 +17,59 @@ const STATUS_LABEL: Record<Project["status"], string> = {
 };
 
 export default function ProjectCard({ project }: { project: Project }) {
+  // const reduce = useReducedMotion();
+  const splash = project.screenshots?.[0];
+
   return (
     <Link
       href={`/projects/${project.slug}`}
-      className="group flex h-full w-full min-w-0 flex-col gap-4 rounded-lg bg-bg-elevated border border-border p-7 transition-[transform,border-color] duration-150 ease-out hover:-translate-y-0.5 hover:border-accent-dim"
+      className="group flex h-full w-full min-w-0 flex-col overflow-hidden rounded-[var(--radius-lg)] border border-border bg-surface-raised transition-[border-color,box-shadow] duration-200 ease-out hover:border-accent/60 hover:shadow-[0_20px_50px_-30px_rgba(0,0,0,0.45)]"
     >
-      <h3 className="font-display font-semibold tracking-[-0.01em] leading-[1.3] text-text-primary text-[1.25rem] truncate">{project.title}</h3>
-
-      <span className="flex items-center gap-1.5 font-mono text-[0.72rem] uppercase tracking-[0.1em] text-text-muted">
-        <span className={`inline-block size-1.5 rounded-full ${STATUS_DOT[project.status]}`} aria-hidden="true" />
-        {project.year} · {STATUS_LABEL[project.status]}
-      </span>
-
-      <p className="text-text-secondary text-[0.95rem] leading-[1.65] flex-1">{project.summary}</p>
-
-      <div className="flex flex-wrap gap-1.5">
-        {project.stack.slice(0, 5).map((s) => (
-          <span key={s} className="font-mono text-[0.72rem] text-text-muted bg-surface border border-border-subtle rounded-sm px-2 py-[0.2rem]">
-            {s}
-          </span>
-        ))}
-      </div>
-
-      <div className="mt-2 flex items-center gap-2 text-accent text-[0.85rem] font-medium border-t border-border-subtle pt-4">
-        Read the case study
-        <span className="transition-transform duration-150 ease-out group-hover:translate-x-1" aria-hidden="true">
+      {/* Splash */}
+      <div className="relative w-full overflow-hidden border-b border-border-subtle bg-bg-elevated" style={{ aspectRatio: "16 / 10" }}>
+        {splash ? (
+          <Image
+            src={splash}
+            alt={`${project.title} splash`}
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            className="project-splash object-cover"
+          />
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <span className="font-display text-[2rem] font-bold text-text-muted/40">{project.title.slice(0, 1)}</span>
+          </div>
+        )}
+        <span
+          aria-hidden="true"
+          className="absolute right-4 bottom-4 flex size-9 translate-y-1 items-center justify-center rounded-full bg-accent text-accent-foreground opacity-0 transition-all duration-300 ease-out group-hover:translate-y-0 group-hover:opacity-100"
+        >
           →
         </span>
+      </div>
+
+      <div className="flex flex-1 flex-col gap-3 p-6">
+        <span className="flex items-center gap-2 font-mono text-[0.68rem] uppercase tracking-[0.12em] text-text-muted">
+          <span className={`inline-block size-1.5 rounded-full ${STATUS_DOT[project.status]}`} aria-hidden="true" />
+          {project.year} · {STATUS_LABEL[project.status]}
+        </span>
+
+        <h3 className="font-display text-[1.3rem] leading-[1.25] tracking-[-0.01em] font-semibold text-text-primary transition-colors duration-200 group-hover:text-accent">
+          {project.title}
+        </h3>
+
+        <p className="text-[0.93rem] leading-[1.65] text-text-secondary line-clamp-2">{project.summary}</p>
+
+        <div className="mt-auto flex flex-wrap gap-1.5 pt-2">
+          {project.stack.slice(0, 4).map((s) => (
+            <span key={s} className="chip">
+              {s}
+            </span>
+          ))}
+        </div>
       </div>
     </Link>
   );
 }
+
+// hover zoom on the splash via group-hover (CSS-only; kept out of inline styles)
