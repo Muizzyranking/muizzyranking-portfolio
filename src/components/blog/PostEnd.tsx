@@ -23,11 +23,7 @@ export default function PostEnd({
       <div className="container-main flex items-center justify-between gap-4 flex-wrap py-6 border-t border-border-subtle">
         <div className="flex gap-1.5 flex-wrap">
           {post.categories.map((c) => (
-            <Link
-              key={c.slug}
-              href={`/blog/category/${c.slug}`}
-              className="font-mono text-[0.66rem] text-text-muted border border-border-subtle rounded-sm px-2 py-[0.2rem] transition-colors duration-150 hover:text-text-primary hover:border-accent-dim"
-            >
+            <Link key={c.slug} href={`/blog/category/${c.slug}`} className="chip">
               {c.label}
             </Link>
           ))}
