@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useState, useTransition } from "react";
 
 type PostRow = {
   slug: string;
@@ -101,7 +102,31 @@ function TabButton({ active, onClick, children }: { active: boolean; onClick: ()
   );
 }
 
+function useDelete() {
+  const router = useRouter();
+  const [pending, startTransition] = useTransition();
+  const [deleting, setDeleting] = useState<string | null>(null);
+
+  async function remove(kind: "posts" | "projects", slug: string, title: string) {
+    if (!window.confirm(`Delete "${title}"?\n\nThis permanently removes the file from content/. This cannot be undone.`)) return;
+    setDeleting(slug);
+    try {
+      const res = await fetch(`/api/editor/${kind}/${encodeURIComponent(slug)}`, { method: "DELETE" });
+      if (!res.ok) throw new Error(`${res.status}: ${await res.text()}`);
+      startTransition(() => router.refresh());
+    } catch (e) {
+      window.alert(`Delete failed: ${(e as Error).message}`);
+    } finally {
+      setDeleting(null);
+    }
+  }
+
+  return { remove, busy: deleting !== null || pending };
+}
+
 function PostsList({ rows }: { rows: PostRow[] }) {
+  const { remove, busy } = useDelete();
+
   return (
     <div>
       <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "1rem" }}>
@@ -116,10 +141,17 @@ function PostsList({ rows }: { rows: PostRow[] }) {
           {rows.map((p) => (
             <li key={p.slug} style={rowStyle}>
               <Link href={`/editor/blog/${p.slug}`} style={rowLinkStyle}>
-                <span style={{ flex: 1, color: "var(--color-text-primary)" }}>{p.title}</span>
+                <span style={{ flex: 1, minWidth: 0 }}>
+                  <span style={{ display: "flex", alignItems: "center", gap: "0.5rem", flexWrap: "wrap" }}>
+                    <span style={{ color: "var(--color-text-primary)" }}>{p.title}</span>
+                    {p.draft && <Badge kind="draft">draft</Badge>}
+                  </span>
+                </span>
                 <span style={metaStyle}>{p.publishedAt}</span>
-                {p.draft && <span style={draftBadgeStyle}>draft</span>}
               </Link>
+              <IconBtn label={`Delete ${p.title}`} disabled={busy} onClick={() => remove("posts", p.slug, p.title)}>
+                ×
+              </IconBtn>
             </li>
           ))}
         </ul>
@@ -129,6 +161,8 @@ function PostsList({ rows }: { rows: PostRow[] }) {
 }
 
 function ProjectsList({ rows }: { rows: ProjectRow[] }) {
+  const { remove, busy } = useDelete();
+
   return (
     <div>
       <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "1rem" }}>
@@ -143,17 +177,87 @@ function ProjectsList({ rows }: { rows: ProjectRow[] }) {
           {rows.map((p) => (
             <li key={p.slug} style={rowStyle}>
               <Link href={`/editor/projects/${p.slug}`} style={rowLinkStyle}>
-                <span style={{ flex: 1, color: "var(--color-text-primary)" }}>{p.title}</span>
+                <span style={{ flex: 1, minWidth: 0 }}>
+                  <span style={{ display: "flex", alignItems: "center", gap: "0.5rem", flexWrap: "wrap" }}>
+                    <span style={{ color: "var(--color-text-primary)" }}>{p.title}</span>
+                    {p.featured && <Badge kind="featured">featured</Badge>}
+                    {p.draft && <Badge kind="draft">draft</Badge>}
+                  </span>
+                </span>
                 <span style={metaStyle}>{p.year}</span>
                 <span style={metaStyle}>{p.status}</span>
-                {p.featured && <span style={featuredBadgeStyle}>featured</span>}
-                {p.draft && <span style={draftBadgeStyle}>draft</span>}
               </Link>
+              <IconBtn label={`Delete ${p.title}`} disabled={busy} onClick={() => remove("projects", p.slug, p.title)}>
+                ×
+              </IconBtn>
             </li>
           ))}
         </ul>
       )}
     </div>
+  );
+}
+
+function Badge({ kind, children }: { kind: "draft" | "featured"; children: React.ReactNode }) {
+  const styles =
+    kind === "draft"
+      ? { color: "#b45309", borderColor: "#d9770666", background: "#d9770614" }
+      : { color: "var(--color-accent)", borderColor: "var(--color-accent-dim)", background: "transparent" };
+  return (
+    <span
+      style={{
+        fontFamily: "var(--font-mono)",
+        fontSize: "0.62rem",
+        border: `1px solid ${styles.borderColor}`,
+        borderRadius: "999px",
+        padding: "0.08rem 0.5rem",
+        textTransform: "uppercase",
+        letterSpacing: "0.08em",
+        color: styles.color,
+        background: styles.background,
+        whiteSpace: "nowrap",
+      }}
+    >
+      {children}
+    </span>
+  );
+}
+
+function IconBtn({ children, onClick, disabled, label }: { children: React.ReactNode; onClick: () => void; disabled?: boolean; label: string }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      aria-label={label}
+      title={label}
+      style={{
+        flexShrink: 0,
+        background: "none",
+        border: "none",
+        color: "var(--color-text-muted)",
+        width: "1.75rem",
+        height: "1.75rem",
+        cursor: disabled ? "wait" : "pointer",
+        opacity: disabled ? 0.35 : 0.55,
+        fontSize: "1rem",
+        lineHeight: 1,
+        borderRadius: "var(--radius-sm)",
+        transition: "opacity 150ms ease, color 150ms ease",
+      }}
+      onMouseEnter={(e) => {
+        if (!disabled) {
+          e.currentTarget.style.color = "var(--color-error)";
+          e.currentTarget.style.opacity = "1";
+        }
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.color = "var(--color-text-muted)";
+        e.currentTarget.style.opacity = disabled ? "0.35" : "0.55";
+      }}
+    >
+      {children}
+    </button>
   );
 }
 
@@ -196,6 +300,8 @@ const listStyle: React.CSSProperties = {
 };
 
 const rowStyle: React.CSSProperties = {
+  display: "flex",
+  alignItems: "center",
   borderBottom: "1px solid var(--color-border-subtle)",
 };
 
@@ -205,33 +311,14 @@ const rowLinkStyle: React.CSSProperties = {
   gap: "1rem",
   padding: "0.9rem 1.1rem",
   textDecoration: "none",
-  transition: "background 0.15s",
+  flex: 1,
+  minWidth: 0,
+  transition: "background 0.15s ease",
 };
 
 const metaStyle: React.CSSProperties = {
   fontFamily: "var(--font-mono)",
   fontSize: "0.7rem",
   color: "var(--color-text-muted)",
-};
-
-const draftBadgeStyle: React.CSSProperties = {
-  fontFamily: "var(--font-mono)",
-  fontSize: "0.62rem",
-  color: "#c9a84c",
-  border: "1px solid #8a6f2e",
-  borderRadius: "var(--radius-sm)",
-  padding: "0.1rem 0.4rem",
-  textTransform: "uppercase",
-  letterSpacing: "0.08em",
-};
-
-const featuredBadgeStyle: React.CSSProperties = {
-  fontFamily: "var(--font-mono)",
-  fontSize: "0.62rem",
-  color: "var(--color-accent)",
-  border: "1px solid var(--color-accent-dim)",
-  borderRadius: "var(--radius-sm)",
-  padding: "0.1rem 0.4rem",
-  textTransform: "uppercase",
-  letterSpacing: "0.08em",
+  whiteSpace: "nowrap",
 };

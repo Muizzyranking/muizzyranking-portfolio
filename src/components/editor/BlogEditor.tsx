@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ChipInput from "./ChipInput";
 import KeyValueTable from "./KeyValueTable";
 import MarkdownField from "./MarkdownField";
@@ -109,6 +109,26 @@ export default function BlogEditor({ initial }: { initial: BlogEditorInitial }) 
       setBusy(null);
     }
   }
+
+  // ⌘S / Ctrl+S → save draft. Ref is refreshed after every render so the
+  // handler always calls the latest `persist` closure with current field state.
+  const saveNow = useRef<() => void>(() => {});
+  useEffect(() => {
+    saveNow.current = () => {
+      if (busy === null) void persist(true, "stay");
+    };
+  });
+
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "s") {
+        e.preventDefault();
+        saveNow.current();
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
 
   return (
     <div
