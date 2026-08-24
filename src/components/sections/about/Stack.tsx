@@ -1,275 +1,90 @@
 "use client";
 
-import { m, useInView } from "framer-motion";
+import { m, useInView, useReducedMotion } from "framer-motion";
 import { useRef } from "react";
-import { fadeUp, SCROLL_REVEAL, staggerContainer, staggerItem } from "@/lib/motion";
-
-type Tier = "production" | "comfortable" | "exploring";
-
-const GROUPS: { label: string; blurb: string; tags: { name: string; tier: Tier }[] }[] = [
-  {
-    label: "Languages",
-    blurb: "What I reach for first.",
-    tags: [
-      { name: "Python", tier: "production" },
-      { name: "TypeScript", tier: "production" },
-      { name: "HTML", tier: "production" },
-      { name: "JavaScript", tier: "comfortable" },
-      { name: "Bash", tier: "comfortable" },
-      { name: "C", tier: "comfortable" },
-      { name: "Lua", tier: "comfortable" },
-      { name: "Go", tier: "exploring" },
-      { name: "Rust", tier: "exploring" },
-    ],
-  },
-  {
-    label: "Frameworks",
-    blurb: "Backend first. A frontend when one is involved.",
-    tags: [
-      { name: "Django", tier: "production" },
-      { name: "FastAPI", tier: "production" },
-      { name: "Django Ninja", tier: "production" },
-      { name: "Next.js", tier: "production" },
-      { name: "Django REST Framework", tier: "comfortable" },
-      { name: "Flask", tier: "comfortable" },
-      { name: "React", tier: "comfortable" },
-    ],
-  },
-  {
-    label: "Data",
-    blurb: "Postgres for everything until there is a real reason not to.",
-    tags: [
-      { name: "PostgreSQL", tier: "production" },
-      { name: "MySQL", tier: "production" },
-      { name: "Redis", tier: "production" },
-      { name: "SQLAlchemy", tier: "production" },
-      { name: "Django ORM", tier: "comfortable" },
-      { name: "SQLite", tier: "comfortable" },
-    ],
-  },
-  {
-    label: "Infrastructure",
-    blurb: "Repeatable deploys: a server, a container, a workflow.",
-    tags: [
-      { name: "Linux", tier: "production" },
-      { name: "Docker", tier: "production" },
-      { name: "Celery", tier: "comfortable" },
-      { name: "Nginx", tier: "comfortable" },
-      { name: "Uvicorn / Gunicorn", tier: "comfortable" },
-      { name: "GitHub Actions", tier: "comfortable" },
-    ],
-  },
-  {
-    label: "Tooling",
-    blurb: "The setup that survives a fresh install.",
-    tags: [
-      { name: "Neovim", tier: "comfortable" },
-      { name: "Git", tier: "production" },
-      { name: "Tmux", tier: "comfortable" },
-      { name: "Zsh", tier: "comfortable" },
-      { name: "fzf", tier: "comfortable" },
-      { name: "ripgrep", tier: "comfortable" },
-      { name: "lazygit", tier: "comfortable" },
-    ],
-  },
-];
-
-const TIER_DOT: Record<Tier, React.CSSProperties> = {
-  production: { background: "var(--color-accent)", border: "none" },
-  comfortable: { border: "1px solid var(--color-text-muted)" },
-  exploring: { border: "1px dashed var(--color-text-muted)", background: "transparent" },
-};
+import { TierDot } from "@/components/sections/homepage/FullStack";
+import { EASE, SCROLL_REVEAL } from "@/lib/motion";
+import { STACK_GROUPS } from "@/lib/stack";
 
 export default function Stack() {
   const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, SCROLL_REVEAL);
+  const reduce = useReducedMotion();
+  const from = reduce ? {} : { y: 14 };
 
   return (
-    <section
-      ref={ref}
-      id="stack"
-      style={{
-        padding: "clamp(4.5rem, 9vw, 7rem) 0",
-        borderBottom: "1px solid var(--color-border-subtle)",
-      }}
-    >
+    <section ref={ref} id="stack" className="section section-band">
       <div className="container-main">
         <m.p
-          variants={fadeUp}
-          custom={0}
-          initial="hidden"
-          animate={inView ? "visible" : "hidden"}
-          className="eyebrow"
-          style={{ marginBottom: "3rem" }}
+          initial={{ opacity: 0, ...from }}
+          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, ...from }}
+          transition={{ duration: 0.45, ease: EASE }}
+          className="eyebrow mb-6"
         >
-          Stack
-          <span className="eyebrow__rule" />
+          stack
         </m.p>
 
         <m.h2
-          variants={fadeUp}
-          custom={1}
-          initial="hidden"
-          animate={inView ? "visible" : "hidden"}
-          style={{
-            fontFamily: "var(--font-display)",
-            fontSize: "clamp(1.9rem, 4vw, 2.75rem)",
-            fontWeight: 600,
-            letterSpacing: "-0.04em",
-            lineHeight: 1.05,
-            marginBottom: "1.25rem",
-          }}
+          initial={{ opacity: 0, ...from }}
+          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, ...from }}
+          transition={{ duration: 0.5, ease: EASE, delay: 0.06 }}
+          className="font-display text-[clamp(1.75rem,3.5vw,2.5rem)] leading-[1.12] font-bold text-text-primary mb-4"
         >
-          What I use to do the above.
+          What I use to work.
         </m.h2>
 
         <m.p
-          variants={fadeUp}
-          custom={2}
-          initial="hidden"
-          animate={inView ? "visible" : "hidden"}
-          style={{
-            fontSize: "1rem",
-            color: "var(--color-text-muted)",
-            lineHeight: 1.7,
-            maxWidth: "52ch",
-            marginBottom: "3.5rem",
-          }}
+          initial={{ opacity: 0, ...from }}
+          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, ...from }}
+          transition={{ duration: 0.5, ease: EASE, delay: 0.12 }}
+          className="text-text-secondary text-[1rem] leading-[1.7] max-w-[52ch] mb-10"
         >
           Not a boast, a working inventory. Grouped the way I think about a system, from the language down to the shell.
         </m.p>
 
-        <m.div
-          variants={staggerContainer}
-          initial="hidden"
-          animate={inView ? "visible" : "hidden"}
-          style={{
-            border: "1px solid var(--color-border)",
-            borderRadius: "var(--radius-lg)",
-            overflow: "hidden",
-            background: "var(--color-background)",
-          }}
-        >
-          {GROUPS.map(({ label, blurb, tags }, idx) => (
+        <div className="flex flex-col gap-4">
+          {STACK_GROUPS.map(({ label, blurb, tags }, idx) => (
             <m.div
               key={label}
-              variants={staggerItem}
-              style={{
-                display: "grid",
-                gridTemplateColumns: "200px 1fr",
-                gap: "2.5rem",
-                padding: "1.75rem 2rem",
-                borderBottom: idx < GROUPS.length - 1 ? "1px solid var(--color-border-subtle)" : "none",
-                alignItems: "start",
-              }}
-              className="about-stack-row"
+              initial={{ opacity: 0, ...from }}
+              animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, ...from }}
+              transition={{ duration: 0.45, ease: EASE, delay: 0.05 * idx }}
+              className="card grid gap-x-10 gap-y-4 p-7 transition-[box-shadow,border-color] duration-200 hover:border-accent/40 hover:shadow-[var(--shadow-lifted)] md:grid-cols-[15rem_minmax(0,1fr)] md:items-start"
             >
               <div>
-                <p
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "0.75rem",
-                    fontWeight: 600,
-                    letterSpacing: "0.14em",
-                    textTransform: "uppercase",
-                    color: "var(--color-accent)",
-                    marginBottom: "0.35rem",
-                  }}
-                >
-                  {label}
-                </p>
-                <p
-                  style={{
-                    fontSize: "0.9rem",
-                    color: "var(--color-text-secondary)",
-                    lineHeight: 1.6,
-                  }}
-                >
-                  {blurb}
-                </p>
+                <p className="font-mono text-[0.72rem] font-semibold tracking-[0.14em] text-accent uppercase">{label}</p>
+                <p className="mt-1.5 text-[0.88rem] leading-relaxed text-text-secondary">{blurb}</p>
               </div>
 
-              <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
+              <div className="flex flex-wrap gap-2">
                 {tags.map(({ name, tier }) => (
-                  <span
-                    key={name}
-                    style={{
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: "0.45rem",
-                      fontFamily: "var(--font-mono)",
-                      fontSize: "0.78rem",
-                      padding: "0.35rem 0.7rem",
-                      borderRadius: "var(--radius-sm)",
-                      border: "1px solid var(--color-border)",
-                      background: "var(--color-bg-elevated)",
-                      color: "var(--color-text-secondary)",
-                    }}
-                  >
-                    <span
-                      aria-hidden
-                      style={{
-                        display: "inline-block",
-                        width: "7px",
-                        height: "7px",
-                        borderRadius: "50%",
-                        flexShrink: 0,
-                        ...TIER_DOT[tier],
-                      }}
-                    />
+                  <span key={name} className="chip !text-[0.75rem]">
+                    <TierDot tier={tier} />
                     {name}
                   </span>
                 ))}
               </div>
             </m.div>
           ))}
-        </m.div>
+        </div>
 
         <m.div
-          variants={fadeUp}
-          custom={3}
-          initial="hidden"
-          animate={inView ? "visible" : "hidden"}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "1.5rem",
-            flexWrap: "wrap",
-            marginTop: "1.5rem",
-            fontFamily: "var(--font-mono)",
-            fontSize: "0.62rem",
-            letterSpacing: "0.12em",
-            textTransform: "uppercase",
-            color: "var(--color-text-muted)",
-          }}
+          initial={{ opacity: 0 }}
+          animate={inView ? { opacity: 1 } : { opacity: 0 }}
+          transition={{ duration: 0.5, ease: EASE, delay: 0.3 }}
+          className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 font-mono text-[0.68rem] tracking-[0.1em] text-text-muted uppercase"
         >
-          {(["production", "comfortable", "exploring"] as Tier[]).map((tier) => (
-            <span key={tier} style={{ display: "inline-flex", alignItems: "center", gap: "0.45rem" }}>
-              <span
-                aria-hidden
-                style={{
-                  display: "inline-block",
-                  width: "7px",
-                  height: "7px",
-                  borderRadius: "50%",
-                  ...TIER_DOT[tier],
-                }}
-              />
-              {tier}
-            </span>
-          ))}
+          <span className="inline-flex items-center gap-2">
+            <TierDot tier="production" /> production
+          </span>
+          <span className="inline-flex items-center gap-2">
+            <TierDot tier="comfortable" /> comfortable
+          </span>
+          <span className="inline-flex items-center gap-2">
+            <TierDot tier="exploring" /> exploring
+          </span>
         </m.div>
       </div>
-
-      <style>{`
-        @media (max-width: 760px) {
-          .about-stack-row {
-            grid-template-columns: 1fr !important;
-            gap: 0.75rem !important;
-            padding: 1.25rem 1.25rem !important;
-          }
-        }
-      `}</style>
     </section>
   );
 }

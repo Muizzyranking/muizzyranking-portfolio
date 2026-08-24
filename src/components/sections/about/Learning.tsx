@@ -31,7 +31,6 @@ export default function Learning() {
           style={{ marginBottom: "2.5rem" }}
         >
           Currently learning
-          <span className="eyebrow__rule" />
         </m.p>
 
         <m.div

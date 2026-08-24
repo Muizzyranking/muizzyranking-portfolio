@@ -45,7 +45,6 @@ export default function Philosophy() {
           style={{ marginBottom: "3rem" }}
         >
           How I think
-          <span className="eyebrow__rule" />
         </m.p>
 
         <m.div

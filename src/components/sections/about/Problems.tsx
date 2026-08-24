@@ -49,7 +49,6 @@ export default function Problems() {
           style={{ marginBottom: "3rem" }}
         >
           Problems I enjoy
-          <span className="eyebrow__rule" />
         </m.p>
 
         <m.h2

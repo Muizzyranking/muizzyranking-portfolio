@@ -1,8 +1,8 @@
 "use client";
 
-import { m, useInView } from "framer-motion";
+import { m, useInView, useReducedMotion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import { fadeUp, SCROLL_REVEAL, staggerContainer, staggerItem } from "@/lib/motion";
+import { EASE, SCROLL_REVEAL } from "@/lib/motion";
 
 const DAD_JOKES = [
   "Why do programmers prefer dark mode? Because light attracts bugs.",
@@ -12,9 +12,39 @@ const DAD_JOKES = [
   "I'm reading a book about anti-gravity. It's impossible to put down.",
 ];
 
+const HOBBIES = [
+  {
+    label: "Watching",
+    title: "Superhero films, sci-fi, animation.",
+    body: "Marvel, DC, anime, anything with a good story. I have opinions about which Spider-Man was objectively the best. They are correct.",
+    tags: ["MCU", "Into the Spider-Verse", "Arcane", "Invincible", "Studio Ghibli"],
+  },
+  {
+    label: "Playing",
+    title: "Video games.",
+    body: "How I unwind after a long build. Good stories, good mechanics, the occasional rage quit.",
+    tags: [],
+  },
+  {
+    label: "Listening",
+    title: "All kinds of music.",
+    body: "I love all songs until I don't — then I go find new ones. Instruments fascinate me; learning one is next on the list.",
+    tags: [],
+  },
+  {
+    label: "Exploring",
+    title: "Travel, nature, and rabbit holes.",
+    body: "New places and fresh air with no laptop. At home: history, science and space documentaries I fall into at 1am.",
+    tags: [],
+  },
+];
+
 export default function HumanSide() {
   const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, SCROLL_REVEAL);
+  const reduce = useReducedMotion();
+  const from = reduce ? {} : { y: 14 };
+
   const [jokeIndex, setJokeIndex] = useState(0);
   const [ready, setReady] = useState(false);
 
@@ -27,327 +57,74 @@ export default function HumanSide() {
   const cycleJoke = () => setJokeIndex((i) => (i + 1) % DAD_JOKES.length);
 
   return (
-    <section
-      ref={ref}
-      style={{
-        padding: "clamp(4.5rem, 9vw, 7rem) 0",
-        borderBottom: "1px solid var(--color-border-subtle)",
-      }}
-    >
+    <section ref={ref} className="section section-band">
       <div className="container-main">
         <m.p
-          variants={fadeUp}
-          custom={0}
-          initial="hidden"
-          animate={inView ? "visible" : "hidden"}
-          className="eyebrow"
-          style={{ marginBottom: "3rem" }}
+          initial={{ opacity: 0, ...from }}
+          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, ...from }}
+          transition={{ duration: 0.45, ease: EASE }}
+          className="eyebrow mb-6"
         >
-          The human side
-          <span className="eyebrow__rule" />
+          when not coding
         </m.p>
 
         <m.h2
-          variants={fadeUp}
-          custom={1}
-          initial="hidden"
-          animate={inView ? "visible" : "hidden"}
-          style={{
-            fontFamily: "var(--font-display)",
-            fontSize: "clamp(1.9rem, 4vw, 2.75rem)",
-            fontWeight: 600,
-            letterSpacing: "-0.04em",
-            lineHeight: 1.05,
-            marginBottom: "3rem",
-          }}
+          initial={{ opacity: 0, ...from }}
+          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, ...from }}
+          transition={{ duration: 0.5, ease: EASE, delay: 0.06 }}
+          className="font-display text-[clamp(1.75rem,3.5vw,2.5rem)] leading-[1.12] font-bold text-text-primary mb-10"
         >
-          Not just a résumé
+          What I like to do.
         </m.h2>
 
-        {/* Bento grid */}
-        <m.div
-          variants={staggerContainer}
-          initial="hidden"
-          animate={inView ? "visible" : "hidden"}
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(12, 1fr)",
-            gap: "1px",
-            border: "1px solid var(--color-border)",
-            borderRadius: "var(--radius-lg)",
-            overflow: "hidden",
-          }}
-        >
-          <m.div
-            variants={staggerItem}
-            style={{
-              gridColumn: "span 7",
-              background: "var(--color-background)",
-              padding: "2rem",
-              borderRight: "1px solid var(--color-border)",
-              borderBottom: "1px solid var(--color-border)",
-            }}
-            className="bento-wide"
-          >
-            <p
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "0.62rem",
-                letterSpacing: "0.16em",
-                textTransform: "uppercase",
-                color: "var(--color-accent)",
-                marginBottom: "0.75rem",
-              }}
+        <div className="grid gap-4 sm:grid-cols-2 overflow-x-clip">
+          {HOBBIES.map((hobby, i) => (
+            <m.div
+              key={hobby.label}
+              initial={{ opacity: 0, ...from }}
+              animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, ...from }}
+              transition={{ duration: 0.45, ease: EASE, delay: 0.06 * i }}
+              className="card flex flex-col gap-3 p-7"
             >
-              Watching
-            </p>
-            <p
-              style={{
-                fontSize: "1.1rem",
-                fontWeight: 600,
-                color: "var(--color-text-primary)",
-                marginBottom: "0.75rem",
-                lineHeight: 1.35,
-              }}
-            >
-              Marvel. DC. Animations. Sci-fi. Any superhero film that exists.
-            </p>
-            <p
-              style={{
-                fontSize: "0.875rem",
-                color: "var(--color-text-muted)",
-                lineHeight: 1.7,
-              }}
-            >
-              I watch everything: live action, animated, sequels that probably shouldn&apos;t exist. I have opinions about which Spider-Man was
-              objectively the best. They are correct.
-            </p>
-            <div
-              style={{
-                marginTop: "1.25rem",
-                display: "flex",
-                gap: "0.4rem",
-                flexWrap: "wrap",
-              }}
-            >
-              {["MCU", "DCEU", "Into the Spider-Verse", "Arcane", "Invincible", "Studio Ghibli"].map((t) => (
-                <span
-                  key={t}
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "0.68rem",
-                    color: "var(--color-text-muted)",
-                    border: "1px solid var(--color-border)",
-                    borderRadius: "var(--radius-sm)",
-                    padding: "0.22rem 0.55rem",
-                  }}
-                >
-                  {t}
-                </span>
-              ))}
-            </div>
-          </m.div>
+              <span className="eyebrow">{hobby.label}</span>
+              <h3 className="text-[1.1rem] font-semibold text-text-primary">{hobby.title}</h3>
+              <p className="text-[0.93rem] leading-relaxed text-text-secondary">{hobby.body}</p>
+              {hobby.tags.length > 0 && (
+                <div className="mt-auto flex flex-wrap gap-1.5 pt-1">
+                  {hobby.tags.map((t) => (
+                    <span key={t} className="chip">
+                      {t}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </m.div>
+          ))}
 
           <m.div
-            variants={staggerItem}
-            style={{
-              gridColumn: "span 5",
-              background: "var(--color-accent-subtle)",
-              padding: "2rem",
-              borderBottom: "1px solid var(--color-border)",
-            }}
-            className="bento-narrow"
+            initial={{ opacity: 0, ...from }}
+            animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, ...from }}
+            transition={{ duration: 0.45, ease: EASE, delay: 0.24 }}
+            className="card flex flex-col gap-4 border-accent/25 !bg-accent-subtle p-7 sm:col-span-2 sm:flex-row sm:items-center"
           >
-            <p
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "0.62rem",
-                letterSpacing: "0.16em",
-                textTransform: "uppercase",
-                color: "var(--color-accent-dim)",
-                marginBottom: "0.75rem",
-              }}
-            >
-              Editor of choice
-            </p>
-            <p
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "2rem",
-                fontWeight: 700,
-                color: "var(--color-accent)",
-                letterSpacing: "-0.04em",
-                marginBottom: "0.5rem",
-                lineHeight: 1,
-              }}
-            >
-              Neovim
-            </p>
-            <p
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "0.78rem",
-                color: "var(--color-text-muted)",
-                lineHeight: 1.65,
-                marginBottom: "1rem",
-              }}
-            >
-              Still. <span style={{ color: "var(--color-accent)" }}>:wq</span> survivor.
-              <br />
-              Config: I&apos;m done this time, I promise.
-              <br />
-              Regrets: zero.
-            </p>
-            {/* Mini terminal block */}
-            <div
-              style={{
-                background: "var(--color-background)",
-                border: "1px solid var(--color-border)",
-                borderRadius: "var(--radius-sm)",
-                padding: "0.6rem 0.8rem",
-                fontFamily: "var(--font-mono)",
-                fontSize: "0.7rem",
-              }}
-            >
-              <span style={{ color: "var(--color-accent)" }}>$</span>
-              <span style={{ color: "var(--color-text-muted)" }}> nvim .</span>
-              <br />
-              <span style={{ color: "var(--color-text-muted)", opacity: 0.5 }}># home. sweet. home.</span>
+            <div className="flex-1">
+              <span className="eyebrow">dad joke free sample</span>
+              <p className="mt-3 font-display text-[clamp(1.1rem,2vw,1.35rem)] leading-snug font-semibold text-text-primary">&ldquo;{joke}&rdquo;</p>
             </div>
+            <button
+              type="button"
+              onClick={cycleJoke}
+              aria-label="Show the next dad joke"
+              className="group inline-flex shrink-0 items-center gap-2 self-start rounded-full border border-accent/40 px-4 py-2 font-mono text-[0.72rem] font-semibold tracking-[0.08em] text-accent uppercase transition-colors duration-150 hover:bg-accent hover:text-accent-foreground sm:self-center"
+            >
+              another one
+              <span aria-hidden="true" className="transition-transform duration-200 ease-out group-hover:rotate-90">
+                ↻
+              </span>
+            </button>
           </m.div>
-
-          <m.button
-            type="button"
-            variants={staggerItem}
-            onClick={cycleJoke}
-            aria-label="Show the next dad joke"
-            style={{
-              gridColumn: "span 5",
-              background: "var(--color-background)",
-              padding: "2rem",
-              borderRight: "1px solid var(--color-border)",
-              borderBottom: "1px solid var(--color-border)",
-              cursor: "pointer",
-              font: "inherit",
-              textAlign: "left",
-              color: "inherit",
-            }}
-            className="bento-narrow dad-joke-card"
-          >
-            <p
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "0.62rem",
-                letterSpacing: "0.16em",
-                textTransform: "uppercase",
-                color: "var(--color-accent)",
-                marginBottom: "0.75rem",
-              }}
-            >
-              Dad jokes free sample
-            </p>
-            <p
-              style={{
-                fontSize: "0.9rem",
-                color: "var(--color-text-secondary)",
-                lineHeight: 1.7,
-                fontStyle: "italic",
-                marginBottom: "1rem",
-              }}
-            >
-              &ldquo;{joke}&rdquo;
-            </p>
-            <p
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "0.68rem",
-                color: "var(--color-text-muted)",
-              }}
-            >
-              {"// there are more where that came from."}
-              <br />
-              {"// hint: click"}
-            </p>
-          </m.button>
-
-          <m.div
-            variants={staggerItem}
-            style={{
-              gridColumn: "span 7",
-              background: "var(--color-background)",
-              padding: "2rem",
-            }}
-            className="bento-wide"
-          >
-            <p
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "0.62rem",
-                letterSpacing: "0.16em",
-                textTransform: "uppercase",
-                color: "var(--color-accent)",
-                marginBottom: "0.75rem",
-              }}
-            >
-              Good conversation topics
-            </p>
-            <p
-              style={{
-                fontSize: "0.875rem",
-                color: "var(--color-text-secondary)",
-                lineHeight: 1.7,
-                marginBottom: "1.25rem",
-              }}
-            >
-              I&apos;m bad at small talk. I&apos;m very good at the kind of conversation that starts with &ldquo;wait, but why does that work?&rdquo;
-              and ends ninety minutes later with everyone slightly smarter.
-            </p>
-            <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap" }}>
-              {[
-                "Distributed systems",
-                "History of computing",
-                "How things fail",
-                "Why anything works at all",
-                "The philosophy of debugging",
-                "Bad dad jokes",
-              ].map((t) => (
-                <span
-                  key={t}
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "0.68rem",
-                    color: "var(--color-text-muted)",
-                    border: "1px solid var(--color-border)",
-                    borderRadius: "var(--radius-sm)",
-                    padding: "0.22rem 0.55rem",
-                  }}
-                >
-                  {t}
-                </span>
-              ))}
-            </div>
-          </m.div>
-        </m.div>
+        </div>
       </div>
-
-      <style>{`
-        .dad-joke-card {
-          transition: border-color 0.2s ease;
-        }
-        .dad-joke-card:hover,
-        .dad-joke-card:focus-visible {
-          border-color: var(--color-accent) !important;
-        }
-        .dad-joke-card:focus-visible {
-          outline: 2px solid var(--color-accent);
-          outline-offset: -2px;
-        }
-        @media (max-width: 760px) {
-          .bento-wide, .bento-narrow {
-            grid-column: span 12 !important;
-          }
-        }
-      `}</style>
     </section>
   );
 }

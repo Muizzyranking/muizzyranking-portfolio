@@ -28,7 +28,6 @@ export default function AboutCTA() {
           style={{ marginBottom: "3rem" }}
         >
           What&apos;s next
-          <span className="eyebrow__rule" />
         </m.p>
 
         <m.h2
