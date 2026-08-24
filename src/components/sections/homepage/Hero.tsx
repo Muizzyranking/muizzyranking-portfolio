@@ -2,72 +2,77 @@
 
 import { m, useReducedMotion } from "framer-motion";
 import Link from "next/link";
+import SystemDiagram from "@/components/sections/homepage/SystemDiagram";
 import { EASE } from "@/lib/motion";
 
 export default function Hero() {
   const reduce = useReducedMotion();
-  const from = reduce ? {} : { y: 12 };
+  const rise = reduce ? {} : { y: 16 };
 
   return (
-    <section className="container-main text-center pt-[clamp(5rem,11vw,8.5rem)] pb-[clamp(4rem,8vw,6rem)]">
-      <m.div
-        initial={{ opacity: 0, ...from }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.45, ease: EASE }}
-        className="font-mono text-[0.72rem] font-semibold tracking-[0.12em] uppercase text-text-muted mb-[clamp(2.5rem,6vw,4rem)]"
-      >
-        Backend Engineer
-      </m.div>
+    <section className="relative overflow-x-clip">
+      <div className="container-main grid items-center gap-x-14 gap-y-14 pt-[clamp(7rem,15vw,11rem)] pb-[clamp(4rem,9vw,6rem)] lg:grid-cols-[1.05fr_0.95fr]">
+        <div className="flex flex-col items-start">
+          <m.p
+            initial={{ opacity: 0, ...rise }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: EASE }}
+            className="mb-3 text-[1.1rem] italic text-text-muted"
+            style={{ fontFamily: "var(--font-display)" }}
+          >
+            Hi there, my name is
+          </m.p>
 
-      <m.h1
-        initial={{ opacity: 0, ...from }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.45, ease: EASE }}
-        className="font-display font-bold tracking-[-0.02em] leading-[1.05] text-[clamp(3rem,9vw,6.5rem)] text-text-primary mb-[clamp(2.5rem,6vw,4rem)]"
-      >
-        Muiz <span className="inline-block italic px-[0.12em] rounded-sm bg-accent text-background">Oyebowale</span>
-      </m.h1>
+          <m.h1
+            initial={{ opacity: 0, ...rise }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: EASE, delay: 0.08 }}
+            className="font-display text-[clamp(3rem,8vw,6rem)] leading-[1.0] tracking-[-0.035em] font-extrabold text-text-primary mb-6"
+          >
+            Muiz <em className="italic text-accent">Oyebowale</em>
+          </m.h1>
 
-      <m.p
-        initial={{ opacity: 0, ...from }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.45, ease: EASE, delay: 0.06 }}
-        className="text-text-secondary text-[clamp(1.2rem,2.3vw,1.6rem)] leading-[1.5] max-w-[44ch] mx-auto mb-4"
-      >
-        I build the parts nobody sees, and that&apos;s exactly how I like it. I&apos;ve got your back
-        <span className="italic text-accent">end</span>.
-      </m.p>
+          <m.div
+            initial={{ opacity: 0, ...rise }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: EASE, delay: 0.16 }}
+            className="mb-7"
+          >
+            <span className="inline-flex items-center gap-2.5 rounded-full border border-border bg-surface-raised px-4 py-2">
+              <span className="block size-1.5 rounded-full bg-accent" aria-hidden="true" />
+              <span className="font-mono text-[0.68rem] font-semibold tracking-[0.12em] text-text-secondary uppercase">
+                backend-heavy fullstack engineer
+              </span>
+            </span>
+          </m.div>
 
-      <m.p
-        initial={{ opacity: 0, ...from }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.45, ease: EASE, delay: 0.06 }}
-        className="text-text-muted text-[1rem] leading-[1.7] max-w-[46ch] mx-auto mb-10"
-      >
-        not all heroes wears cape, some quietly build infrastructure that keeps working when it matters.
-      </m.p>
+          <m.p
+            initial={{ opacity: 0, ...rise }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.55, ease: EASE, delay: 0.22 }}
+            className="text-text-secondary text-[clamp(1.15rem,2.2vw,1.45rem)] leading-[1.6] max-w-[42ch] mb-10"
+          >
+            I build the part of the software nobody sees. And that&rsquo;s exactly how I like it.
+          </m.p>
 
-      <m.div
-        initial={{ opacity: 0, ...from }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.45, ease: EASE, delay: 0.12 }}
-        className="flex items-center justify-center gap-3 flex-wrap"
-      >
-        <Link
-          href="/about"
-          className="inline-flex items-center gap-2 rounded-md bg-accent px-6 py-3 text-[0.95rem] font-semibold text-accent-foreground transition-colors duration-150 hover:bg-accent-dim"
-        >
-          about me
-          <span aria-hidden="true">→</span>
-        </Link>
-        <Link
-          href="/projects"
-          className="inline-flex items-center gap-2 rounded-md border border-border bg-transparent px-6 py-3 text-[0.95rem] font-semibold text-text-primary transition-colors duration-150 hover:border-accent-dim"
-        >
-          projects
-          <span aria-hidden="true">→</span>
-        </Link>
-      </m.div>
+          <m.div
+            initial={{ opacity: 0, y: reduce ? 0 : 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: EASE, delay: 0.3 }}
+            className="flex flex-wrap items-center gap-3"
+          >
+            <Link href="/about" className="btn btn--primary">
+              about me
+              <span aria-hidden="true">→</span>
+            </Link>
+            <Link href="/projects" className="btn btn--ghost">
+              projects
+            </Link>
+          </m.div>
+        </div>
+
+        <SystemDiagram />
+      </div>
     </section>
   );
 }
