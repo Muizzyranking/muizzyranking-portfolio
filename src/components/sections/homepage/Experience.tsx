@@ -1,75 +1,72 @@
 "use client";
 
-import { m, useInView, useReducedMotion } from "framer-motion";
+import { m, useReducedMotion } from "framer-motion";
 import { useRef } from "react";
 import SectionHeader from "@/components/sections/homepage/SectionHeader";
 import { EASE, SCROLL_REVEAL } from "@/lib/motion";
 import type { Experience } from "@/types";
 
 function formatPeriod(start: string, end: string) {
-  return `${start} to ${end === "present" ? "Present" : end}`;
+  return `${start} — ${end === "present" ? "Present" : end}`;
 }
 
-function ExperienceEntry({ exp }: { exp: Experience }) {
+function ExperienceEntry({ exp, index }: { exp: Experience; index: number }) {
+  const reduce = useReducedMotion();
+
   return (
-    <div className="py-7 first:pt-0 last:pb-0 border-b border-border-subtle last:border-0">
-      <div className="flex items-baseline justify-between gap-3 flex-wrap mb-2">
-        <h3 className="font-display font-semibold tracking-[-0.01em] leading-[1.3] text-text-primary text-[1.25rem]">{exp.company}</h3>
-        <span className="font-mono text-[0.68rem] uppercase tracking-[0.1em] text-text-muted">{exp.type}</span>
+    <m.li
+      initial={{ opacity: 0, y: reduce ? 0 : 14 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={SCROLL_REVEAL}
+      transition={{ duration: 0.45, ease: EASE, delay: index * 0.06 }}
+      className="grid gap-x-10 gap-y-3 border-b border-border-subtle py-8 last:border-0 md:grid-cols-[15rem_minmax(0,1fr)]"
+    >
+      <div>
+        <h3 className="font-display text-[1.2rem] leading-[1.3] font-semibold tracking-[-0.01em] text-text-primary">{exp.company}</h3>
+        <p className="mt-1 font-mono text-[0.72rem] tracking-[0.06em] text-text-muted">{exp.role}</p>
+        <p className="mt-1 font-mono text-[0.68rem] tracking-[0.06em] text-text-muted/80 uppercase">
+          {formatPeriod(exp.period.start, exp.period.end)} · {exp.type}
+        </p>
       </div>
 
-      <p className="font-mono text-[0.78rem] tracking-[0.06em] text-text-muted mb-4">
-        {exp.role}
-        <span aria-hidden="true"> · </span>
-        {formatPeriod(exp.period.start, exp.period.end)}
-      </p>
+      <div className="min-w-0">
+        <p className="max-w-[70ch] text-[0.98rem] leading-[1.7] text-text-secondary">{exp.summary}</p>
 
-      <p className="text-text-secondary text-[0.98rem] leading-[1.7] max-w-[72ch] mb-4">{exp.summary}</p>
+        {exp.highlights.length > 0 && (
+          <ul className="mt-4 flex flex-col gap-2">
+            {exp.highlights.slice(0, 3).map((h) => (
+              <li key={h.slice(0, 48)} className="relative max-w-[74ch] pl-5 text-[0.92rem] leading-[1.6] text-text-secondary">
+                <span className="absolute top-[0.55em] left-0 block h-px w-3 bg-accent" aria-hidden="true" />
+                {h}
+              </li>
+            ))}
+          </ul>
+        )}
 
-      {exp.highlights.length > 0 && (
-        <ul className="flex flex-col gap-2 mb-4">
-          {exp.highlights.slice(0, 4).map((h) => (
-            <li key={h.slice(0, 48)} className="text-text-secondary text-[0.95rem] leading-[1.65] pl-5 relative max-w-[76ch]">
-              <span className="absolute left-0 top-[0.5rem] text-accent font-mono text-[0.85rem]" aria-hidden="true">
-                →
-              </span>
-              {h}
-            </li>
+        <div className="mt-4 flex flex-wrap gap-1.5">
+          {exp.stack.map((s) => (
+            <span key={s} className="chip">
+              {s}
+            </span>
           ))}
-        </ul>
-      )}
-
-      <div className="flex flex-wrap gap-1.5">
-        {exp.stack.map((s) => (
-          <span key={s} className="font-mono text-[0.72rem] text-text-muted bg-surface border border-border-subtle rounded-sm px-2 py-[0.2rem]">
-            {s}
-          </span>
-        ))}
+        </div>
       </div>
-    </div>
+    </m.li>
   );
 }
 
 export default function ExperienceSection({ exp }: { exp: Experience[] }) {
   const ref = useRef<HTMLElement>(null);
-  const inView = useInView(ref, SCROLL_REVEAL);
-  const reduce = useReducedMotion();
-  const from = reduce ? {} : { y: 12 };
 
   return (
     <section ref={ref} className="section section-band">
       <div className="container-main">
-        <SectionHeader eyebrow="Career" title="Where I've done this." />
-
-        <m.div
-          initial={{ opacity: 0, ...from }}
-          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, ...from }}
-          transition={{ duration: 0.45, ease: EASE, delay: 0.1 }}
-        >
-          {exp.map((e) => (
-            <ExperienceEntry key={e.company} exp={e} />
+        <SectionHeader eyebrow="Career" title="Where I've done it." />
+        <ul className="border-t border-border-subtle">
+          {exp.map((e, i) => (
+            <ExperienceEntry key={e.company} exp={e} index={i} />
           ))}
-        </m.div>
+        </ul>
       </div>
     </section>
   );

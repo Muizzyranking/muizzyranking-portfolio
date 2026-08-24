@@ -9,37 +9,47 @@ import type { PostMeta } from "@/types";
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("en-GB", {
+    day: "numeric",
     month: "short",
     year: "numeric",
   });
 }
 
-function PostRow({ post }: { post: PostMeta }) {
+function PostRow({ post, index }: { post: PostMeta; index: number }) {
   return (
     <Link
       href={`/blog/${post.slug}`}
-      className="group grid gap-2 py-6 border-b border-border-subtle md:grid-cols-[1fr_auto] md:gap-8 items-baseline transition-colors duration-150"
+      className="group grid gap-x-8 gap-y-1 border-b border-border-subtle py-6 transition-colors duration-200 md:grid-cols-[2.5rem_minmax(0,1fr)_auto] md:items-baseline"
     >
-      <div>
-        <h3 className="font-display font-semibold tracking-[-0.01em] leading-[1.3] text-text-primary text-[1.35rem] transition-colors duration-150 group-hover:text-accent">
+      <span
+        className="font-mono text-[0.75rem] tracking-[0.1em] text-text-muted transition-colors duration-200 group-hover:text-accent"
+        aria-hidden="true"
+      >
+        {String(index + 1).padStart(2, "0")}
+      </span>
+
+      <span className="min-w-0">
+        <h3 className="font-display text-[clamp(1.2rem,2vw,1.5rem)] leading-[1.3] font-semibold tracking-[-0.01em] text-text-primary transition-colors duration-200 group-hover:text-accent">
           {post.title}
         </h3>
-        {post.summary && <p className="text-text-secondary text-[1rem] leading-[1.65] mt-2 max-w-[64ch] line-clamp-2">{post.summary}</p>}
+        <p className="mt-1.5 max-w-[64ch] text-[0.95rem] leading-[1.65] text-text-secondary line-clamp-1">{post.summary}</p>
         {post.categories.length > 0 && (
-          <div className="flex gap-1.5 mt-2.5 flex-wrap">
+          <span className="mt-2 flex flex-wrap gap-1.5">
             {post.categories.slice(0, 3).map((c) => (
-              <span key={c.slug} className="font-mono text-[0.68rem] text-text-muted border border-border-subtle rounded-sm px-2 py-[0.2rem]">
+              <span key={c.slug} className="chip">
                 {c.label}
               </span>
             ))}
-          </div>
+          </span>
         )}
-      </div>
+      </span>
 
-      <div className="flex flex-col items-start md:items-end gap-1 font-mono text-[0.72rem] tracking-[0.08em] text-text-muted md:pt-1">
+      <span className="flex items-center gap-4 font-mono text-[0.7rem] tracking-[0.08em] text-text-muted whitespace-nowrap max-md:hidden">
         <span>{formatDate(post.publishedAtIso)}</span>
-        <span>{post.readingTime.text}</span>
-      </div>
+        <span aria-hidden="true" className="transition-transform duration-200 ease-out group-hover:translate-x-1 group-hover:text-accent">
+          →
+        </span>
+      </span>
     </Link>
   );
 }
@@ -48,7 +58,7 @@ export default function BlogTeaser({ posts }: { posts: PostMeta[] }) {
   const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, SCROLL_REVEAL);
   const reduce = useReducedMotion();
-  const from = reduce ? {} : { y: 12 };
+  const from = reduce ? {} : { y: 14 };
 
   return (
     <section ref={ref} className="section section-band">
@@ -70,17 +80,18 @@ export default function BlogTeaser({ posts }: { posts: PostMeta[] }) {
         />
 
         {posts.length > 0 && (
-          <m.div
-            initial={{ opacity: 0, ...from }}
-            animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, ...from }}
-            transition={{ duration: 0.45, ease: EASE, delay: 0.1 }}
-          >
-            <div className="border-t border-border-subtle">
-              {posts.map((post) => (
-                <PostRow key={post.slug} post={post} />
-              ))}
-            </div>
-          </m.div>
+          <div className="border-t border-border-subtle">
+            {posts.map((post, i) => (
+              <m.div
+                key={post.slug}
+                initial={{ opacity: 0, ...from }}
+                animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, ...from }}
+                transition={{ duration: 0.45, ease: EASE, delay: 0.06 * i }}
+              >
+                <PostRow post={post} index={i} />
+              </m.div>
+            ))}
+          </div>
         )}
       </div>
     </section>

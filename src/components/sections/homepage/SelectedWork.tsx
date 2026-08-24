@@ -12,14 +12,14 @@ export default function SelectedWork({ projects }: { projects: Project[] }) {
   const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, SCROLL_REVEAL);
   const reduce = useReducedMotion();
-  const from = reduce ? {} : { y: 12 };
+  const from = reduce ? {} : { y: 16 };
 
   return (
     <section ref={ref} className="section section-band">
       <div className="container-main">
         <SectionHeader
           eyebrow="Selected work"
-          title="Projects as case studies."
+          title="Things I've built."
           right={
             <Link
               href="/projects"
@@ -34,16 +34,19 @@ export default function SelectedWork({ projects }: { projects: Project[] }) {
         />
 
         {projects.length > 0 && (
-          <m.div
-            initial={{ opacity: 0, ...from }}
-            animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, ...from }}
-            transition={{ duration: 0.45, ease: EASE, delay: 0.1 }}
-            className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 overflow-x-clip"
-          >
-            {projects.map((project) => (
-              <ProjectCard key={project.slug} project={project} />
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 overflow-x-clip">
+            {projects.map((project, i) => (
+              <m.div
+                key={project.slug}
+                initial={{ opacity: 0, ...from }}
+                animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, ...from }}
+                transition={{ duration: 0.45, ease: EASE, delay: 0.06 * i }}
+                className="min-w-0"
+              >
+                <ProjectCard project={project} />
+              </m.div>
             ))}
-          </m.div>
+          </div>
         )}
       </div>
     </section>
