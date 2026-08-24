@@ -3,8 +3,8 @@ import { notFound } from "next/navigation";
 import PostBody from "@/components/blog/PostBody";
 import PostEnd from "@/components/blog/PostEnd";
 import PostHero from "@/components/blog/PostHero";
-import ReadingProgress from "@/components/blog/ReadingProgress";
 import TableOfContents from "@/components/blog/TableOfContents";
+import ReadingProgress from "@/components/ui/ReadingProgress";
 import { getAdjacentPosts, getAllPosts, getPost, getRelatedPosts } from "@/lib/blog";
 import { site } from "@/lib/site";
 

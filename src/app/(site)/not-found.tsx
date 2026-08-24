@@ -14,17 +14,11 @@ export default function NotFound() {
       </p>
 
       <div className="flex items-center justify-center gap-3 flex-wrap">
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2 rounded-md bg-accent px-6 py-3 text-[0.95rem] font-semibold text-accent-foreground transition-colors duration-150 hover:bg-accent-dim"
-        >
+        <Link href="/" className="btn btn--primary">
           go home
           <span aria-hidden="true">→</span>
         </Link>
-        <Link
-          href="/projects"
-          className="inline-flex items-center gap-2 rounded-md border border-border bg-transparent px-6 py-3 text-[0.95rem] font-semibold text-text-primary transition-colors duration-150 hover:border-accent-dim"
-        >
+        <Link href="/projects" className="btn btn--ghost">
           see projects
           <span aria-hidden="true">→</span>
         </Link>

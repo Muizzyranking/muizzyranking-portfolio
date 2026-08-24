@@ -36,6 +36,21 @@ export default async function BlogPreviewPage({ params }: Props) {
         </Link>
         <span style={{ color: "var(--color-text-muted)", opacity: 0.5 }}>·</span>
         <span style={{ color: "var(--color-text-muted)" }}>preview · {slug}</span>
+        <div style={{ flex: 1 }} />
+        <span
+          style={{
+            color: "#b45309",
+            border: "1px solid #d9770666",
+            background: "#d9770614",
+            borderRadius: "999px",
+            padding: "0.08rem 0.55rem",
+            textTransform: "uppercase",
+            letterSpacing: "0.1em",
+            fontSize: "0.62rem",
+          }}
+        >
+          draft preview
+        </span>
       </div>
 
       <PostHero post={post} />

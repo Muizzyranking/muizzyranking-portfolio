@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
-import AboutCta from "@/components/sections/homepage/AboutCta";
 import BlogTeaser from "@/components/sections/homepage/BlogTeaser";
 import Contact from "@/components/sections/homepage/Contact";
 import ExperienceSection from "@/components/sections/homepage/Experience";
+import FullStack from "@/components/sections/homepage/FullStack";
 import Hero from "@/components/sections/homepage/Hero";
 import SelectedWork from "@/components/sections/homepage/SelectedWork";
-import StackMini from "@/components/sections/homepage/StackMini";
 import { getRecentPosts } from "@/lib/blog";
 import { getAllExperience } from "@/lib/experience";
 import { getFeaturedProjects } from "@/lib/projects";
@@ -22,10 +21,9 @@ export default function Home() {
   return (
     <>
       <Hero />
-      <AboutCta />
       <SelectedWork projects={projects} />
       <ExperienceSection exp={experiences} />
-      <StackMini />
+      <FullStack />
       <BlogTeaser posts={posts} />
       <Contact />
     </>

@@ -24,9 +24,9 @@ export default async function OG({ params }: { params: Promise<{ slug: string }>
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
-        background: "#faf8f4",
+        background: "#fffdf9",
         padding: "72px 84px",
-        color: "#1c1917",
+        color: "#191512",
         position: "relative",
       }}
     >
@@ -38,7 +38,7 @@ export default async function OG({ params }: { params: Promise<{ slug: string }>
           width: "14px",
           height: "14px",
           borderRadius: "999px",
-          background: "#55702f",
+          background: "#881600",
         }}
       />
 
@@ -51,11 +51,11 @@ export default async function OG({ params }: { params: Promise<{ slug: string }>
           fontSize: "22px",
           letterSpacing: "0.18em",
           textTransform: "uppercase",
-          color: "#625c4a",
+          color: "#6d655a",
         }}
       >
-        <span style={{ color: "#55702f" }}>writing</span>
-        <span style={{ width: "48px", height: "1px", background: "#e3ded4" }} />
+        <span style={{ color: "#881600" }}>writing</span>
+        <span style={{ width: "48px", height: "1px", background: "#e9e4da" }} />
         <span>muizzyranking.me</span>
       </div>
 
@@ -73,7 +73,7 @@ export default async function OG({ params }: { params: Promise<{ slug: string }>
             letterSpacing: "-0.02em",
             lineHeight: 1.1,
             fontSize: "64px",
-            color: "#1c1917",
+            color: "#191512",
             maxWidth: "900px",
           }}
         >
@@ -89,12 +89,12 @@ export default async function OG({ params }: { params: Promise<{ slug: string }>
           fontFamily: "monospace",
           fontSize: "20px",
           letterSpacing: "0.1em",
-          color: "#625c4a",
+          color: "#6d655a",
         }}
       >
         <span>Muiz Oyebowale</span>
         <span style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          <span style={{ width: "8px", height: "8px", borderRadius: "999px", background: "#55702f" }} />
+          <span style={{ width: "8px", height: "8px", borderRadius: "999px", background: "#881600" }} />
           {dateLabel}
         </span>
       </div>
