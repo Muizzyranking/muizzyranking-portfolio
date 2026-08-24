@@ -1,59 +1,62 @@
 @import "tailwindcss";
 
-/* ─────────────────────────────────────────────
-   DESIGN TOKENS
-   Token names are stable (editor depends on them).
-   Values switch between light (default) and dark.
-──────────────────────────────────────────────── */
 @theme {
-  /* Light palette — warm paper + evergreen */
-  --color-background: #faf8f4;
-  --color-bg-elevated: #f2efe9;
-  --color-surface: #f2efe9;
-  --color-surface-raised: #fffdf9;
-  --color-border: #e3ded4;
-  --color-border-subtle: #ebe7dd;
-  --color-text-primary: #1c1917;
-  --color-text-secondary: #4a463f;
-  --color-text-muted: #625c4a;
-  --color-accent: #55702f;
-  --color-accent-dim: #4c662b;
-  --color-accent-subtle: #edf2e2;
-  --color-accent-foreground: #ffffff;
-  --color-success: #2e7d32;
-  --color-error: #c53030;
+  /* Light palette — bright porcelain + ink + blood red */
+  --color-background: #fffdf9;
+  --color-bg-elevated: #f7f4ee;
+  --color-surface: #f7f4ee;
+  --color-surface-raised: #ffffff;
+  --color-border: #e9e4da;
+  --color-border-subtle: #f0ece4;
+  --color-text-primary: #191512;
+  --color-text-secondary: #463f37;
+  --color-text-muted: #6d655a;
+  --color-accent: #881600;
+  --color-accent-bright: #a81c00;
+  --color-accent-dim: #690f00;
+  --color-accent-subtle: #fbeeea;
+  --color-accent-foreground: #fff6f2;
+  --color-success: #1a7f37;
+  --color-error: #c0271c;
 
-  /* Radius */
-  --radius-sm: 6px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
+  /* Radius — generous, friendly */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+
+  /* Soft elevation */
+  --shadow-soft: 0 2px 6px -2px rgb(25 21 18 / 0.06), 0 12px 32px -16px rgb(25 21 18 / 0.14);
+  --shadow-lifted: 0 4px 10px -4px rgb(25 21 18 / 0.08), 0 24px 56px -24px rgb(25 21 18 / 0.22);
 }
 
 @theme inline {
-  /* Fonts — self-hosted via next/font (Poppins / Fraunces / IBM Plex Mono) */
   --font-sans: var(--font-poppins), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-display: var(--font-fraunces), "Iowan Old Style", Georgia, "Times New Roman", serif;
-  --font-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  --font-display: var(--font-bricolage), "Poppins", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
-/* ── Dark palette — near-black base + glowing moss ── */
+/* ── Dark palette — true night black + glowing bordeaux ── */
 [data-theme="dark"] {
-  --color-background: #080808;
-  --color-bg-elevated: #101010;
-  --color-surface: #101010;
-  --color-surface-raised: #181818;
-  --color-border: #222222;
-  --color-border-subtle: #1a1a1a;
-  --color-text-primary: #f5f0ea;
-  --color-text-secondary: #b4ada2;
-  --color-text-muted: #9a9385;
-  --color-accent: #9fbf6b;
-  --color-accent-dim: #6f8c48;
-  --color-accent-subtle: #1c2412;
-  --color-accent-foreground: #1c2412;
+  --color-background: #0a0a0b;
+  --color-bg-elevated: #121114;
+  --color-surface: #121114;
+  --color-surface-raised: #18171b;
+  --color-border: #26242a;
+  --color-border-subtle: #1d1c21;
+  --color-text-primary: #f3f1ee;
+  --color-text-secondary: #c7c3bc;
+  --color-text-muted: #9a958d;
+  --color-accent: #e2543e;
+  --color-accent-bright: #f07357;
+  --color-accent-dim: #b03a28;
+  --color-accent-subtle: #291009;
+  --color-accent-foreground: #1c0703;
   --color-success: #4ade80;
   --color-error: #f87171;
+
+  --shadow-soft: 0 2px 6px -2px rgb(0 0 0 / 0.5), 0 12px 32px -16px rgb(0 0 0 / 0.55);
+  --shadow-lifted: 0 4px 10px -4px rgb(0 0 0 / 0.5), 0 24px 56px -24px rgb(0 0 0 / 0.7);
 }
 
 /* ─────────────────────────────────────────────
@@ -69,8 +72,8 @@
   :root {
     color-scheme: light;
     --font-sans: var(--font-poppins), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    --font-display: var(--font-fraunces), "Iowan Old Style", Georgia, "Times New Roman", serif;
-    --font-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    --font-display: var(--font-bricolage), "Poppins", -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   }
 
   [data-theme="dark"] {
@@ -104,30 +107,28 @@
   h6 {
     font-family: var(--font-display);
     color: var(--color-text-primary);
-    font-weight: 600;
-    line-height: 1.2;
-    letter-spacing: -0.01em;
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
     text-wrap: balance;
     scroll-margin-top: 6rem;
   }
 
   h1 {
     font-size: clamp(2rem, 5vw, 3.25rem);
-    line-height: 1.1;
-    letter-spacing: -0.02em;
-    font-weight: 700;
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+    font-weight: 800;
   }
 
   h2 {
-    font-size: clamp(1.5rem, 3vw, 2.1rem);
-    line-height: 1.15;
-    letter-spacing: -0.015em;
+    font-size: clamp(1.6rem, 3.2vw, 2.35rem);
+    line-height: 1.14;
   }
 
   h3 {
-    font-size: 1.25rem;
-    line-height: 1.3;
-    letter-spacing: -0.01em;
+    font-size: 1.3rem;
+    line-height: 1.28;
   }
 
   h4 {
@@ -156,12 +157,12 @@
   }
 
   ::selection {
-    background-color: var(--color-accent-subtle);
-    color: var(--color-text-primary);
+    background-color: var(--color-accent);
+    color: var(--color-accent-foreground);
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-accent);
+    outline: 2px solid var(--color-accent-bright);
     outline-offset: 2px;
   }
 
@@ -209,11 +210,24 @@
 
 .eyebrow {
   font-family: var(--font-mono);
-  font-size: 0.78rem;
+  font-size: 0.72rem;
   font-weight: 600;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--color-text-muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+/* Small red tick before eyebrow labels — a quiet recurring brand mark */
+.eyebrow::before {
+  content: "";
+  display: inline-block;
+  width: 1.25rem;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--color-accent);
 }
 
 .text-accent {
@@ -224,6 +238,283 @@
   height: 1px;
   background: var(--color-border-subtle);
   border: 0;
+}
+
+/* ─────────────────────────────────────────────
+   SHARED UI PRIMITIVES
+──────────────────────────────────────────────── */
+
+/* Buttons: pill geometry, press feedback, precise transitions */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.65rem;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    transform 160ms cubic-bezier(0.23, 1, 0.32, 1),
+    background-color 150ms ease,
+    border-color 150ms ease,
+    color 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn--primary {
+  background: var(--color-accent);
+  color: var(--color-accent-foreground);
+  box-shadow: 0 10px 24px -12px color-mix(in srgb, var(--color-accent) 75%, transparent);
+}
+
+.btn--primary:hover {
+  background: var(--color-accent-dim);
+  transform: translateY(-1px);
+  box-shadow: 0 16px 32px -14px color-mix(in srgb, var(--color-accent) 80%, transparent);
+}
+
+.btn--ghost {
+  background: transparent;
+  color: var(--color-text-primary);
+  border: 1.5px solid var(--color-border);
+}
+
+.btn--ghost:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  transform: translateY(-1px);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+  color: var(--color-text-secondary);
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: 0.26rem 0.75rem;
+  white-space: nowrap;
+  transition:
+    color 150ms ease,
+    border-color 150ms ease,
+    transform 150ms cubic-bezier(0.23, 1, 0.32, 1),
+    box-shadow 150ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .chip:hover {
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-soft);
+  }
+}
+
+.card {
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+}
+
+/* Project card splash zooms gently on card hover */
+.project-splash {
+  transition: transform 500ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.group:hover .project-splash {
+  transform: scale(1.045);
+}
+
+/* ─────────────────────────────────────────────
+   CUSTOM CURSOR
+   Amber-bordeaux circle that replaces the native
+   cursor on fine-pointer devices and expands over
+   anything clickable. Rendered by <CustomCursor/>;
+   the html.custom-cursor-active class is added by
+   JS only when it's actually running, so no-JS,
+   touch and reduced-motion users keep normal cursors.
+──────────────────────────────────────────────── */
+html.custom-cursor-active,
+html.custom-cursor-active a,
+html.custom-cursor-active button,
+html.custom-cursor-active [role="button"],
+html.custom-cursor-active [data-cursor],
+html.custom-cursor-active label,
+html.custom-cursor-active input,
+html.custom-cursor-active textarea,
+html.custom-cursor-active select,
+html.custom-cursor-active svg [data-cursor],
+html.custom-cursor-active svg [role="button"] {
+  cursor: none;
+}
+
+.cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  pointer-events: none;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-accent) 14%, transparent);
+  border: 1.5px solid var(--color-accent);
+  opacity: 0;
+  will-change: transform, width, height;
+  /* No transform transition here on purpose: the spring drives position 1:1.
+     `.cursor-glide` is added temporarily for the dot↔wrap morphs. */
+  transition:
+    width 260ms cubic-bezier(0.23, 1, 0.32, 1),
+    height 260ms cubic-bezier(0.23, 1, 0.32, 1),
+    border-radius 260ms cubic-bezier(0.23, 1, 0.32, 1),
+    background-color 180ms ease,
+    opacity 200ms ease;
+}
+
+.cursor-dot.cursor-glide {
+  transition:
+    transform 300ms cubic-bezier(0.23, 1, 0.32, 1),
+    width 300ms cubic-bezier(0.23, 1, 0.32, 1),
+    height 300ms cubic-bezier(0.23, 1, 0.32, 1),
+    border-radius 300ms cubic-bezier(0.23, 1, 0.32, 1),
+    background-color 180ms ease,
+    opacity 200ms ease;
+}
+
+.cursor-dot.cursor-press {
+  transition:
+    transform 120ms ease-out,
+    background-color 120ms ease;
+}
+
+.cursor-dot.cursor-press[data-wrapped="false"] {
+  background: color-mix(in srgb, var(--color-accent) 26%, transparent);
+}
+
+.cursor-dot[data-visible="true"] {
+  opacity: 1;
+}
+
+.cursor-dot[data-wrapped="true"] {
+  background: color-mix(in srgb, var(--color-accent) 7%, transparent);
+  border-width: 2px;
+}
+
+/* Music control bar equalizer */
+.music-bar {
+  height: 30%;
+  animation: music-bounce 0.9s ease-in-out infinite;
+}
+
+@keyframes music-bounce {
+  0%,
+  100% {
+    height: 25%;
+  }
+  50% {
+    height: 100%;
+  }
+}
+
+/* Slow vinyl-style spin on the navbar music icon while playing minimized */
+.music-spin {
+  animation: music-rotate 3.5s linear infinite;
+}
+
+@keyframes music-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Volume slider in the music control bar */
+.music-volume {
+  appearance: none;
+  -webkit-appearance: none;
+  height: 4px;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--color-accent) 30%, var(--color-border));
+  outline-offset: 4px;
+  cursor: pointer;
+}
+
+.music-volume::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: var(--color-accent);
+  border: none;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 0.25);
+  transition: transform 150ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.music-volume::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+.music-volume::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: var(--color-accent);
+  border: none;
+}
+
+/* Prose links — wrap-safe animated underline (retracts on hover) */
+.post-link {
+  color: var(--color-accent);
+  font-weight: 500;
+  text-decoration: none;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 100% 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition:
+    background-size 220ms cubic-bezier(0.23, 1, 0.32, 1),
+    color 150ms ease;
+}
+
+.post-link:hover {
+  background-size: 0% 1px;
+  background-position: 100% 100%;
+}
+
+/* Hero diagram: no focus outline on the (huge) station group box; keyboard
+   users get the badge circle itself highlighted instead */
+.system-diagram [role="button"]:focus,
+.system-diagram [role="button"]:focus-visible {
+  outline: none;
+}
+
+.system-diagram [role="button"]:focus-visible circle {
+  stroke: var(--color-accent-bright);
+  stroke-width: 3;
+}
+
+.post-link:hover {
+  background-size: 0% 1px;
+  background-position: 100% 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor-dot {
+    display: none;
+  }
 }
 
 /* ─────────────────────────────────────────────
@@ -241,6 +532,13 @@
   border-bottom-color: var(--color-border-subtle);
   backdrop-filter: blur(14px) saturate(180%);
   -webkit-backdrop-filter: blur(14px) saturate(180%);
+}
+
+/* ─────────────────────────────────────────────
+   PORTRAIT TREATMENT
+──────────────────────────────────────────────── */
+.portrait-frame img {
+  filter: none;
 }
 
 /* ─────────────────────────────────────────────
