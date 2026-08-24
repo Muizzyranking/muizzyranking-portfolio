@@ -7,6 +7,8 @@ import { useEffect, useState } from "react";
 import CommandPalette from "@/components/layout/CommandPalette";
 import MobileMenu from "@/components/layout/MobileMenu";
 import ThemeToggle from "@/components/layout/ThemeToggle";
+import MusicPopover from "@/components/music/MusicPopover";
+import { useMusic } from "@/components/music/MusicProvider";
 import { site } from "@/lib/site";
 
 export default function Navbar({ projects, posts }: { projects: { slug: string; title: string }[]; posts: { slug: string; title: string }[] }) {
@@ -15,6 +17,9 @@ export default function Navbar({ projects, posts }: { projects: { slug: string; 
   const [mobileOpen, setMobileOpen] = useState(false);
   const [paletteOpen, setPaletteOpen] = useState(false);
   const { scrollY } = useScroll();
+  const { playback, panel, togglePanel } = useMusic();
+  const musicActive = playback === "playing";
+  const musicSpin = musicActive && panel !== "open";
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
@@ -42,9 +47,9 @@ export default function Navbar({ projects, posts }: { projects: { slug: string; 
         <div className="container-main flex h-14 items-center justify-between gap-4">
           <Link
             href="/"
-            className="text-[0.95rem] font-semibold tracking-tight text-text-primary transition-colors duration-150 hover:text-text-secondary"
+            className="text-[1rem] font-semibold tracking-tight text-text-primary transition-colors duration-150 hover:text-text-secondary"
           >
-            muizzy<span className="inline-block italic px-[0.12em] rounded-sm bg-accent text-background">ranking</span>
+            muizzy<em className="italic text-accent">ranking</em>
           </Link>
 
           <nav className="hidden md:flex items-center gap-1" aria-label="Primary navigation">
@@ -55,7 +60,7 @@ export default function Navbar({ projects, posts }: { projects: { slug: string; 
                   key={item.href}
                   href={item.href}
                   aria-current={active ? "page" : undefined}
-                  className="relative rounded-sm px-3 py-2 text-[0.9rem] font-semibold lowercase transition-colors duration-150"
+                  className="relative rounded-sm px-3 py-2 text-[0.9rem] leading-none font-semibold lowercase transition-colors duration-150"
                   style={{ color: active ? "var(--color-text-primary)" : "var(--color-text-secondary)" }}
                 >
                   {item.label}
@@ -72,6 +77,46 @@ export default function Navbar({ projects, posts }: { projects: { slug: string; 
           </nav>
 
           <div className="flex items-center gap-1.5">
+            <div className="relative">
+              <button
+                type="button"
+                onClick={togglePanel}
+                aria-label={panel === "open" ? "Minimize music player" : "Open music player"}
+                aria-expanded={panel === "open"}
+                data-music-trigger
+                title="Music"
+                className={`relative inline-flex h-8 w-8 items-center justify-center rounded-md border transition-colors duration-150 ${
+                  panel === "open" || musicActive ? "border-accent/50 text-accent" : "border-border text-text-secondary hover:text-text-primary"
+                }`}
+              >
+                {musicSpin ? (
+                  <span className="flex h-3.5 items-end gap-[2.5px]" aria-hidden="true">
+                    {[0, 1, 2, 3].map((i) => (
+                      <span key={i} className="music-bar w-[2.5px] rounded-full bg-accent" style={{ animationDelay: `${i * 0.25}s` }} />
+                    ))}
+                  </span>
+                ) : (
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.75"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                    className={musicSpin ? "music-spin" : ""}
+                  >
+                    <path d="M9 18V5l12-2v13" />
+                    <circle cx="6" cy="18" r="3" />
+                    <circle cx="18" cy="16" r="3" />
+                  </svg>
+                )}
+              </button>
+              <MusicPopover />
+            </div>
+
             <button
               type="button"
               onClick={() => setPaletteOpen(true)}
