@@ -3,26 +3,12 @@
 import { useSpring } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 
-// Elements the ring wraps. Text inputs stay dot-only so typing areas feel normal.
 const WRAP_SELECTOR = "a, button, [role='button'], input, textarea, select, label, summary, [data-cursor]";
 
 const DOT_SIZE = 32;
 const WRAP_PADDING = 7;
 const PRESS_SCALE = 0.92;
 
-/**
- * Replaces the native cursor on fine-pointer devices.
- * Rest: a 32px bordeaux ring gliding after the pointer.
- * Hover: the ring glides onto the hovered element and wraps it like an extra
- * border, then releases back to the pointer on leave.
- *
- * While wrapping, a rAF loop re-reads the element's rect every frame, so the
- * ring stays glued to the element even when it moves under a still pointer
- * (scrolling, layout shifts, animations) — and releases the moment the
- * element moves away from the pointer.
- *
- * Off for touch devices and prefers-reduced-motion.
- */
 export default function CustomCursor() {
   const [enabled, setEnabled] = useState(false);
   const dotRef = useRef<HTMLDivElement>(null);
@@ -62,12 +48,9 @@ export default function CustomCursor() {
       const w = rect.width + WRAP_PADDING * 2;
       const h = rect.height + WRAP_PADDING * 2;
 
-      let cx = rect.left + rect.width / 2;
+      const cx = rect.left + rect.width / 2;
       let cy = rect.top + rect.height / 2;
-      // Small elements (navbar links, buttons) sit close to the viewport top —
-      // keep their ring fully on-screen. Larger elements (cards) follow their
-      // element exactly, going off-screen with it — clamping a tall ring to
-      // the viewport is what made it "stick" while scrolling.
+
       if (h <= 80) {
         cy = Math.min(Math.max(cy, h / 2 + 3), window.innerHeight - h / 2 - 3);
       }
@@ -104,9 +87,6 @@ export default function CustomCursor() {
       if (!target.current) applyDot(x.get(), y.get());
     });
 
-    // While wrapping, track the element every frame: survives scrolling,
-    // layout shifts and animations — and releases when the element moves
-    // away from the pointer instead of hovering thin air.
     let raf = 0;
     const track = () => {
       const el = target.current;
@@ -140,7 +120,7 @@ export default function CustomCursor() {
           glide(() => applyDot(e.clientX, e.clientY));
         }
       } else if (next) {
-        applyWrap(); // element may have resized under the pointer
+        applyWrap();
       }
 
       if (!shown.current) {
@@ -157,8 +137,6 @@ export default function CustomCursor() {
     };
     const onRelease = () => {
       pressed.current = false;
-      // Keep the transition class briefly so the release eases back, then
-      // hand transform back to the 1:1 spring follow.
       dot.classList.add("cursor-press");
       if (target.current) applyWrap();
       else applyDot(x.get(), y.get());
