@@ -410,6 +410,32 @@ html.custom-cursor-active svg [role="button"] {
   border-width: 2px;
 }
 
+.cursor-back {
+  position: fixed;
+  top: 0;
+  left: 0;
+  border-radius: 999px;
+  pointer-events: none;
+  z-index: 9997;
+  background-color: var(--color-accent, #7a1f2b);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+.cursor-back[data-visible="true"] {
+  opacity: 1;
+}
+
+.cursor-body {
+  position: fixed;
+  top: 0;
+  left: 0;
+  transform-origin: 0 50%;
+  pointer-events: none;
+  z-index: 9997;
+  background-color: var(--color-accent, #7a1f2b);
+  opacity: 0;
+}
+
 /* Music control bar equalizer */
 .music-bar {
   height: 30%;
