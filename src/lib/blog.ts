@@ -152,12 +152,30 @@ function parseFile(record: FileRecord): RawPost | null {
   };
 }
 
-// Cache layer
-let cachedAllParsed: RawPost[] | null = null;
+type BlogCache = { signature: string; posts: RawPost[] };
+
+let cachedAllParsed: BlogCache | null = null;
+
+function computeFileSignature(files: FileRecord[]): string {
+  const parts: string[] = [];
+  for (const f of files) {
+    try {
+      const st = fs.statSync(f.filepath);
+      parts.push(`${f.filepath}:${st.mtimeMs}:${st.size}`);
+    } catch {
+      parts.push(`${f.filepath}:gone`);
+    }
+  }
+  return `${files.length}|${parts.join("|")}`;
+}
 
 function getAllParsed(): RawPost[] {
-  if (cachedAllParsed) return cachedAllParsed;
   const files = listPostFiles();
+  const signature = computeFileSignature(files);
+  if (cachedAllParsed && cachedAllParsed.signature === signature) {
+    return cachedAllParsed.posts;
+  }
+
   const parsed: RawPost[] = [];
   const seenSlugs = new Map<string, string>();
   for (const f of files) {
@@ -170,9 +188,8 @@ function getAllParsed(): RawPost[] {
     seenSlugs.set(p.meta.slug, p.meta.filepath);
     parsed.push(p);
   }
-  // newest first
   parsed.sort((a, b) => b.publishedDate.getTime() - a.publishedDate.getTime());
-  cachedAllParsed = parsed;
+  cachedAllParsed = { signature, posts: parsed };
   return parsed;
 }
 
