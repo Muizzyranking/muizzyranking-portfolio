@@ -9,7 +9,7 @@ export const mdxComponents: MDXComponents = {
       style={{
         fontFamily: "var(--font-display)",
         fontSize: "clamp(1.5rem, 3vw, 1.9rem)",
-        fontWeight: 600,
+        fontWeight: 700,
         letterSpacing: "-0.03em",
         lineHeight: 1.2,
         marginTop: "3rem",
@@ -28,7 +28,7 @@ export const mdxComponents: MDXComponents = {
       style={{
         fontFamily: "var(--font-display)",
         fontSize: "clamp(1.15rem, 2.2vw, 1.4rem)",
-        fontWeight: 600,
+        fontWeight: 700,
         letterSpacing: "-0.02em",
         lineHeight: 1.25,
         marginTop: "2.25rem",
@@ -57,20 +57,15 @@ export const mdxComponents: MDXComponents = {
   a: ({ children, href, ...rest }) => {
     const isInternal = href?.startsWith("/") ?? false;
     const className = "post-link";
-    const style: React.CSSProperties = {
-      color: "var(--color-accent)",
-      borderBottom: "1px solid var(--color-accent-dim)",
-      transition: "opacity 0.15s",
-    };
     if (isInternal && href) {
       return (
-        <Link href={href} className={className} style={style}>
+        <Link href={href} className={className}>
           {children}
         </Link>
       );
     }
     return (
-      <a href={href} target="_blank" rel="noopener noreferrer" className={className} style={style} {...rest}>
+      <a href={href} target="_blank" rel="noopener noreferrer" className={className} {...rest}>
         {children}
       </a>
     );
