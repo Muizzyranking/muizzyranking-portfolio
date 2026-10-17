@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRef } from "react";
 import { EMAIL } from "@/lib/data";
 import { fadeUp, SCROLL_REVEAL } from "@/lib/motion";
+import { site } from "@/lib/site";
 
 export default function AboutCTA() {
   const ref = useRef<HTMLElement>(null);
@@ -282,7 +283,7 @@ export default function AboutCTA() {
               </a>
               <span style={{ color: "var(--color-text-muted)", opacity: 0.4 }}>·</span>
               <a
-                href="/Muiz-Oyebowale-Resume.pdf"
+                href={site.resume}
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{

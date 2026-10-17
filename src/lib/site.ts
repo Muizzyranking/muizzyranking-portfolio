@@ -6,7 +6,7 @@ export const site = {
     "Muiz Oyebowale is a backend engineer who designs and builds APIs, data pipelines, and distributed systems in Python and Django, with a focus on reliability and maintainability at scale.",
   url: "https://muizzyranking.me",
   email: "oyebowaleabdulmuiz@gmail.com",
-  resume: "/Muiz-Oyebowale-Resume.pdf",
+  resume: "/resume.pdf",
   nav: [
     { label: "home", href: "/" },
     { label: "about", href: "/about" },

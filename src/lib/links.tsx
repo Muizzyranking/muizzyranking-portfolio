@@ -96,7 +96,7 @@ export const LINKS: LinkItem[] = [
   },
   {
     label: "Résumé",
-    href: "/Muiz-Oyebowale-Resume.pdf",
+    href: "/resume.pdf",
     icon: "file",
     tone: "#881600",
     note: "the structured version of me",
