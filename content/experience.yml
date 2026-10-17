@@ -1,17 +1,21 @@
-- company: "HNG Internship, Anvila & Insighta Labs"
-  role: "Tech Lead / Backend Engineer"
+- company: "Anvila (HNG)"
+  role: "Full-Stack Engineer, Team Lead"
   type: "Internship"
   period:
     start: "Apr 2026"
     end: "Jun 2026"
-  summary: "Tech lead over an 11-engineer backend and frontend team building Anvila, an AI-agent manifest generator, shipped in under a month. Alongside that, built Insighta Labs solo: a demographic-intelligence API with dual OAuth and a rule-based natural-language query parser."
+  summary: "Tech lead over an 11-engineer team (4 backend, 7 frontend) building Anvila, an AI-agent manifest generator. Users describe an agent, answer follow-up questions, preview the generated files, and publish them to GitHub. Shipped in under a month."
   highlights:
-    - "Led both backend and frontend delivery. 4 backend engineers, 7 frontend, while remaining the top individual contributor on the frontend myself."
-    - "Owned database design across the entire team; every engineer extended schemas I originally built, keeping the data layer consistent as the team scaled."
-    - "Built the prompt-to-manifest generation pipeline and its event-publishing layer. The path that turns a user's prompt into a set of customized AI-agent manifest files. 30+ manifests generated in production use."
-    - "Owned all frontend-to-API integration and built several of the marketing pages."
-    - "Independently built Insighta Labs: dual OAuth flow (browser cookie-based, and a full CLI PKCE flow with a local callback server), short-lived JWTs paired with single-use hashed refresh tokens, and a rule-based natural-language query parser for filtering people by age, gender, and country from plain text."
-  stack: [Python, FastAPI, Next.js, PostgreSQL, Redis, OAuth, JWT]
+    - "Wrote the technical requirements document, made the feature calls, and split the backend work by experience: beginners took utilities, authentication, and the Redis cache helper, while the other senior engineer took the LLM adapters, conversation compression, and the message API layer."
+    - "Owned database design and migrations for the whole team. Every engineer extended schemas I originally built, which kept the data layer consistent as the team grew."
+    - "Built the prompt-to-manifest generation pipeline and its event-publishing layer, the path that turns a user's prompt into a set of customized agent manifest files. 30+ manifests generated in production use."
+    - "Built publishing to GitHub: manifests go to a public org repo or the user's private account, with an install link. Matched skills are pulled from ClawHub and cached in the GitHub org so they're reused instead of re-fetched. Took over and finished the ClawHub integration after it hit problems."
+    - "Decided where to use SSE versus regular requests, and chose SSE over WebSockets because the client never needs to push live messages. Status events ('thinking', 'matching skills') drive the UI while responses stream with a typing effect. Messages go by POST and are persisted, so a refresh never loses them."
+    - "Designed token tracking per chat and in total, and the chat data model, so history stays readable."
+    - "Frontend: designed the Next.js cookie-based auth, with server-side wrappers that attach auth to backend calls and refresh tokens automatically. Used Next as a proxy between frontend and backend, chose the libraries and styling, designed several pages, wrote a large share of the frontend code, and built client-side streaming."
+    - "Fixed a chat bug no one else on the team could: a conversation stayed untitled in the UI after the first message."
+    - "Wrote the startup scripts for the web server (Uvicorn workers) and the Celery worker with the DevOps team."
+  stack: [Python, FastAPI, Next.js, PostgreSQL, Redis, Celery, SSE, GitHub API]
 
 - company: "Taskingdom"
   role: "Backend Developer"
@@ -21,11 +25,26 @@
     end: "Jan 2026"
   summary: "Task-based gaming platform with real-money payouts. Four distinct user roles (regular, VIP, business, influencer), strict permission boundaries, and abuse-prevention logic that had to survive both ephemeral and long-lived tasks."
   highlights:
-    - "Designed the abuse-prevention layer: a hybrid Redis-TTL + join-table storage strategy that prevented reward farming across task resets, regardless of whether tasks were short-lived or non-expiring."
     - "Built the webhook layer linking third-party game outcomes to internal payouts. Game ends, condition checks, reward fires, all idempotent."
+    - "Designed the abuse-prevention layer: a hybrid Redis-TTL and join-table storage strategy that prevented reward farming across task resets, whether tasks were short-lived or non-expiring."
     - "Co-designed core schemas (user, task, reward, role) and the permission system that enforces what each user type can see and do."
     - "Moved heavy operations onto Celery workers behind Redis. User-facing endpoints stopped paying for image processing and external API roundtrips."
   stack: [Python, Django, Django Ninja, PostgreSQL, Redis, Celery, Docker]
+
+- company: "Sitelytics (HNG)"
+  role: "Backend Engineer"
+  type: "Internship"
+  period:
+    start: "Oct 2025"
+    end: "Dec 2025"
+  summary: "Website vulnerability scanner for non-technical users. It explains findings in plain English, says what needs fixing, and offers the option to hire someone to fix it."
+  highlights:
+    - "Built the admin system from scratch as sole contributor: role-based access control, user monitoring, scan tracking, and admin-managed content."
+    - "Built authentication: login, tokens, and Google OAuth."
+    - "Built the platform notification system end to end (in-app and email, retrieval, deletion) and the helper utilities that standardized notifications across services, replacing the inconsistent handling that existed before."
+    - "Worked with the team on the SSE streaming endpoints and the async website-scanning flow, which used background workers for real-time scan progress in the UI."
+    - "Reviewed code across a 15-engineer backend team and held the bar on consistency during fast iteration. Acted as temp team lead for one sprint."
+  stack: [Python, FastAPI, PostgreSQL, Redis, SSE, OAuth]
 
 - company: "Meerge Africa"
   role: "Backend Engineer"
@@ -33,24 +52,39 @@
   period:
     start: "Dec 2024"
     end: "Jul 2025"
-  summary: "Multi-service food commerce platform connecting vendors, suppliers, and delivery operations. I owned the Supplier service end to end and stepped in as acting lead when the engineering lead left."
+  summary: "Multi-service food commerce platform connecting vendors, suppliers, delivery, and kitchens. I worked across four services (Supplier, Delivery, Customer, Kitchen), owned the Supplier service end to end, and stepped in as acting lead when the engineering lead left."
   highlights:
-    - "Designed and led the Supplier service from scratch: supplier lifecycle with four explicit states (pending, approved, rejected, suspended), full audit logging, and admin tooling. 500+ suppliers, ~50 products each at pilot."
-    - "Acted as backend lead for 8 weeks across a 7-engineer team. Reviewed architecture decisions, unblocked contributors, kept shipping. Also designed scoped JWT for safer service-to-service calls."
-    - "Refactored bare-except blocks and swallowed exceptions into structured error handling with consistent response shapes and full logging. Silent failures became traceable, on-call became less painful."
-    - "Reviewed PRs across all three backend services (Supplier, Delivery, Kitchens), keeping conventions consistent across an evolving codebase."
+    - "Designed and led the Supplier service from scratch: a supplier lifecycle with four explicit states (pending, approved, rejected, suspended), full audit logging, and admin tooling. 500+ suppliers, about 50 products each, at pilot."
+    - "Owned service-to-service communication across all four services: REST calls secured with JWTs scoped to specific service identities."
+    - "Designed the Delivery database: assignments, status transitions, and a rider availability system. Riders pick their days (with a minimum) and time windows, and assignment only happens inside them. Added rider location with Google Geocoding."
+    - "Designed the Kitchen database: customized food and menu items, allergies, dietary information, and food goals."
+    - "Acted as backend lead for 8 weeks across a 7-engineer team. Reviewed architecture decisions, unblocked contributors, and kept shipping."
+    - "Worked with the DevOps team on deployment: wrote Dockerfiles, fixed CI pipelines, and debugged deployment failures caused by misconfigured environments."
+    - "Refactored bare-except blocks and swallowed exceptions into structured error handling with consistent response shapes and full logging. Silent failures became traceable."
+    - "Reviewed PRs across the backend services, keeping conventions consistent across an evolving codebase."
+    - "The pilot handled about 500 orders from about 500 users."
   stack: [Python, Django, Django REST Framework, PostgreSQL, Redis, Celery, Docker]
 
-- company: "HNG Internship, Sitelytics"
-  role: "Backend Engineer"
-  type: "Internship"
+- company: "Freelance"
+  role: "Software Engineer"
+  type: "Freelance"
   period:
-    start: "Oct 2025"
-    end: "Dec 2025"
-  summary: "Finalist in a globally competitive engineering internship, contributing to Sitelytics, a website analysis platform for non-technical users. Selected among ~309 finalists from 22,000+ interns."
+    start: "2023"
+    end: "Present"
+  summary: "Client projects across e-commerce, events, and web presence, with backend work on most of them."
   highlights:
-    - "Built the Admin system from scratch as sole contributor: role-based access control, user monitoring, scan tracking, admin-managed content."
-    - "Built the platform notification system end to end (retrieval, deletion, email delivery) and the helper utilities that standardized notifications across services, removing the inconsistent handling that existed before."
-    - "Contributed to the async website-scanning pipeline using background workers and Server-Sent Events for real-time scan progress in the UI."
-    - "Reviewed code across a 15-engineer backend team; held the bar on consistency during fast iteration. Acted as temp team lead for one sprint."
-  stack: [Python, FastAPI, PostgreSQL, Redis, SSE]
+    - "Built an e-commerce store for a cake and juice business and a concert ticketing page. Both take Paystack payments, with webhook verification on the backend."
+    - "Built the backend for Locked In (2025): authentication, user management, and goal setting and tracking."
+    - "Built a portfolio site for an artist and a brand website."
+  stack: [Python, Django, JavaScript, TypeScript, Next.js, React, PostgreSQL, Redis, WordPress]
+
+- company: "Oshodi-Isolo Cooperative Multipurpose Society"
+  role: "Variation Officer"
+  type: "Full-time"
+  period:
+    start: "Jul 2023"
+    end: "Apr 2024"
+  summary: "Financial operations role covering member accounts, loan processing, and transaction records, where getting a number wrong had real consequences."
+  highlights:
+    - "Handled member accounts, loan processing, and transaction records day to day."
+  stack: []
