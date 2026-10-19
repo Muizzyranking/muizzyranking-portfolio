@@ -78,7 +78,7 @@ export default function ExperienceSection({ exp }: { exp: Experience[] }) {
                 aria-selected={selected}
                 aria-controls="exp-panel"
                 onClick={() => setActive(i)}
-                className="group relative shrink-0 py-2 text-left font-mono text-[0.88rem] lowercase transition-colors duration-150"
+                className="group relative shrink-0 py-2 text-left font-mono text-[0.88rem] transition-colors duration-150"
                 style={{ color: selected ? "var(--color-accent)" : "var(--color-text-muted)" }}
               >
                 {selected && (
