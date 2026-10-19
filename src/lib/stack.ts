@@ -24,12 +24,14 @@ export const STACK_GROUPS: StackGroup[] = [
   },
   {
     label: "Frameworks",
-    blurb: "Backend first. A frontend when one is involved.",
+    blurb: "The problem picks the framework, not the other way round.",
     tags: [
       { name: "Django", tier: "production" },
       { name: "FastAPI", tier: "production" },
       { name: "Django Ninja", tier: "production" },
       { name: "Next.js", tier: "production" },
+      { name: "Express", tier: "comfortable" },
+      { name: "Node.js", tier: "exploring" },
       { name: "Django REST Framework", tier: "comfortable" },
       { name: "Flask", tier: "comfortable" },
       { name: "React", tier: "comfortable" },
@@ -52,6 +54,7 @@ export const STACK_GROUPS: StackGroup[] = [
     blurb: "Repeatable deploys: a server, a container, a workflow.",
     tags: [
       { name: "Linux", tier: "production" },
+      { name: "AWS EC2", tier: "production" },
       { name: "Docker", tier: "production" },
       { name: "Celery", tier: "comfortable" },
       { name: "Nginx", tier: "comfortable" },
