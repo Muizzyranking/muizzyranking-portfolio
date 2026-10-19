@@ -9,14 +9,13 @@ in this repo; there is a built-in dev-only editor for writing.
 
 ## Design language
 
-- **Dark-only** — neutral near-black surfaces (`#0a0a0c`–`#17171a`), amber
-  accent (`#f59e0b`), hairline borders and mono metadata. Light tokens
-  still exist in CSS but the theme is pinned dark (`forcedTheme`).
-- **Type** — Fraunces (display, with real italics for accent moments),
-  Poppins (body), IBM Plex Mono (labels, code, metadata)
+- **Dark-only** — near-black surfaces (`#080808`–`#242424`), dusty green
+  accent (`#9fbf6b`), hairline borders and mono metadata.
+- **Type** — Clash Display (display headlines), Space Grotesk (body),
+  JetBrains Mono (labels, code, metadata — with real italics)
 - **Sections** — ruled doc-style blocks with hairline dividers; section
   headers are plain, the sidebar rails and fake `01/02` numbering are gone
-- **Custom cursor** — a hub dot tracks the pointer 1:1 while an amber ring
+- **Custom cursor** — a hub dot tracks the pointer 1:1 while a green ring
   wraps hoverable elements like a border (fine-pointer devices only).
   How it works: [cursor.md](./cursor.md)
 
@@ -26,18 +25,21 @@ in this repo; there is a built-in dev-only editor for writing.
 - **Styling** — Tailwind CSS v4 (CSS-first tokens in `globals.css`)
 - **Animations** — Framer Motion (LazyMotion, strict)
 - **Content** — MDX + YAML files in `content/`, parsed at build
-- **Fonts** — Fraunces (display), Poppins (body), IBM Plex Mono (mono)
+- **Fonts** — Clash Display (display), Space Grotesk (body), JetBrains Mono (mono)
 - **Linting/Formatting** — Biome
 - **Deployment** — Vercel
 
 ## Features
 
-- **Homepage** — big-name hero (copy lives in a `HERO` constant at the top
-  of `Hero.tsx`), a 2×2 featured-projects grid, tech-stack inventory,
-  tabbed experience selector, blog teaser, about blurb, centered contact
+- **Homepage** — grid-backdrop hero with a typewriter tag (copy lives in
+  constants at the top of `Hero.tsx`), a 2×2 featured-projects grid,
+  tech-stack inventory, tabbed experience selector, blog teaser, about
+  blurb, centered contact
 - **Projects** — card-grid index with status/tech filters; case studies are
-  MDX with optional screenshot galleries (horizontal strip + lightbox),
-  roman-numeral challenge timelines and a sticky meta rail
+  MDX with a grid-backdrop header, challenge cards, an accent "what I
+  learned" panel, optional screenshot lightbox and a sticky meta sidebar
+- **About** — includes an "How I work" section (operating principle +
+  working-style grid)
 - **Blog** — MDX posts with categories, search, TOC, reading progress
 - **Music player** — ambient tracks with a mac-style popover in the navbar
   (progress, playlist, volume; auto-advances)
@@ -120,7 +122,7 @@ featured: true               # homepage shows the first 4 featured
 ---
 
 ## Overview
-## Engineering Challenges    # optional; ### per challenge → roman-numeral list
+## Engineering Challenges    # optional; ### per challenge → numbered cards
 ## Outcomes                  # optional
 ## Lessons Learned           # optional
 ```
