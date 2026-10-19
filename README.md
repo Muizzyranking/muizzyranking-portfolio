@@ -1,6 +1,6 @@
 # [muizzyranking.me](https://muizzyranking.me)
 
-Personal portfolio and blog of **Muiz Oyebowale** — software engineer.
+Personal portfolio and blog.
 Built with Next.js, Tailwind v4, and Framer Motion. Content lives as files
 in this repo; there is a built-in dev-only editor for writing.
 
