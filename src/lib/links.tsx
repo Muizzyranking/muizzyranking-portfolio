@@ -98,14 +98,14 @@ export const LINKS: LinkItem[] = [
     label: "Résumé",
     href: "/resume.pdf",
     icon: "file",
-    tone: "#881600",
+    tone: "#6f8c48",
     note: "the structured version of me",
   },
   {
     label: "Email",
     href: "mailto:oyebowaleabdulmuiz@gmail.com",
     icon: "mail",
-    tone: "#b45309",
+    tone: "#6f8c48",
     note: "always open to a good conversation",
   },
 ];
