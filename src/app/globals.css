@@ -1,23 +1,26 @@
+@import url("https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&display=swap");
 @import "tailwindcss";
 
+/* ─────────────────────────────────────────────
+   DESIGN TOKENS — dark-only. Near-black surfaces,
+   dusty green accent. ───────────────────────── */
 @theme {
-  /* Light palette — warm off-white + amber experiment */
-  --color-background: #f7f3ec;
-  --color-bg-elevated: #f1ede4;
-  --color-surface: #f1ede4;
-  --color-surface-raised: #fdfbf7;
-  --color-border: #e4ddd0;
-  --color-border-subtle: #ece6da;
-  --color-text-primary: #191512;
-  --color-text-secondary: #463f37;
-  --color-text-muted: #6d655a;
-  --color-accent: #d97706;
-  --color-accent-bright: #b45309;
-  --color-accent-dim: #92400e;
-  --color-accent-subtle: #faf0e0;
+  --color-background: #080808;
+  --color-bg-elevated: #0f0f0f;
+  --color-surface: #161616;
+  --color-surface-raised: #242424;
+  --color-border: #2f2f2f;
+  --color-border-subtle: #1f1f1f;
+  --color-text-primary: #f5f3ef;
+  --color-text-secondary: #c9c3b8;
+  --color-text-muted: #9a948a;
+  --color-accent: #9fbf6b;
+  --color-accent-bright: #b5d58e;
+  --color-accent-dim: #6f8c48;
+  --color-accent-subtle: #1c2412;
   --color-accent-foreground: #ffffff;
-  --color-success: #1a7f37;
-  --color-error: #c0271c;
+  --color-success: #4a7c59;
+  --color-error: #8b3a3a;
 
   /* Radius — quiet, precise. Interactive elements are rectangles. */
   --radius-sm: 4px;
@@ -26,37 +29,14 @@
   --radius-xl: 16px;
 
   /* Elevation is carried by borders; shadows only lift floating chrome */
-  --shadow-soft: 0 1px 2px rgb(25 21 18 / 0.04), 0 8px 24px -12px rgb(25 21 18 / 0.1);
-  --shadow-lifted: 0 2px 4px rgb(25 21 18 / 0.05), 0 24px 48px -24px rgb(25 21 18 / 0.16);
+  --shadow-soft: 0 1px 2px rgb(0 0 0 / 0.4), 0 8px 24px -12px rgb(0 0 0 / 0.5);
+  --shadow-lifted: 0 2px 4px rgb(0 0 0 / 0.4), 0 24px 48px -24px rgb(0 0 0 / 0.6);
 }
 
 @theme inline {
-  --font-sans: var(--font-poppins), "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-display: var(--font-fraunces), "Fraunces", Georgia, "Times New Roman", serif;
-  --font-mono: var(--font-ibm-plex-mono), "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-}
-
-/* ── Dark palette — neutral near-black + amber accent ── */
-[data-theme="dark"] {
-  --color-background: #0a0a0c;
-  --color-bg-elevated: #121214;
-  --color-surface: #121214;
-  --color-surface-raised: #17171a;
-  --color-border: #242428;
-  --color-border-subtle: #1d1d20;
-  --color-text-primary: #f4f4f2;
-  --color-text-secondary: #c6c5c2;
-  --color-text-muted: #999791;
-  --color-accent: #f59e0b;
-  --color-accent-bright: #fbbf24;
-  --color-accent-dim: #b45309;
-  --color-accent-subtle: #271b06;
-  --color-accent-foreground: #191403;
-  --color-success: #4ade80;
-  --color-error: #f87171;
-
-  --shadow-soft: 0 1px 2px rgb(0 0 0 / 0.4), 0 8px 24px -12px rgb(0 0 0 / 0.5);
-  --shadow-lifted: 0 2px 4px rgb(0 0 0 / 0.4), 0 24px 48px -24px rgb(0 0 0 / 0.6);
+  --font-sans: var(--font-space-grotesk), system-ui, sans-serif;
+  --font-display: "Clash Display", var(--font-space-grotesk), system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), "Fira Code", ui-monospace, monospace;
 }
 
 /* ─────────────────────────────────────────────
@@ -70,15 +50,10 @@
   }
 
   :root {
-    color-scheme: light;
-    --font-sans:
-      var(--font-schibsted), "Schibsted Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    --font-display: var(--font-fraunces), "Fraunces", Georgia, "Times New Roman", serif;
-    --font-mono: var(--font-ibm-plex-mono), "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  }
-
-  [data-theme="dark"] {
     color-scheme: dark;
+    --font-sans: var(--font-space-grotesk), system-ui, sans-serif;
+    --font-display: "Clash Display", var(--font-space-grotesk), system-ui, sans-serif;
+    --font-mono: var(--font-jetbrains-mono), "Fira Code", ui-monospace, monospace;
   }
 
   html {
@@ -110,8 +85,8 @@
     font-family: var(--font-display);
     color: var(--color-text-primary);
     font-weight: 600;
-    line-height: 1.15;
-    letter-spacing: -0.005em;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
     text-wrap: balance;
     scroll-margin-top: 6rem;
   }
@@ -119,19 +94,19 @@
   h1 {
     font-size: clamp(2.5rem, 6vw, 3.75rem);
     line-height: 1.06;
-    letter-spacing: -0.015em;
+    letter-spacing: -0.035em;
   }
 
   h2 {
     font-size: clamp(1.75rem, 3.6vw, 2.5rem);
     line-height: 1.14;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.03em;
   }
 
   h3 {
     font-size: 1.25rem;
     line-height: 1.3;
-    letter-spacing: -0.015em;
+    letter-spacing: -0.02em;
   }
 
   h4 {
@@ -474,7 +449,7 @@ html.custom-cursor-active svg [role="button"] {
   border-radius: 999px;
   pointer-events: none;
   z-index: 9997;
-  background-color: var(--color-accent, #7a1f2b);
+  background-color: var(--color-accent, #6f8c48);
   opacity: 0;
   transition: opacity 0.15s ease;
 }
@@ -489,7 +464,7 @@ html.custom-cursor-active svg [role="button"] {
   transform-origin: 0 50%;
   pointer-events: none;
   z-index: 9997;
-  background-color: var(--color-accent, #7a1f2b);
+  background-color: var(--color-accent, #6f8c48);
   opacity: 0;
 }
 
