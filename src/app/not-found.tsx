@@ -5,7 +5,7 @@ export default function NotFound() {
     <main className="container-main flex min-h-[100svh] flex-col items-center justify-center pb-20 pt-24 text-center">
       <p className="font-mono text-[0.72rem] font-semibold uppercase tracking-[0.12em] text-text-muted mb-[clamp(2rem,5vw,3rem)]">404</p>
 
-      <h1 className="font-display font-bold tracking-[-0.03em] leading-[1.05] text-text-primary text-[clamp(2.4rem,6vw,4.5rem)] mb-6">
+      <h1 className="font-display font-semibold tracking-[-0.03em] leading-[1.05] text-text-primary text-[clamp(2.4rem,6vw,4.5rem)] mb-6">
         This page doesn&apos;t exist.
       </h1>
 

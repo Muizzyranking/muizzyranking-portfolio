@@ -57,7 +57,7 @@ export default function OGImage() {
           color: "#6d655a",
         }}
       >
-        <span style={{ color: "#881600" }}>muizzyranking.me</span>
+        <span style={{ color: "#d97706" }}>muizzyranking.me</span>
         <span style={{ width: "48px", height: "1px", background: "#e9e4da" }} />
         <span>backend-heavy fullstack engineer</span>
       </div>
@@ -80,7 +80,7 @@ export default function OGImage() {
             display: "flex",
           }}
         >
-          Muiz&nbsp;<span style={{ fontStyle: "italic", color: "#881600" }}>Oyebowale</span>
+          Muiz&nbsp;<span style={{ fontStyle: "italic", color: "#d97706" }}>Oyebowale</span>
         </div>
         <div
           style={{
@@ -108,7 +108,7 @@ export default function OGImage() {
       >
         <span>projects · writing · about</span>
         <span style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          <span style={{ width: "8px", height: "8px", borderRadius: "999px", background: "#881600" }} />
+          <span style={{ width: "8px", height: "8px", borderRadius: "999px", background: "#d97706" }} />
           muizzyranking.me
         </span>
       </div>

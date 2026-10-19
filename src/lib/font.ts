@@ -1,23 +1,27 @@
-import { Bricolage_Grotesque, IBM_Plex_Mono, Poppins } from "next/font/google";
+import { Fraunces, IBM_Plex_Mono, Poppins } from "next/font/google";
 
-export const poppins = Poppins({
+export const display = Fraunces({
   subsets: ["latin"],
+  style: ["normal", "italic"],
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
+  variable: "--font-fraunces",
   display: "swap",
+});
+
+export const sans = Poppins({
+  subsets: ["latin"],
+  style: ["normal", "italic"],
   weight: ["400", "500", "600", "700"],
   variable: "--font-poppins",
-});
-
-export const bricolage = Bricolage_Grotesque({
-  subsets: ["latin"],
   display: "swap",
-  weight: ["500", "600", "700", "800"],
-  variable: "--font-bricolage",
 });
 
-export const plexMono = IBM_Plex_Mono({
+export const mono = IBM_Plex_Mono({
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  variable: "--font-plex-mono",
+  style: ["normal", "italic"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-ibm-plex-mono",
+  display: "swap",
 });
 
-export const fontVariables = `${poppins.variable} ${bricolage.variable} ${plexMono.variable}`;
+export const fontVariables = `${display.variable} ${sans.variable} ${mono.variable}`;

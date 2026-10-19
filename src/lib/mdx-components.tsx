@@ -9,7 +9,7 @@ export const mdxComponents: MDXComponents = {
       style={{
         fontFamily: "var(--font-display)",
         fontSize: "clamp(1.5rem, 3vw, 1.9rem)",
-        fontWeight: 700,
+        fontWeight: 600,
         letterSpacing: "-0.03em",
         lineHeight: 1.2,
         marginTop: "3rem",
@@ -28,7 +28,7 @@ export const mdxComponents: MDXComponents = {
       style={{
         fontFamily: "var(--font-display)",
         fontSize: "clamp(1.15rem, 2.2vw, 1.4rem)",
-        fontWeight: 700,
+        fontWeight: 600,
         letterSpacing: "-0.02em",
         lineHeight: 1.25,
         marginTop: "2.25rem",
