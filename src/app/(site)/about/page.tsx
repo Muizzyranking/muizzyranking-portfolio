@@ -3,7 +3,6 @@ import AboutCTA from "@/components/sections/about/Cta";
 import AboutHero from "@/components/sections/about/Hero";
 import HowIWork from "@/components/sections/about/HowIWork";
 import HumanSide from "@/components/sections/about/HumanSide";
-import Stack from "@/components/sections/about/Stack";
 import WhatIDo from "@/components/sections/about/WhatIDo";
 import { site } from "@/lib/site";
 
@@ -24,7 +23,6 @@ export default function AboutPage() {
       <AboutHero />
       <WhatIDo />
       <HowIWork />
-      <Stack />
       <HumanSide />
       <AboutCTA />
     </>

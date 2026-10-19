@@ -2,7 +2,6 @@
 
 import { AnimatePresence, m, useInView, useReducedMotion } from "framer-motion";
 import { useRef, useState } from "react";
-import TierDot from "@/components/ui/TierDot";
 import { EASE, SCROLL_REVEAL } from "@/lib/motion";
 import { STACK_GROUPS } from "@/lib/stack";
 
@@ -84,25 +83,12 @@ export default function Stack() {
                   <p className="max-w-[56ch] text-[1.02rem] leading-[1.7] text-text-secondary">{current.blurb}</p>
 
                   <ul className="mt-6 flex flex-wrap items-center gap-2">
-                    {current.tags.map(({ name, tier }) => (
-                      <li key={name}>
-                        <span className="chip chip--lg">
-                          <TierDot tier={tier} />
-                          {name}
-                        </span>
+                    {current.tags.map((tag) => (
+                      <li key={tag.name}>
+                        <span className="chip">{tag.name}</span>
                       </li>
                     ))}
                   </ul>
-
-                  {/* Legend for the tier dots */}
-                  <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-1.5 border-t border-border-subtle pt-4">
-                    {(["production", "comfortable", "exploring"] as const).map((tier) => (
-                      <span key={tier} className="inline-flex items-center gap-2 font-mono text-[0.72rem] lowercase text-text-muted">
-                        <TierDot tier={tier} />
-                        {tier}
-                      </span>
-                    ))}
-                  </div>
                 </m.div>
               </AnimatePresence>
             </div>
