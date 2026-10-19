@@ -6,20 +6,20 @@ import { fadeUp, SCROLL_REVEAL, staggerContainer, staggerItem } from "@/lib/moti
 
 const VALUES = [
   {
-    title: "I listen — actually",
-    body: "Not the kind of listening where you're composing your reply. The kind where you catch the thing behind the thing they said. Details most people scroll past.",
+    title: "I notice the small things",
+    body: "The edge case mentioned in passing. The error nobody documented. The flow a user will never admit to following. Systems break in the small places first, so that's where I start looking.",
   },
   {
-    title: "Slow to start, thorough to finish",
-    body: "I ask questions that feel annoying in the moment and save time in the long run. You want this person on your team before the architecture is decided, not after.",
+    title: "Careful where it counts",
+    body: "Money that moves exactly once. Migrations that can be rolled back. Tests around the paths where failure isn't an option. If what I'm building has consequences, the care shows.",
   },
   {
-    title: "I write code for the next person",
-    body: "That person is often me, six months later. So: clear naming, honest comments, no clever tricks that only make sense at 2am.",
+    title: "Readable over clever",
+    body: "The next person to read my code is often me, six months from now. Clear names, honest comments, solutions that stay boring under pressure — cleverness is a tool, not a default.",
   },
   {
-    title: "Disagreement is a feature",
-    body: "I'll push back if something doesn't make sense. Respectfully. Persistently. I'll also change my mind the moment I see a better argument — ego doesn't survive good evidence.",
+    title: "Straight talk, handled with care",
+    body: "If something doesn't add up, I'll say so — kindly, with reasons behind it. And on good evidence, I change my mind quickly. Disagreements surface problems sooner; nobody needs to defend a fudge for six months.",
   },
 ];
 
@@ -109,21 +109,23 @@ export default function HowIWork() {
                 marginBottom: "1.25rem",
               }}
             >
-              I ask why until it makes sense.
+              I understand the problem before writing a single line of code.
             </h2>
 
             <p style={{ fontSize: "0.95rem", color: "var(--color-text-secondary)", lineHeight: 1.8, marginBottom: "1rem" }}>
-              Not because I&apos;m difficult. Because I genuinely cannot move forward until I understand the thing underneath the thing. The root
-              cause. The actual reason a decision was made. The constraint that nobody documented but everyone assumed.
+              I don&apos;t just write code — I build solutions, and the coding is simply the means to the end. That end is something that works, holds
+              up and actually matches what was needed. So before anything gets built, I make sure the problem itself is understood: what we are
+              solving, who it is for, and what it costs to get it wrong.
             </p>
 
             <p style={{ fontSize: "0.95rem", color: "var(--color-text-secondary)", lineHeight: 1.8, marginBottom: "1rem" }}>
-              It makes me slower sometimes. It makes the work better, always. And once in a while, the why reveals that we&apos;re solving the wrong
-              problem entirely — which is the most valuable discovery you can make before you&apos;ve written any code.
+              Most wasted effort I have seen did not come from hard problems — it came from solving the wrong one really well. Digging into the why
+              first keeps the work honest: the requirements sharpen, the edge cases surface early, and the right implementation almost follows on its
+              own.
             </p>
 
             <p style={{ fontFamily: "var(--font-mono)", fontSize: "0.8rem", color: "var(--color-text-muted)", marginTop: "0.5rem" }}>
-              {"// apologies in advance to my future Product Managers."}
+              {"// code is the means. the solution is the end."}
             </p>
           </div>
         </m.div>
