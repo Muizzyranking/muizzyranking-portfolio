@@ -1,8 +1,7 @@
-import Image from "next/image";
 import Link from "next/link";
-import ProjectCard from "@/components/sections/projects/ProjectCard";
 import ProjectMdx from "@/components/sections/projects/ProjectMdx";
 import ProjectSection from "@/components/sections/projects/ProjectSection";
+import ScreenshotGallery from "@/components/sections/projects/ScreenshotGallery";
 import type { Project, ProjectContent } from "@/types";
 
 const STATUS_LABEL: Record<Project["status"], { label: string; dot: string }> = {
@@ -20,20 +19,16 @@ function toRoman(n: number): string {
 export default function ProjectCaseStudy({
   meta,
   parsed,
-  related,
   prev,
   next,
 }: {
   meta: Project;
   parsed: ProjectContent;
-  related: Project[];
   prev?: Project | null;
   next?: Project | null;
 }) {
   const status = STATUS_LABEL[meta.status];
   const screenshots = meta.screenshots ?? [];
-  const splash = screenshots[0];
-  const gallery = screenshots.slice(1);
   const hasChallenges = parsed.challenges.length > 0;
 
   let sectionIndex = 1;
@@ -42,142 +37,50 @@ export default function ProjectCaseStudy({
   return (
     <>
       {/* Header */}
-      <header className="container-main pt-[clamp(5rem,10vw,8rem)] pb-[clamp(2.5rem,5vw,4rem)]">
-        <Link
-          href="/projects"
-          className="group inline-flex items-center gap-2 font-mono text-[0.75rem] font-semibold tracking-[0.08em] text-text-muted uppercase mb-9 ml-[1.85rem] transition-colors duration-150 hover:text-accent"
-        >
-          <span className="transition-transform duration-150 ease-out group-hover:-translate-x-1" aria-hidden="true">
-            ←
-          </span>
-          all projects
-        </Link>
+      <header className="container-main pt-[clamp(7rem,13vw,10rem)] pb-[clamp(2.5rem,5vw,4rem)]">
+        <div className="mb-12 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 border-b border-border-subtle pb-5">
+          <Link
+            href="/projects"
+            className="group inline-flex items-center gap-2 font-mono text-[0.74rem] lowercase text-text-muted transition-colors duration-150 hover:text-accent"
+          >
+            <span className="transition-transform duration-200 ease-out group-hover:-translate-x-1" aria-hidden="true">
+              ←
+            </span>
+            all projects
+          </Link>
+          <p className="font-mono text-[0.7rem] text-text-muted">case study · {meta.year}</p>
+        </div>
 
-        <p className="eyebrow mb-5">case study</p>
-        <h1 className="font-display text-[clamp(2.2rem,5.5vw,4rem)] leading-[1.05] tracking-[-0.03em] font-extrabold text-text-primary mb-5 max-w-[24ch]">
+        <h1 className="mb-5 max-w-[26ch] font-display text-[clamp(2.2rem,5vw,3.7rem)] leading-[1.05] tracking-[-0.03em] text-text-primary">
           {meta.title}
         </h1>
-        <p className="text-text-secondary text-[clamp(1rem,1.8vw,1.2rem)] leading-[1.65] max-w-[62ch]">{meta.summary}</p>
+        {meta.summary && <p className="max-w-[62ch] text-[1.02rem] leading-[1.7] text-text-secondary">{meta.summary}</p>}
       </header>
 
       {/* Body grid: content + sticky meta rail */}
-      <div className="container-main grid gap-x-12 gap-y-10 pb-[clamp(3rem,6vw,5rem)] lg:grid-cols-[minmax(0,1fr)_17rem]">
-        {/* Meta rail — sticky on desktop, inline cards on mobile */}
-        <aside className="lg:order-2 lg:sticky lg:top-24 lg:self-start flex flex-row flex-wrap lg:flex-col gap-4" aria-label="Project details">
-          <div className="card flex-1 p-5 min-w-[14rem] lg:min-w-0">
-            <p className="eyebrow mb-3">status</p>
-            <p className="flex items-center gap-2 text-[0.9rem] font-semibold text-text-primary">
-              <span className={`inline-block size-2 rounded-full ${status.dot}`} aria-hidden="true" />
-              {status.label}
-            </p>
-            <dl className="mt-4 flex flex-col gap-2 text-[0.82rem]">
-              <div className="flex justify-between gap-4">
-                <dt className="text-text-muted">Year</dt>
-                <dd className="font-mono font-semibold text-text-primary">{meta.year}</dd>
-              </div>
-              {meta.role && (
-                <div className="flex justify-between gap-4">
-                  <dt className="text-text-muted">Role</dt>
-                  <dd className="font-mono font-semibold text-text-primary text-right">{meta.role}</dd>
-                </div>
-              )}
-            </dl>
-          </div>
-
-          {(meta.live || meta.repo) && (
-            <div className="card flex-1 p-5 min-w-[14rem] lg:min-w-0">
-              <p className="eyebrow mb-3">explore</p>
-              <div className="flex flex-col gap-2.5">
-                {meta.live && (
-                  <a href={meta.live} target="_blank" rel="noopener noreferrer" className="btn btn--primary w-full !py-2.5 !text-[0.85rem]">
-                    live site <span aria-hidden="true">↗</span>
-                  </a>
-                )}
-                {meta.repo && (
-                  <a href={meta.repo} target="_blank" rel="noopener noreferrer" className="btn btn--ghost w-full !py-2.5 !text-[0.85rem]">
-                    source code <span aria-hidden="true">↗</span>
-                  </a>
-                )}
-              </div>
-            </div>
-          )}
-
-          <div className="card flex-1 p-5 min-w-[14rem] lg:min-w-0">
-            <p className="eyebrow mb-3">built with</p>
-            <div className="flex flex-wrap gap-1.5">
-              {meta.stack.map((s) => (
-                <span key={s} className="chip">
-                  {s}
-                </span>
-              ))}
-            </div>
-          </div>
-        </aside>
-
+      <div className="container-main grid gap-x-12 gap-y-12 pb-[clamp(3rem,6vw,5rem)] lg:grid-cols-[minmax(0,1fr)_16rem]">
         {/* Main column */}
         <div className="min-w-0 lg:order-1">
-          {splash && (
-            <div
-              className="relative mb-4 overflow-hidden rounded-[var(--radius-xl)] border border-border shadow-[var(--shadow-lifted)]"
-              style={{ aspectRatio: "16 / 9" }}
-            >
-              <Image
-                src={splash}
-                alt={`${meta.title} splash`}
-                fill
-                priority
-                sizes="(min-width: 1024px) 800px, 100vw"
-                className="object-cover"
-                quality={90}
-              />
-            </div>
-          )}
-
           <ProjectSection index={nextIndex()} label="Overview">
-            <div className="card px-[clamp(1.25rem,3vw,2.75rem)] py-[clamp(1.5rem,3.5vw,2.75rem)]">
-              <ProjectMdx source={parsed.overview} />
-            </div>
+            <ProjectMdx source={parsed.overview} />
           </ProjectSection>
 
-          {gallery.length > 0 && (
+          {screenshots.length > 0 && (
             <ProjectSection index={nextIndex()} label="Screenshots">
-              <div className="grid gap-5 overflow-x-clip sm:grid-cols-2">
-                {gallery.map((src, i) => (
-                  <figure
-                    key={src}
-                    className="relative overflow-hidden rounded-[var(--radius-lg)] border border-border shadow-[var(--shadow-soft)]"
-                    style={{ aspectRatio: "16 / 10" }}
-                  >
-                    <Image
-                      src={src}
-                      alt={`${meta.title} screenshot ${i + 1}`}
-                      fill
-                      sizes="(max-width: 768px) 100vw, 50vw"
-                      style={{ objectFit: "cover" }}
-                      quality={90}
-                    />
-                  </figure>
-                ))}
-              </div>
+              <ScreenshotGallery screenshots={screenshots} title={meta.title} />
             </ProjectSection>
           )}
 
           {hasChallenges && (
             <ProjectSection index={nextIndex()} label="Engineering challenges">
-              <ol className="relative flex flex-col gap-8 pl-10">
-                {/* timeline rail */}
-                <span aria-hidden="true" className="absolute top-2 bottom-2 left-[1.05rem] w-px bg-border" />
+              <ol className="flex flex-col gap-9">
                 {parsed.challenges.map((challenge, i) => (
-                  <li key={challenge.title} className="relative">
-                    {/* roman numeral node on the rail */}
-                    <span
-                      aria-hidden="true"
-                      className="absolute -left-10 top-0 flex size-[2.1rem] items-center justify-center rounded-full border border-accent/40 bg-surface-raised font-mono text-[0.7rem] font-semibold text-accent"
-                    >
+                  <li key={challenge.title} className="grid grid-cols-[2.5rem_minmax(0,1fr)] items-baseline gap-x-4">
+                    <span aria-hidden="true" className="font-mono text-[0.72rem] font-medium text-accent">
                       {toRoman(i + 1)}
                     </span>
-                    <div className="card p-7">
-                      <h3 className="font-display text-[1.2rem] leading-[1.3] font-bold tracking-[-0.01em] text-text-primary mb-3">
+                    <div className="min-w-0">
+                      <h3 className="mb-3 font-display text-[1.15rem] leading-[1.3] font-semibold tracking-[-0.01em] text-text-primary">
                         {challenge.title}
                       </h3>
                       <div className="project-challenge-body">
@@ -192,77 +95,92 @@ export default function ProjectCaseStudy({
 
           {parsed.outcomes.trim() && (
             <ProjectSection index={nextIndex()} label="Outcomes">
-              <div className="card px-[clamp(1.25rem,3vw,2.5rem)] py-[clamp(1.5rem,3vw,2.5rem)]">
-                <ProjectMdx source={parsed.outcomes} />
-              </div>
+              <ProjectMdx source={parsed.outcomes} />
             </ProjectSection>
           )}
 
           {parsed.learned.trim() && (
             <ProjectSection index={nextIndex()} label="Lessons learned">
-              <div className="rounded-[var(--radius-lg)] border border-accent/25 bg-accent-subtle px-[clamp(1.25rem,3vw,2.5rem)] py-[clamp(1.5rem,3vw,2.5rem)]">
-                <ProjectMdx source={parsed.learned} />
-              </div>
+              <ProjectMdx source={parsed.learned} />
             </ProjectSection>
           )}
         </div>
+
+        {/* Meta rail — a definition sheet, not cards */}
+        <aside
+          className="flex flex-row flex-wrap gap-x-8 gap-y-6 lg:order-2 lg:sticky lg:top-24 lg:self-start lg:flex-col"
+          aria-label="Project details"
+        >
+          <dl className="flex-1 min-w-[14rem] divide-y divide-border-subtle border-y border-border-subtle text-[0.84rem] lg:min-w-0">
+            <div className="flex items-baseline justify-between gap-4 py-3">
+              <dt className="font-mono text-[0.68rem] uppercase tracking-[0.12em] text-text-muted">status</dt>
+              <dd className="inline-flex items-center gap-2 font-mono text-[0.74rem] text-text-primary">
+                <span className={`inline-block size-[6px] rounded-full ${status.dot}`} aria-hidden="true" />
+                {status.label}
+              </dd>
+            </div>
+            <div className="flex items-baseline justify-between gap-4 py-3">
+              <dt className="font-mono text-[0.68rem] uppercase tracking-[0.12em] text-text-muted">year</dt>
+              <dd className="font-mono text-[0.78rem] text-text-primary">{meta.year}</dd>
+            </div>
+            {meta.role && (
+              <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 py-3">
+                <dt className="font-mono text-[0.68rem] uppercase tracking-[0.12em] text-text-muted">role</dt>
+                <dd className="max-w-[14rem] text-right font-mono text-[0.74rem] leading-[1.45] text-text-primary">{meta.role}</dd>
+              </div>
+            )}
+          </dl>
+
+          <div className="flex-1 min-w-[14rem] lg:min-w-0">
+            <p className="mb-3 font-mono text-[0.68rem] uppercase tracking-[0.12em] text-text-muted">built with</p>
+            <p className="font-mono text-[0.76rem] leading-[1.9] text-text-secondary">{meta.stack.join(" · ")}</p>
+          </div>
+
+          {(meta.live || meta.repo) && (
+            <div className="flex flex-1 flex-col gap-2.5 min-w-[14rem] lg:min-w-0">
+              {meta.live && (
+                <a href={meta.live} target="_blank" rel="noopener noreferrer" className="btn btn--primary w-full !py-2 !text-[0.8rem]">
+                  live site <span aria-hidden="true">↗</span>
+                </a>
+              )}
+              {meta.repo && (
+                <a href={meta.repo} target="_blank" rel="noopener noreferrer" className="btn btn--ghost w-full !py-2 !text-[0.8rem]">
+                  source code <span aria-hidden="true">↗</span>
+                </a>
+              )}
+            </div>
+          )}
+        </aside>
       </div>
 
-      {related.length > 0 && (
-        <section className="section section-band">
-          <div className="container-main">
-            <div className="flex items-baseline justify-between gap-4 mb-8">
-              <h2 className="font-display text-[clamp(1.4rem,2.6vw,1.9rem)] leading-tight font-bold tracking-[-0.02em] text-text-primary">
-                Related projects
-              </h2>
-              <Link
-                href="/projects"
-                className="group inline-flex items-center gap-2 font-mono text-[0.75rem] font-semibold tracking-[0.08em] text-accent uppercase"
-              >
-                All projects
-                <span className="transition-transform duration-150 ease-out group-hover:translate-x-1" aria-hidden="true">
-                  →
-                </span>
-              </Link>
-            </div>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 overflow-x-clip">
-              {related.map((project) => (
-                <ProjectCard key={project.slug} project={project} />
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
 
       {(prev || next) && (
-        <nav className="container-main py-[clamp(2.5rem,5vw,4rem)] border-t border-border-subtle" aria-label="Project navigation">
-          <div className="flex items-stretch justify-between gap-4 flex-wrap">
+        <nav className="border-t border-border-subtle" aria-label="Project navigation">
+          <div className="container-main grid gap-8 py-12 sm:grid-cols-2">
             {prev ? (
-              <Link
-                href={`/projects/${prev.slug}`}
-                className="group flex-1 min-w-[16rem] card p-6 transition-[border-color,box-shadow] duration-200 hover:border-accent/40 hover:shadow-[var(--shadow-lifted)]"
-              >
-                <span className="block font-mono text-[0.65rem] uppercase tracking-[0.1em] text-text-muted mb-3">← previous</span>
-                <span className="block font-display font-semibold text-[1.05rem] text-text-primary leading-[1.3] transition-colors duration-150 group-hover:text-accent">
+              <Link href={`/projects/${prev.slug}`} className="group min-w-0">
+                <span className="mb-2 block font-mono text-[0.68rem] lowercase text-text-muted transition-colors duration-150 group-hover:text-accent">
+                  ← previous
+                </span>
+                <span className="block font-display text-[1.05rem] font-semibold leading-[1.3] text-text-primary transition-colors duration-200 group-hover:text-accent">
                   {prev.title}
                 </span>
               </Link>
             ) : (
-              <span className="flex-1 min-w-[16rem] hidden md:block" />
+              <span aria-hidden="true" />
             )}
 
             {next ? (
-              <Link
-                href={`/projects/${next.slug}`}
-                className="group flex-1 min-w-[16rem] card p-6 text-right transition-[border-color,box-shadow] duration-200 hover:border-accent/40 hover:shadow-[var(--shadow-lifted)]"
-              >
-                <span className="block font-mono text-[0.65rem] uppercase tracking-[0.1em] text-text-muted mb-3">next →</span>
-                <span className="block font-display font-semibold text-[1.05rem] text-text-primary leading-[1.3] transition-colors duration-150 group-hover:text-accent">
+              <Link href={`/projects/${next.slug}`} className="group min-w-0 sm:text-right">
+                <span className="mb-2 block font-mono text-[0.68rem] lowercase text-text-muted transition-colors duration-150 group-hover:text-accent">
+                  next →
+                </span>
+                <span className="block font-display text-[1.05rem] font-semibold leading-[1.3] text-text-primary transition-colors duration-200 group-hover:text-accent">
                   {next.title}
                 </span>
               </Link>
             ) : (
-              <span className="flex-1 min-w-[16rem] hidden md:block" />
+              <span aria-hidden="true" />
             )}
           </div>
         </nav>

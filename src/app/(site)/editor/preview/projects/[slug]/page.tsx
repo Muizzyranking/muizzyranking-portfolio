@@ -53,7 +53,7 @@ export default async function ProjectPreviewPage({ params }: Props) {
         )}
       </div>
 
-      <ProjectCaseStudy meta={project.meta} parsed={project.parsed} related={[]} />
+      <ProjectCaseStudy meta={project.meta} parsed={project.parsed} />
     </>
   );
 }

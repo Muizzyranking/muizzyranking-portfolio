@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ProjectCaseStudy from "@/components/sections/projects/ProjectCaseStudy";
 import ReadingProgress from "@/components/ui/ReadingProgress";
-import { getAllProjects, getPrevNextProject, getProjectBySlug, getRelatedProjects } from "@/lib/projects";
+import { getAllProjects, getPrevNextProject, getProjectBySlug } from "@/lib/projects";
 import { site } from "@/lib/site";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -52,7 +52,6 @@ export default async function ProjectPage({ params }: Props) {
       <ProjectCaseStudy
         meta={project.meta}
         parsed={project.parsed}
-        related={getRelatedProjects(slug)}
         prev={getPrevNextProject(slug).prev}
         next={getPrevNextProject(slug).next}
       />
