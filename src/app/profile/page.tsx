@@ -41,12 +41,12 @@ export default function ProfileCard() {
             </div>
           </div>
 
-          <h1 className="font-display text-[1.65rem] leading-tight font-extrabold tracking-[-0.02em] text-text-primary">
-            Muiz <em className="italic text-accent">Oyebowale</em>
+          <h1 className="font-display text-[1.65rem] leading-tight font-semibold tracking-[-0.02em] text-text-primary">
+            Muiz <em className="text-accent">Oyebowale</em>
           </h1>
 
           <p className="mt-2 max-w-[30ch] text-[0.9rem] leading-relaxed text-text-secondary">
-            Backend-heavy fullstack engineer. I build the part of the software nobody sees.
+            Software engineer building things end to end — backend, frontend, and the parts in between.
           </p>
 
           <Link

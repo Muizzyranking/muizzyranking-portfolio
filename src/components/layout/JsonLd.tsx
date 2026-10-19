@@ -12,7 +12,7 @@ export default function JsonLd() {
     image: `${site.url}/opengraph-image`,
     email: `mailto:${site.email}`,
     knowsAbout: [
-      "Backend Engineering",
+      "Software Engineering",
       "Python",
       "Django",
       "FastAPI",
