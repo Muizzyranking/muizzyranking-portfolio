@@ -4,67 +4,58 @@ import { m, useReducedMotion } from "framer-motion";
 import Link from "next/link";
 import { EASE } from "@/lib/motion";
 
+// ─── Hero copy — edit me ───
+const HERO = {
+  greeting: "hello, my name is.",
+  intro: "I am a software engineer, and I build software — backend, frontend, and the parts in between.",
+};
+
 export default function Hero() {
   const reduce = useReducedMotion();
-  const rise = reduce ? {} : { y: 16 };
+  const rise = reduce ? {} : { y: 20 };
 
   return (
     <section className="relative overflow-x-clip">
-      <div className="container-main flex flex-col items-center pt-[clamp(7rem,15vw,11rem)] pb-[clamp(4rem,9vw,6rem)] text-center">
+      <div className="container-main flex min-h-[92dvh] flex-col justify-center pt-24 pb-16">
         <m.p
           initial={{ opacity: 0, ...rise }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: EASE }}
-          className="mb-3 text-[1.1rem] italic text-text-muted"
-          style={{ fontFamily: "var(--font-display)" }}
+          className="mb-6 font-mono text-[0.82rem] font-semibold tracking-[0.02em] text-text-secondary"
         >
-          Hi there, my name is
+          {HERO.greeting}
         </m.p>
 
         <m.h1
           initial={{ opacity: 0, ...rise }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: EASE, delay: 0.08 }}
-          className="font-display text-[clamp(3rem,8vw,6rem)] leading-[1.0] tracking-[-0.035em] font-extrabold text-text-primary mb-6"
+          transition={{ duration: 0.7, ease: EASE, delay: 0.06 }}
+          className="mb-8 font-display text-[clamp(3.2rem,10vw,7.25rem)] leading-[1] tracking-[-0.02em] font-bold text-text-primary"
         >
-          Muiz <em className="italic text-accent">Oyebowale</em>
+          Muiz <em className="text-accent">Oyebowale</em>
         </m.h1>
-
-        <m.div
-          initial={{ opacity: 0, ...rise }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: EASE, delay: 0.16 }}
-          className="mb-7"
-        >
-          <span className="inline-flex items-center gap-2.5 rounded-full border border-border bg-surface-raised px-4 py-2">
-            <span className="block size-1.5 rounded-full bg-accent" aria-hidden="true" />
-            <span className="font-mono text-[0.68rem] font-semibold tracking-[0.12em] text-text-secondary uppercase">
-              backend-heavy fullstack engineer
-            </span>
-          </span>
-        </m.div>
 
         <m.p
           initial={{ opacity: 0, ...rise }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.55, ease: EASE, delay: 0.22 }}
-          className="text-text-secondary text-[clamp(1.15rem,2.2vw,1.45rem)] leading-[1.6] max-w-[42ch] mb-10"
+          transition={{ duration: 0.55, ease: EASE, delay: 0.2 }}
+          className="mb-12 max-w-[54ch] text-[clamp(1.15rem,2.2vw,1.35rem)] leading-[1.7] text-text-secondary"
         >
-          I build the part of the software nobody sees. And that&rsquo;s exactly how I like it.
+          {HERO.intro}
         </m.p>
 
         <m.div
-          initial={{ opacity: 0, y: reduce ? 0 : 12 }}
+          initial={{ opacity: 0, y: reduce ? 0 : 14 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: EASE, delay: 0.3 }}
-          className="flex flex-wrap items-center justify-center gap-3"
+          transition={{ duration: 0.5, ease: EASE, delay: 0.32 }}
+          className="flex flex-wrap items-center gap-3"
         >
-          <Link href="/about" className="btn btn--primary">
-            about me
+          <Link href="/projects" className="btn btn--primary">
+            view projects
             <span aria-hidden="true">→</span>
           </Link>
-          <Link href="/projects" className="btn btn--ghost">
-            projects
+          <Link href="#contact" className="btn btn--ghost">
+            get in touch
           </Link>
         </m.div>
       </div>
