@@ -4,10 +4,17 @@ import { m } from "framer-motion";
 import Image from "next/image";
 import { fadeUp } from "@/lib/motion";
 
-const STATS = [
-  { label: "Role", value: "Backend Engineer" },
-  { label: "Primary lang", value: "Python / TS" },
-  { label: "Availability", value: "Open" },
+const PARAGRAPHS = [
+  {
+    text: "It started with curiosity, like most things do. I wanted to know how things worked. Not the surface, but the mechanism underneath. I started with C, which isn't the friendliest place to begin, but it taught me the fundamentals properly. The questions never really stopped.",
+  },
+  {
+    text: "Backend engineering felt like a natural home. I like the parts nobody sees: the performance work, the data modelling, the failure modes, the 3am alerts that teach you more about a system than a week of reading docs. If you did it right, nobody knows you were there.",
+  },
+  {
+    text: "People who know me call me muizzy. You're welcome to too. Now I'm pointing the same obsession at AI and ML. The intersection of systems and intelligence is the most interesting problem space I've found, and I'm still early in it. I'm paying attention.",
+    accent: true,
+  },
 ];
 
 export default function AboutHero() {
@@ -21,183 +28,81 @@ export default function AboutHero() {
         overflow: "hidden",
       }}
     >
-      <m.div
-        initial={{ scaleX: 0, opacity: 0 }}
-        animate={{ scaleX: 1, opacity: 1 }}
-        transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1], delay: 0.05 }}
-        style={{
-          position: "absolute",
-          top: "clamp(6rem, 14vw, 10rem)",
-          left: "clamp(1.5rem, 5vw, 4rem)",
-          right: "clamp(1.5rem, 5vw, 4rem)",
-          height: "1px",
-          background: "linear-gradient(to right, var(--color-accent), var(--color-border), transparent)",
-          transformOrigin: "left",
-          zIndex: 1,
-        }}
-      />
+      <div className="container-main text-center">
+        <m.p custom={0} initial="hidden" animate="visible" variants={fadeUp} className="eyebrow" style={{ marginBottom: "2.5rem" }}>
+          who am i
+        </m.p>
 
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          backgroundImage: `
-            linear-gradient(var(--color-border-subtle) 1px, transparent 1px),
-            linear-gradient(90deg, var(--color-border-subtle) 1px, transparent 1px)
-          `,
-          backgroundSize: "48px 48px",
-          opacity: 0.35,
-          pointerEvents: "none",
-          maskImage: "radial-gradient(ellipse 80% 100% at 50% 0%, black 30%, transparent 100%)",
-          WebkitMaskImage: "radial-gradient(ellipse 80% 100% at 50% 0%, black 30%, transparent 100%)",
-        }}
-      />
-
-      <div className="container-main" style={{ position: "relative", zIndex: 2 }}>
-        {/* Page label */}
-        <m.p
-          custom={0}
+        <m.h1
+          custom={1}
           initial="hidden"
           animate="visible"
           variants={fadeUp}
           style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: "0.68rem",
-            letterSpacing: "0.2em",
-            textTransform: "uppercase",
-            color: "var(--color-text-muted)",
-            display: "flex",
-            alignItems: "center",
-            gap: "0.75rem",
-            marginBottom: "3rem",
+            fontFamily: "var(--font-display)",
+            fontSize: "clamp(2.8rem, 7vw, 5rem)",
+            fontWeight: 700,
+            letterSpacing: "-0.04em",
+            lineHeight: 1,
+            color: "var(--color-text-primary)",
+            marginBottom: "2.5rem",
           }}
         >
-          <span style={{ color: "var(--color-accent)", opacity: 0.7 }}>~/about</span>
-          <span
-            style={{
-              display: "inline-block",
-              width: "32px",
-              height: "1px",
-              background: "var(--color-border)",
-            }}
-          />
-          the full picture
-        </m.p>
+          <span className="inline-block italic px-[0.12em] rounded-sm bg-accent text-background">Muiz</span> <span>Oyebowale</span>
+        </m.h1>
 
-        {/* Two-column: text left, avatar right */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr auto",
-            gap: "4rem",
-            alignItems: "start",
-          }}
-          className="about-hero-grid"
-        >
-          {/* LEFT */}
-          <div>
-            {/* Name */}
-            <m.h1
-              custom={1}
-              initial="hidden"
-              animate="visible"
-              variants={fadeUp}
-              style={{
-                fontFamily: "var(--font-display)",
-                fontSize: "clamp(2.8rem, 7vw, 5.5rem)",
-                fontWeight: 700,
-                letterSpacing: "-0.04em",
-                lineHeight: 0.93,
-                marginBottom: "1.75rem",
-              }}
-            >
-              <span style={{ color: "var(--color-accent)", display: "block" }}>Muiz</span>
-              <span style={{ color: "var(--color-text-primary)", display: "block", fontStyle: "italic", fontWeight: 700 }}>Oyebowale</span>
-            </m.h1>
-
-            {/* Opening line — personality first */}
-            <m.p
-              custom={2}
-              initial="hidden"
-              animate="visible"
-              variants={fadeUp}
-              style={{
-                fontSize: "clamp(1rem, 2vw, 1.2rem)",
-                color: "var(--color-text-secondary)",
-                lineHeight: 1.65,
-                maxWidth: "52ch",
-                marginBottom: "2.5rem",
-                fontWeight: 400,
-              }}
-            >
-              Backend engineer. Reluctant perfectionist. Avid consumer of superhero films and bad dad jokes.{" "}
-              <span style={{ color: "var(--color-text-primary)", fontWeight: 500 }}>Currently teaching myself to teach machines.</span>
-            </m.p>
-
-            {/* Stat pills */}
-            <m.div custom={3} initial="hidden" animate="visible" variants={fadeUp} style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
-              {STATS.map(({ label, value }) => (
-                <div
-                  key={label}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0",
-                    border: "1px solid var(--color-border)",
-                    borderRadius: "var(--radius-sm)",
-                    overflow: "hidden",
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "0.7rem",
-                  }}
-                >
-                  <span
-                    style={{
-                      padding: "0.3rem 0.6rem",
-                      background: "var(--color-surface)",
-                      color: "var(--color-text-muted)",
-                      letterSpacing: "0.08em",
-                      borderRight: "1px solid var(--color-border)",
-                    }}
-                  >
-                    {label}
-                  </span>
-                  <span
-                    style={{
-                      padding: "0.3rem 0.7rem",
-                      color: "var(--color-text-secondary)",
-                      letterSpacing: "0.04em",
-                    }}
-                  >
-                    {value}
-                  </span>
-                </div>
-              ))}
-            </m.div>
+        {/* Bio + avatar */}
+        <div className="about-hero-grid">
+          <div className="about-hero-bio">
+            {PARAGRAPHS.map(({ text, accent }, idx) => (
+              <m.p
+                key={text.slice(0, 24)}
+                custom={2 + idx}
+                initial="hidden"
+                animate="visible"
+                variants={fadeUp}
+                style={{
+                  color: accent ? "var(--color-text-primary)" : "var(--color-text-secondary)",
+                  fontSize: accent ? "0.98rem" : "1.02rem",
+                  lineHeight: 1.75,
+                  fontWeight: accent ? 500 : 400,
+                  padding: accent ? "1.1rem 1.4rem" : undefined,
+                  background: accent ? "var(--color-accent-subtle)" : undefined,
+                  borderLeft: accent ? "2px solid var(--color-accent-dim)" : undefined,
+                  borderRadius: accent ? "0 var(--radius-sm) var(--radius-sm) 0" : undefined,
+                  marginBottom: "1.25rem",
+                }}
+              >
+                {text.trim()}
+              </m.p>
+            ))}
           </div>
 
-          {/* RIGHT — avatar */}
           <m.div
             initial={{ opacity: 0, scale: 0.97 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.5, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
             className="about-avatar"
             style={{
-              width: "260px",
+              width: "100%",
+              maxWidth: 320,
               aspectRatio: "1",
               borderRadius: "var(--radius-lg)",
               border: "1px solid var(--color-border)",
               background: "var(--color-surface)",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: "0.75rem",
               position: "relative",
               overflow: "hidden",
-              flexShrink: 0,
+              margin: "0 auto",
             }}
           >
-            <Image src="/muizzy.jpg" alt="Muiz Oyebowale" fill sizes="(max-width: 700px) 85vw, 260px" style={{ objectFit: "cover", objectPosition: "center center" }} quality={90} />
+            <Image
+              src="/muizzy.jpg"
+              alt="Muiz Oyebowale"
+              fill
+              sizes="(max-width: 760px) 85vw, 320px"
+              style={{ objectFit: "cover", objectPosition: "center center" }}
+              quality={90}
+            />
 
             {[
               { top: "10px", left: "10px", borderTop: "1px solid", borderLeft: "1px solid" },
@@ -219,12 +124,19 @@ export default function AboutHero() {
 
             <p
               style={{
+                position: "absolute",
+                bottom: "8px",
+                left: 0,
+                right: 0,
+                textAlign: "center",
                 fontFamily: "var(--font-mono)",
                 fontSize: "0.6rem",
                 letterSpacing: "0.15em",
                 textTransform: "uppercase",
-                color: "var(--color-text-muted)",
-                opacity: 0.6,
+                color: "var(--color-background)",
+                opacity: 0.85,
+                background: "var(--color-text-primary)",
+                padding: "0.25rem 0",
               }}
             >
               muizzyranking
@@ -234,14 +146,27 @@ export default function AboutHero() {
       </div>
 
       <style>{`
-        @media (max-width: 700px) {
+        .about-hero-grid {
+          display: grid;
+          grid-template-areas: "bio photo";
+          grid-template-columns: minmax(0, 1fr) 320px;
+          column-gap: 3.5rem;
+          row-gap: 2.5rem;
+          align-items: start;
+          max-width: 880px;
+          margin: 0 auto;
+          text-align: left;
+        }
+        .about-hero-bio {
+          grid-area: bio;
+        }
+        .about-avatar {
+          grid-area: photo;
+        }
+        @media (max-width: 760px) {
           .about-hero-grid {
-            grid-template-columns: 1fr !important;
-          }
-          .about-avatar {
-            width: 90% !important;
-            max-width: 320px !important;
-            margin: 0 auto;
+            grid-template-areas: "photo" "bio";
+            grid-template-columns: 1fr;
           }
         }
       `}</style>

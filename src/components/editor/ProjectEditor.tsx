@@ -21,12 +21,14 @@ export type ProjectEditorInitial = {
     stack: string[];
     repo: string;
     live: string;
+    screenshots: string[];
     featured: boolean;
     draft: boolean;
   };
   parsed: {
     overview: string;
     challenges: ChallengeEntry[];
+    outcomes: string;
     learned: string;
   };
 };
@@ -52,12 +54,14 @@ export default function ProjectEditor({ initial }: { initial: ProjectEditorIniti
   const [stack, setStack] = useState<string[]>(initial.frontmatter.stack);
   const [repo, setRepo] = useState(initial.frontmatter.repo);
   const [live, setLive] = useState(initial.frontmatter.live);
+  const [screenshots, setScreenshots] = useState<string[]>(initial.frontmatter.screenshots);
   const [featured, setFeatured] = useState<boolean>(initial.frontmatter.featured);
   const [slug, setSlug] = useState(initial.slug);
   const [slugTouched, setSlugTouched] = useState(initial.mode === "edit");
 
   const [overview, setOverview] = useState(initial.parsed.overview);
   const [challenges, setChallenges] = useState<ChallengeEntry[]>(initial.parsed.challenges);
+  const [outcomes, setOutcomes] = useState(initial.parsed.outcomes);
   const [learned, setLearned] = useState(initial.parsed.learned);
 
   const [busy, setBusy] = useState<AfterSave | null>(null);
@@ -72,8 +76,8 @@ export default function ProjectEditor({ initial }: { initial: ProjectEditorIniti
     try {
       const payload = {
         slug: effectiveSlug,
-        frontmatter: { title, summary, status, year, stack, repo, live, featured, draft: draftAfter },
-        parsed: { overview, challenges, learned },
+        frontmatter: { title, summary, status, year, stack, repo, live, screenshots, featured, draft: draftAfter },
+        parsed: { overview, challenges, outcomes, learned },
       };
       const url = initial.mode === "new" ? "/api/editor/projects" : `/api/editor/projects/${initial.slug}`;
       const method = initial.mode === "new" ? "POST" : "PUT";
@@ -193,6 +197,13 @@ export default function ProjectEditor({ initial }: { initial: ProjectEditorIniti
           <TextField label="Live" value={live} onChange={setLive} mono placeholder="https://…" />
         </div>
 
+        <ChipInput
+          label="Screenshots"
+          values={screenshots}
+          onChange={setScreenshots}
+          placeholder="add image path, e.g. /projects/flint/dashboard.png"
+        />
+
         <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
           <input
             id="featured"
@@ -248,6 +259,9 @@ export default function ProjectEditor({ initial }: { initial: ProjectEditorIniti
 
         <SectionDivider label="What I Learned" />
         <MarkdownField value={learned} onChange={setLearned} minHeight={140} placeholder="First paragraph is italicized on the live page." />
+
+        <SectionDivider label="Outcomes" />
+        <MarkdownField value={outcomes} onChange={setOutcomes} minHeight={140} placeholder="What did the thing actually achieve? Optional." />
       </div>
     </div>
   );

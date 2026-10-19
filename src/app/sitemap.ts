@@ -1,9 +1,10 @@
 import type { MetadataRoute } from "next";
 import { getAllCategories, getAllPosts } from "@/lib/blog";
 import { getAllProjects } from "@/lib/projects";
+import { site } from "@/lib/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://muizzyranking.me";
+  const baseUrl = site.url;
   const now = new Date();
 
   const staticPages: MetadataRoute.Sitemap = [
@@ -24,12 +25,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: now,
       changeFrequency: "weekly",
       priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/tools`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.6,
     },
     {
       url: `${baseUrl}/blog`,

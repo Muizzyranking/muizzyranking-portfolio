@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { getAllProjects } from "@/lib/projects";
-
-const SITE_URL = "https://muizzyranking.me";
+import { site } from "@/lib/site";
 
 export const revalidate = 3600;
 
@@ -22,7 +21,7 @@ export async function GET(req: Request) {
     repo: p.repo,
     live: p.live,
     featured: p.featured,
-    url: `${SITE_URL}/projects/${p.slug}`,
+    url: `${site.url}/projects/${p.slug}`,
   }));
 
   return NextResponse.json({ count: projects.length, projects }, { headers: { "Cache-Control": "public, max-age=3600, s-maxage=3600" } });

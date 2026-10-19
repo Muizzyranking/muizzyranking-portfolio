@@ -31,6 +31,7 @@ export type ProjectFrontmatterInput = {
   stack?: string[];
   repo?: string;
   live?: string;
+  screenshots?: string[];
   featured?: boolean;
   draft?: boolean;
 };
@@ -46,6 +47,7 @@ export function buildProjectFrontmatter(fm: ProjectFrontmatterInput): Record<str
     live: fm.live ?? "",
     featured: Boolean(fm.featured),
   };
+  if (fm.screenshots && fm.screenshots.length > 0) out.screenshots = fm.screenshots;
   if (fm.draft) out.draft = true;
   return out;
 }
@@ -53,6 +55,7 @@ export function buildProjectFrontmatter(fm: ProjectFrontmatterInput): Record<str
 export type ProjectParsed = {
   overview: string;
   challenges: { title: string; body: string }[];
+  outcomes: string;
   learned: string;
 };
 
@@ -60,12 +63,16 @@ export function assembleProjectBody(p: ProjectParsed): string {
   const parts: string[] = [];
   parts.push("## Overview", "", p.overview.trim(), "");
 
-  parts.push("## Challenges", "");
+  parts.push("## Engineering Challenges", "");
   for (const c of p.challenges) {
     parts.push(`### ${c.title.trim()}`, "", c.body.trim(), "");
   }
 
-  parts.push("## What I Learned", "", p.learned.trim(), "");
+  if (p.outcomes.trim()) {
+    parts.push("## Outcomes", "", p.outcomes.trim(), "");
+  }
+
+  parts.push("## Lessons Learned", "", p.learned.trim(), "");
 
   return `${parts
     .join("\n")

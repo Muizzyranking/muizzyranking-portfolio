@@ -1,18 +1,17 @@
 import type { Metadata } from "next";
-import ProjectsGrid from "@/components/ui/ProjectsGrid";
-import { getAllProjects } from "@/lib/projects";
+import ProjectsIndex from "@/components/sections/projects/ProjectsIndex";
+import { getAllProjects, getProjectStackList } from "@/lib/projects";
+import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Projects — Muiz Oyebowale",
-  description:
-    "Things I've built. Backend systems, APIs, tools, and the occasional project that started because I was tired of doing something manually.",
+  title: "Projects",
+  description: "Backend systems, APIs, and tools, each one written up as a case study.",
+  alternates: { canonical: `${site.url}/projects` },
 };
 
-export default async function ProjectsPage() {
+export default function ProjectsPage() {
   const projects = getAllProjects();
+  const stack = getProjectStackList();
 
-  const complete = projects.filter((p) => p.status === "complete").length;
-  const inProgress = projects.filter((p) => p.status === "in-progress").length;
-
-  return <ProjectsGrid projects={projects} stats={{ total: projects.length, complete, inProgress }} />;
+  return <ProjectsIndex projects={projects} stack={stack} />;
 }

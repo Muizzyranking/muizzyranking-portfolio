@@ -1,172 +1,205 @@
-@import url("https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&display=swap");
 @import "tailwindcss";
 
-/* ----------------------------------------
+/* ─────────────────────────────────────────────
    DESIGN TOKENS
----------------------------------------- */
-@theme inline {
-  /* Fonts */
-  --font-display: "Clash Display", var(--font-space-grotesk), system-ui, sans-serif;
-  --font-sans: var(--font-space-grotesk), system-ui, sans-serif;
-  --font-mono: var(--font-jetbrains-mono), "Fira Code", ui-monospace, monospace;
+   Token names are stable (editor depends on them).
+   Values switch between light (default) and dark.
+──────────────────────────────────────────────── */
+@theme {
+  /* Light palette — warm paper + evergreen */
+  --color-background: #faf8f4;
+  --color-bg-elevated: #f2efe9;
+  --color-surface: #f2efe9;
+  --color-surface-raised: #fffdf9;
+  --color-border: #e3ded4;
+  --color-border-subtle: #ebe7dd;
+  --color-text-primary: #1c1917;
+  --color-text-secondary: #4a463f;
+  --color-text-muted: #625c4a;
+  --color-accent: #55702f;
+  --color-accent-dim: #4c662b;
+  --color-accent-subtle: #edf2e2;
+  --color-accent-foreground: #ffffff;
+  --color-success: #2e7d32;
+  --color-error: #c53030;
 
-  /* Base palette */
-  --color-background: #080808;
-  --color-bg-elevated: #0f0f0f;
-  --color-surface: #161616;
-  --color-surface-raised: #242424;
-  --color-border: #2f2f2f;
-  --color-border-subtle: #1f1f1f;
-
-  /* Text */
-  --color-text-primary: #f5f3ef;
-  --color-text-secondary: #c9c3b8;
-  --color-text-muted: #9a948a;
-
-  /* Accent — dusty green */
-  --color-accent: #9fbf6b;
-  --color-accent-dim: #6f8c48;
-  --color-accent-subtle: #1c2412;
-
-  /* Semantic */
-  --color-success: #4a7c59;
-  --color-error: #8b3a3a;
-
-  /* Spacing scale additions */
-  --spacing-18: 4.5rem;
-  --spacing-22: 5.5rem;
-
-  /* Border radius */
-  --radius-sm: 4px;
+  /* Radius */
+  --radius-sm: 6px;
   --radius-md: 8px;
   --radius-lg: 12px;
   --radius-xl: 16px;
 }
 
-/* ----------------------------------------
-   BASE RESET & GLOBAL STYLES
----------------------------------------- */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
+@theme inline {
+  /* Fonts — self-hosted via next/font (Poppins / Fraunces / IBM Plex Mono) */
+  --font-sans: var(--font-poppins), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-display: var(--font-fraunces), "Iowan Old Style", Georgia, "Times New Roman", serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
 }
 
-html {
-  scroll-behavior: smooth;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* ── Dark palette — near-black base + glowing moss ── */
+[data-theme="dark"] {
+  --color-background: #080808;
+  --color-bg-elevated: #101010;
+  --color-surface: #101010;
+  --color-surface-raised: #181818;
+  --color-border: #222222;
+  --color-border-subtle: #1a1a1a;
+  --color-text-primary: #f5f0ea;
+  --color-text-secondary: #b4ada2;
+  --color-text-muted: #9a9385;
+  --color-accent: #9fbf6b;
+  --color-accent-dim: #6f8c48;
+  --color-accent-subtle: #1c2412;
+  --color-accent-foreground: #1c2412;
+  --color-success: #4ade80;
+  --color-error: #f87171;
 }
 
-body {
-  background-color: var(--color-background);
-  color: var(--color-text-primary);
-  font-family: var(--font-sans);
-  line-height: 1.7;
-  min-height: 100vh;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* ─────────────────────────────────────────────
+   BASE
+──────────────────────────────────────────────── */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  :root {
+    color-scheme: light;
+    --font-sans: var(--font-poppins), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-display: var(--font-fraunces), "Iowan Old Style", Georgia, "Times New Roman", serif;
+    --font-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  }
+
+  [data-theme="dark"] {
+    color-scheme: dark;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-text-primary);
+    font-family: var(--font-sans);
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    transition:
+      background-color 200ms ease,
+      color 200ms ease;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display);
+    color: var(--color-text-primary);
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+    scroll-margin-top: 6rem;
+  }
+
+  h1 {
+    font-size: clamp(2rem, 5vw, 3.25rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    font-weight: 700;
+  }
+
+  h2 {
+    font-size: clamp(1.5rem, 3vw, 2.1rem);
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+  }
+
+  h4 {
+    font-size: 1.0625rem;
+    line-height: 1.35;
+  }
+
+  p {
+    color: var(--color-text-secondary);
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  code,
+  kbd,
+  pre {
+    font-family: var(--font-mono);
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  ::selection {
+    background-color: var(--color-accent-subtle);
+    color: var(--color-text-primary);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: 5px;
+    border: 3px solid var(--color-background);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-text-muted);
+  }
 }
 
-/* ----------------------------------------
-   TYPOGRAPHY
----------------------------------------- */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: var(--font-display);
-  line-height: 1.1;
-  letter-spacing: -0.03em;
-  color: var(--color-text-primary);
-  font-weight: 600;
-}
-
-h1 {
-  font-size: clamp(2.5rem, 6vw, 5rem);
-  font-weight: 700;
-  letter-spacing: -0.04em;
-}
-h2 {
-  font-size: clamp(1.75rem, 4vw, 3rem);
-  letter-spacing: -0.035em;
-}
-h3 {
-  font-size: clamp(1.25rem, 2.5vw, 2rem);
-}
-
-p {
-  color: var(--color-text-secondary);
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-code,
-kbd,
-pre {
-  font-family: var(--font-mono);
-}
-
-/* ----------------------------------------
-   SELECTION
----------------------------------------- */
-::selection {
-  background-color: var(--color-accent-dim);
-  color: var(--color-text-primary);
-}
-
-/* ----------------------------------------
-   SCROLLBAR
----------------------------------------- */
-::-webkit-scrollbar {
-  width: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--color-background);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--color-border);
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--color-accent-dim);
-}
-
-:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: 3px;
-  border-radius: var(--radius-sm);
-}
-
-input:focus-visible {
-  outline: none;
-}
-
-/* ----------------------------------------
-   LAYOUT UTILITIES
----------------------------------------- */
+/* ─────────────────────────────────────────────
+   LAYOUT HELPERS
+──────────────────────────────────────────────── */
 .container-main {
   width: 100%;
-  max-width: 1100px;
+  max-width: 1120px;
   margin-inline: auto;
-  padding-inline: clamp(1.5rem, 5vw, 4rem);
+  padding-inline: clamp(1.25rem, 5vw, 2.5rem);
 }
 
 .section {
-  padding-block: clamp(4rem, 10vw, 8rem);
+  padding-block: clamp(4rem, 9vw, 7rem);
 }
 
 .section-band {
-  padding-block: clamp(5rem, 10vw, 8rem);
   border-top: 1px solid var(--color-border-subtle);
 }
 
@@ -174,55 +207,45 @@ input:focus-visible {
   background: var(--color-bg-elevated);
 }
 
-/* Mono eyebrow — used on every section heading */
 .eyebrow {
   font-family: var(--font-mono);
-  font-size: 0.8rem;
-  letter-spacing: 0.2em;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--color-text-muted);
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
 }
 
-.eyebrow__mark {
-  color: var(--color-accent);
-  opacity: 0.7;
-}
-
-.eyebrow__rule {
-  display: inline-block;
-  width: 32px;
-  height: 1px;
-  background: var(--color-border);
-}
-
-/* Accent text helper */
 .text-accent {
   color: var(--color-accent);
 }
 
-/* Subtle divider */
 .divider {
   height: 1px;
   background: var(--color-border-subtle);
-  width: 100%;
+  border: 0;
 }
 
-/* Inline code in prose */
-code {
-  font-family: var(--font-mono);
-  font-size: 0.82em;
-  color: var(--color-accent);
-  background: var(--color-accent-subtle);
-  padding: 0.1em 0.4em;
-  border-radius: var(--radius-sm);
+/* ─────────────────────────────────────────────
+   SITE HEADER (translucent chrome on scroll)
+──────────────────────────────────────────────── */
+.site-header {
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
-/* ----------------------------------------
-   CODE BLOCK (MDX rendered)
----------------------------------------- */
+.site-header--scrolled {
+  background: color-mix(in srgb, var(--color-background) 82%, transparent);
+  border-bottom-color: var(--color-border-subtle);
+  backdrop-filter: blur(14px) saturate(180%);
+  -webkit-backdrop-filter: blur(14px) saturate(180%);
+}
+
+/* ─────────────────────────────────────────────
+   CODE BLOCK (shared by blog + editor preview)
+──────────────────────────────────────────────── */
 .code-block {
   position: relative;
   margin: 1.75rem 0;
@@ -236,26 +259,32 @@ code {
   padding: 0;
   overflow-x: auto;
   background: transparent;
-  font-family: var(--font-mono);
   font-size: 0.9rem;
   line-height: 1.7;
 }
 
-/* The inner <code> carries the bg so the fill follows the horizontal scroll. */
 .code-block pre > code {
   display: block;
   min-width: max-content;
   padding: 1.1rem 1.25rem;
-  background: #0d1117;
-  color: var(--color-text-primary);
-  border: 0;
-  border-radius: 0;
-  box-sizing: border-box;
+  background: var(--color-bg-elevated);
+  color: #24292e;
   font-size: 0.9rem;
   line-height: 1.7;
 }
 
-/* Copy button */
+.code-block pre > code span {
+  color: var(--shiki-light);
+}
+
+[data-theme="dark"] .code-block pre > code {
+  color: #adbac7;
+}
+
+[data-theme="dark"] .code-block pre > code span {
+  color: var(--shiki-dark);
+}
+
 .code-block__copy {
   position: absolute;
   top: 0.5rem;
@@ -265,7 +294,7 @@ code {
   align-items: center;
   gap: 0.4rem;
   padding: 0.32rem 0.6rem;
-  background: rgba(13, 17, 23, 0.85);
+  background: var(--color-surface-raised);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
   color: var(--color-text-muted);
@@ -276,13 +305,10 @@ code {
   opacity: 0;
   transform: translateY(-2px);
   transition:
-    opacity 0.2s,
-    transform 0.2s,
-    color 0.2s,
-    border-color 0.2s,
-    background 0.2s;
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+    opacity 150ms ease,
+    transform 150ms ease,
+    color 150ms ease,
+    border-color 150ms ease;
 }
 
 .code-block:hover .code-block__copy,
@@ -293,7 +319,7 @@ code {
 
 .code-block__copy:hover {
   color: var(--color-text-primary);
-  border-color: var(--color-accent-dim);
+  border-color: var(--color-border);
 }
 
 .code-block__copy[data-copied="true"] {
@@ -304,13 +330,51 @@ code {
 }
 
 @media (max-width: 640px) {
-  /* Always show on touch — no hover state available */
   .code-block__copy {
     opacity: 1;
     transform: translateY(0);
   }
-  /* Push code down so the always-visible copy button doesn't sit on the first line */
   .code-block pre > code {
     padding-top: 2.4rem;
+  }
+}
+
+.post-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 220px;
+  gap: 4rem;
+}
+
+@media (max-width: 1024px) {
+  .post-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   REDUCED MOTION / TRANSPARENCY
+──────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    /* biome-ignore lint/complexity/noImportantStyles: reduced-motion override must beat every rule */
+    animation-duration: 0.01ms !important;
+    /* biome-ignore lint/complexity/noImportantStyles: reduced-motion override must beat every rule */
+    animation-iteration-count: 1 !important;
+    /* biome-ignore lint/complexity/noImportantStyles: reduced-motion override must beat every rule */
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* biome-ignore lint/correctness/noUnknownMediaFeatureName: prefers-reduced-transparency is a valid Media Queries Level 5 feature */
+@media (prefers-reduced-transparency: reduce) {
+  .site-header--scrolled {
+    background: var(--color-background);
   }
 }

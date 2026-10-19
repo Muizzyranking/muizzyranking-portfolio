@@ -196,7 +196,7 @@ export default function AboutCTA() {
               Languages, tools, the setup that survives a fresh install.
             </p>
             <Link
-              href="/tools"
+              href="/about#stack"
               style={{
                 fontFamily: "var(--font-mono)",
                 fontSize: "0.78rem",
@@ -209,7 +209,7 @@ export default function AboutCTA() {
               }}
               className="group"
             >
-              the toolbox
+              the stack
               <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
             </Link>
           </m.div>

@@ -14,12 +14,14 @@ export default function NewProjectPage() {
       stack: [],
       repo: "",
       live: "",
+      screenshots: [],
       featured: false,
       draft: true,
     },
     parsed: {
       overview: "",
       challenges: [],
+      outcomes: "",
       learned: "",
     },
   };

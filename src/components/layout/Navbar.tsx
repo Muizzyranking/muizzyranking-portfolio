@@ -3,158 +3,143 @@
 import { m, useMotionValueEvent, useScroll } from "framer-motion";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import CommandPalette from "@/components/layout/CommandPalette";
+import MobileMenu from "@/components/layout/MobileMenu";
+import ThemeToggle from "@/components/layout/ThemeToggle";
+import { site } from "@/lib/site";
 
-const NAV_LINKS = [
-  { label: "about", href: "/about" },
-  { label: "projects", href: "/projects" },
-  { label: "tools", href: "/tools" },
-  { label: "writing", href: "/blog" },
-];
-
-export default function Navbar() {
+export default function Navbar({ projects, posts }: { projects: { slug: string; title: string }[]; posts: { slug: string; title: string }[] }) {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [paletteOpen, setPaletteOpen] = useState(false);
   const { scrollY } = useScroll();
 
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key.toLowerCase() !== "k" || !(e.metaKey || e.ctrlKey)) return;
+      const target = e.target as HTMLElement | null;
+      if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable)) return;
+      e.preventDefault();
+      setPaletteOpen((o) => !o);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
+
   useMotionValueEvent(scrollY, "change", (v) => {
-    setScrolled(v > 24);
+    setScrolled(v > 8);
   });
+
+  const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href));
 
   return (
     <>
-      <m.header
-        initial={{ y: -80, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-        className="fixed top-0 left-0 right-0 z-[100] h-16 flex items-center justify-between px-[clamp(1.5rem,5vw,4rem)] transition-[background,border-color,backdrop-filter] duration-[350ms] ease-out"
-        style={{
-          borderBottom: scrolled ? "1px solid var(--color-border)" : "1px solid transparent",
-          background: scrolled ? "rgba(14,14,14,0.92)" : "transparent",
-          backdropFilter: scrolled ? "blur(14px)" : "none",
-          WebkitBackdropFilter: scrolled ? "blur(14px)" : "none",
-        }}
+      <header
+        className={`site-header fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-300 ease-out ${scrolled ? "site-header--scrolled" : ""}`}
       >
-        <div className="container-main h-full flex items-center justify-between">
-          {/* ── LOGO ── */}
+        <div className="container-main flex h-14 items-center justify-between gap-4">
           <Link
             href="/"
-            className="font-mono text-[0.88rem] font-semibold tracking-[-0.01em] text-text-primary transition-colors duration-200 no-underline flex items-center gap-0 hover:text-accent"
+            className="text-[0.95rem] font-semibold tracking-tight text-text-primary transition-colors duration-150 hover:text-text-secondary"
           >
-            muizzy
-            <span className="text-accent">ranking.</span>
+            muizzy<span className="inline-block italic px-[0.12em] rounded-sm bg-accent text-background">ranking</span>
           </Link>
 
-          {/* ── DESKTOP NAV ── */}
-          <nav className="flex items-center gap-1" aria-label="Primary navigation">
-            {/* Links — hidden on mobile via CSS */}
-            <ul className="nav-desktop-links hidden sm:flex items-center gap-0 list-none m-0 p-0">
-              {NAV_LINKS.map(({ label, href }, i) => {
-                const isActive = pathname.startsWith(href);
-                return (
-                  <m.li
-                    key={href}
-                    initial={{ opacity: 0, y: -6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{
-                      delay: 0.15 + i * 0.08,
-                      duration: 0.4,
-                      ease: [0.22, 1, 0.36, 1],
-                    }}
-                    className="flex items-center"
-                  >
-                    {i > 0 && <span className="font-mono text-[0.65rem] text-accent px-3 select-none">/</span>}
-                    <Link
-                      href={href}
-                      className="font-mono text-[0.72rem] tracking-[0.1em] no-underline py-[0.4rem] px-5 rounded-sm transition-[color,background] duration-200 block relative"
-                      style={{
-                        color: isActive ? "var(--color-text-primary)" : "var(--color-text-secondary)",
-                      }}
-                    >
-                      {label}
-                      {isActive && (
-                        <m.span
-                          layoutId="nav-underline"
-                          className="absolute -bottom-0.5 left-0 right-0 h-px bg-accent"
-                          transition={{
-                            type: "spring",
-                            stiffness: 400,
-                            damping: 30,
-                          }}
-                        />
-                      )}
-                    </Link>
-                  </m.li>
-                );
-              })}
-            </ul>
+          <nav className="hidden md:flex items-center gap-1" aria-label="Primary navigation">
+            {site.nav.map((item) => {
+              const active = isActive(item.href);
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  aria-current={active ? "page" : undefined}
+                  className="relative rounded-sm px-3 py-2 text-[0.9rem] font-semibold lowercase transition-colors duration-150"
+                  style={{ color: active ? "var(--color-text-primary)" : "var(--color-text-secondary)" }}
+                >
+                  {item.label}
+                  {active && (
+                    <m.span
+                      layoutId="nav-underline"
+                      className="absolute inset-x-3 -bottom-px h-px bg-accent"
+                      transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                    />
+                  )}
+                </Link>
+              );
+            })}
+          </nav>
 
-            {/* Resume CTA — opens PDF in new tab */}
-            <m.a
-              href="/Muiz-Oyebowale-Resume.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5, duration: 0.4 }}
-              className="nav-resume-btn hidden sm:inline-flex items-center gap-[0.4rem] font-mono text-[0.72rem] tracking-[0.1em] text-accent no-underline border border-accent-dim py-[0.4rem] px-4 ml-3 rounded-sm transition-[background,color] duration-200 hover:bg-accent hover:text-white"
-            >
-              résumé
-              {/* external link icon */}
-              <svg width="11" height="11" viewBox="0 0 11 11" fill="none" aria-hidden="true">
-                <path d="M4.5 1.5h5v5M9.5 1.5L5 6" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </m.a>
-
-            {/* Mobile hamburger */}
+          <div className="flex items-center gap-1.5">
             <button
               type="button"
-              className="nav-hamburger sm:hidden bg-transparent border-0 cursor-pointer p-2 text-text-secondary ml-2"
-              aria-label="Toggle menu"
-              onClick={() => setMobileOpen((o) => !o)}
+              onClick={() => setPaletteOpen(true)}
+              aria-label="Search"
+              className="inline-flex h-8 items-center gap-2 rounded-md border border-border px-2.5 text-text-secondary transition-colors duration-150 hover:text-text-primary hover:border-border"
             >
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <svg
+                width="13"
+                height="13"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.75"
+                strokeLinecap="round"
+                aria-hidden="true"
+              >
+                <circle cx="11" cy="11" r="7" />
+                <path d="m21 21-4.3-4.3" />
+              </svg>
+              <span className="hidden sm:inline font-mono text-[0.62rem] uppercase tracking-[0.1em]">search</span>
+              <kbd
+                className="hidden lg:inline-flex items-center rounded-sm border border-border px-1 py-px font-mono text-[0.6rem] text-text-muted"
+                aria-label="Keyboard shortcut"
+              >
+                ⌘K
+              </kbd>
+            </button>
+
+            <ThemeToggle />
+
+            <a
+              href={site.resume}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden lg:inline-flex items-center gap-1 rounded-md border border-border px-3 h-8 text-xs font-medium text-text-secondary transition-colors duration-150 hover:text-text-primary hover:border-border"
+            >
+              Résumé
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+                <path d="M4 1h5v5M9 1 4 6" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </a>
+
+            <button
+              type="button"
+              onClick={() => setMobileOpen((o) => !o)}
+              aria-label="Toggle menu"
+              aria-expanded={mobileOpen}
+              className="md:hidden inline-flex h-8 w-8 items-center justify-center rounded-md text-text-secondary transition-colors duration-150 hover:text-text-primary hover:bg-bg-elevated"
+            >
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
                 {mobileOpen ? (
-                  <path d="M4 4l12 12M16 4L4 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                  <path d="M4 4l10 10M14 4L4 14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
                 ) : (
                   <>
-                    <line x1="3" y1="6" x2="17" y2="6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                    <line x1="3" y1="10" x2="17" y2="10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                    <line x1="3" y1="14" x2="17" y2="14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                    <line x1="2" y1="5.5" x2="16" y2="5.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                    <line x1="2" y1="9.5" x2="16" y2="9.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                    <line x1="2" y1="13.5" x2="16" y2="13.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
                   </>
                 )}
               </svg>
             </button>
-          </nav>
+          </div>
         </div>
-      </m.header>
+      </header>
 
-      {/* ── MOBILE MENU ── */}
-      <m.div
-        initial={false}
-        animate={mobileOpen ? { opacity: 1, y: 0, pointerEvents: "auto" } : { opacity: 0, y: -8, pointerEvents: "none" }}
-        transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-        className="fixed top-16 left-0 right-0 z-[99] flex flex-col gap-1 px-[clamp(1.5rem,5vw,4rem)] py-6 border-b border-border"
-        style={{
-          background: "rgba(14,14,14,0.97)",
-          backdropFilter: "blur(16px)",
-        }}
-      >
-        {NAV_LINKS.map(({ label, href }) => (
-          <Link
-            key={href}
-            href={href}
-            onClick={() => setMobileOpen(false)}
-            className="font-mono text-[0.9rem] tracking-[0.1em] text-text-secondary no-underline py-3 border-b border-border-subtle transition-colors duration-200 hover:text-text-primary"
-          >
-            {label}
-          </Link>
-        ))}
-        <a href="/Muiz-Oyebowale-Resume.pdf" target="_blank" rel="noopener noreferrer" className="font-mono text-[0.9rem] tracking-[0.1em] text-accent no-underline py-3 mt-1">
-          résumé ↗
-        </a>
-      </m.div>
+      <MobileMenu open={mobileOpen} onClose={() => setMobileOpen(false)} />
+
+      <CommandPalette open={paletteOpen} onClose={() => setPaletteOpen(false)} projects={projects} posts={posts} />
     </>
   );
 }

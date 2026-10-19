@@ -1,101 +1,95 @@
 "use client";
-import { m, useInView } from "framer-motion";
+
+import { m, useInView, useReducedMotion } from "framer-motion";
 import { useRef } from "react";
 import { SOCIAL_ICONS } from "@/components/ui/icons";
-import { EMAIL, SOCIALS } from "@/lib/data";
-import { fadeUp, SCROLL_REVEAL, staggerContainer, staggerItem } from "@/lib/motion";
+import { EASE, SCROLL_REVEAL } from "@/lib/motion";
+import { site } from "@/lib/site";
 
-const socialsArray = (Object.keys(SOCIALS) as Array<keyof typeof SOCIALS>).map((key) => ({
-  ...SOCIALS[key],
-  icon: SOCIAL_ICONS[key],
-}));
+const ICON_KEY: Record<string, keyof typeof SOCIAL_ICONS> = {
+  GitHub: "github",
+  LinkedIn: "linkedin",
+  "X / Twitter": "twitter",
+};
 
 export default function Contact() {
   const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, SCROLL_REVEAL);
+  const reduce = useReducedMotion();
+  const from = reduce ? {} : { y: 12 };
 
   return (
-    <section ref={ref} id="contact" className="py-[clamp(5rem,10vw,8rem)] bg-bg-elevated border-t border-border-subtle">
-      <div className="container-main">
-        <m.p variants={fadeUp} custom={0} initial="hidden" animate={inView ? "visible" : "hidden"} className="eyebrow mb-8">
+    <section ref={ref} className="section section-band">
+      <div className="container-main text-center">
+        <m.p
+          initial={{ opacity: 0, ...from }}
+          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, ...from }}
+          transition={{ duration: 0.45, ease: EASE }}
+          className="eyebrow mb-7"
+        >
           Contact
-          <span className="eyebrow__rule" />
         </m.p>
 
-        <div className="contact-grid grid grid-cols-2 gap-20 items-start max-[860px]:grid-cols-1 max-[860px]:gap-12">
-          <div>
-            <m.h2
-              variants={fadeUp}
-              custom={1}
-              initial="hidden"
-              animate={inView ? "visible" : "hidden"}
-              className="font-display font-semibold tracking-[-0.04em] leading-[1.05] mb-5 text-[clamp(2rem,4vw,3rem)]"
+        <m.h2
+          initial={{ opacity: 0, ...from }}
+          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, ...from }}
+          transition={{ duration: 0.45, ease: EASE, delay: 0.06 }}
+          className="font-display font-semibold tracking-[-0.03em] leading-[1.1] text-[clamp(2rem,5vw,3rem)] text-text-primary max-w-[16ch] mx-auto mb-5"
+        >
+          Let&apos;s build something that has to work.
+        </m.h2>
+
+        <m.p
+          initial={{ opacity: 0, ...from }}
+          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, ...from }}
+          transition={{ duration: 0.45, ease: EASE, delay: 0.12 }}
+          className="text-text-secondary text-[0.95rem] leading-[1.7] max-w-[46ch] mx-auto mb-10"
+        >
+          I&apos;m open to backend engineering roles. Production systems, APIs, and data pipelines that have to stay up. A good conversation about
+          systems works too.
+        </m.p>
+
+        <m.div
+          initial={{ opacity: 0, ...from }}
+          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, ...from }}
+          transition={{ duration: 0.45, ease: EASE, delay: 0.18 }}
+          className="flex items-center justify-center gap-3 flex-wrap mb-12"
+        >
+          <a
+            href={`mailto:${site.email}`}
+            className="inline-flex items-center gap-2 rounded-md bg-accent px-6 py-3 text-[0.95rem] font-medium text-accent-foreground transition-colors duration-150 hover:bg-accent-dim"
+          >
+            {site.email}
+            <span aria-hidden="true">→</span>
+          </a>
+          <a
+            href={site.resume}
+            className="inline-flex items-center gap-2 rounded-md border border-border bg-transparent px-6 py-3 text-[0.95rem] font-medium text-text-primary transition-colors duration-150 hover:border-accent-dim"
+          >
+            Résumé
+            <span aria-hidden="true">↗</span>
+          </a>
+        </m.div>
+
+        <m.div
+          initial={{ opacity: 0, ...from }}
+          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, ...from }}
+          transition={{ duration: 0.45, ease: EASE, delay: 0.24 }}
+          className="flex items-center justify-center gap-2 flex-wrap"
+        >
+          {site.socials.map((social) => (
+            <a
+              key={social.label}
+              href={social.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex items-center gap-2 rounded-md border border-border bg-bg-elevated px-4 py-2 text-text-secondary text-[0.85rem] transition-colors duration-150 hover:border-accent-dim hover:text-text-primary"
             >
-              Let&apos;s build something <em className="italic text-accent font-medium">interesting.</em>
-            </m.h2>
-
-            <m.p
-              variants={fadeUp}
-              custom={2}
-              initial="hidden"
-              animate={inView ? "visible" : "hidden"}
-              className="text-text-secondary text-[0.95rem] leading-[1.78] max-w-[42ch] mb-7"
-            >
-              Open to backend roles, AI/ML adjacent work, interesting problems, conversations about systems, AI, conversations that don&apos;t start
-              with &ldquo;circle back,&rdquo; or why Neovim is still relevant in {new Date().getFullYear()}.{" "}
-              <span className="text-text-muted italic">(It is.)</span>
-            </m.p>
-
-            <m.div variants={fadeUp} custom={3} initial="hidden" animate={inView ? "visible" : "hidden"}>
-              <a
-                href={`mailto:${EMAIL}`}
-                className="inline-flex items-center gap-2 font-mono text-[0.88rem] text-accent no-underline border-b border-accent-dim pb-[0.15rem] tracking-[0.04em] transition-opacity duration-200 hover:opacity-65"
-              >
-                {EMAIL} →
-              </a>
-            </m.div>
-          </div>
-
-          {/* ── RIGHT — social links */}
-          <div>
-            <m.p
-              variants={fadeUp}
-              custom={1}
-              initial="hidden"
-              animate={inView ? "visible" : "hidden"}
-              className="font-mono text-[0.63rem] tracking-[0.18em] uppercase text-text-muted mb-5"
-            >
-              Find me online
-            </m.p>
-
-            <m.div variants={staggerContainer} initial="hidden" animate={inView ? "visible" : "hidden"} className="flex flex-col gap-2">
-              {socialsArray.map(({ name, handle, href, icon }) => (
-                <m.a
-                  key={name}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  variants={staggerItem}
-                  whileHover={{ x: 4 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                  className="group flex items-center gap-[0.875rem] px-4 py-[0.875rem] bg-background border border-border rounded-md no-underline text-text-secondary transition-colors duration-200 hover:border-accent-dim"
-                >
-                  {/* Icon box */}
-                  <div className="w-8 h-8 bg-surface border border-border rounded-sm flex items-center justify-center text-accent shrink-0">
-                    {icon}
-                  </div>
-
-                  <div>
-                    <p className="text-[0.85rem] font-medium text-text-primary mb-[0.1rem] leading-[1.3]">{name}</p>
-                    <p className="font-mono text-[0.7rem] text-text-muted">{handle}</p>
-                  </div>
-
-                  <span className="ml-auto text-text-muted text-[0.82rem]">→</span>
-                </m.a>
-              ))}
-            </m.div>
-          </div>
-        </div>
+              <span className="text-accent">{SOCIAL_ICONS[ICON_KEY[social.label]]}</span>
+              {social.label}
+            </a>
+          ))}
+        </m.div>
       </div>
     </section>
   );

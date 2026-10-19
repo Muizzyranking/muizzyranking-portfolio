@@ -4,41 +4,41 @@ summary: "A production-ready wallet backend with Paystack deposits, internal tra
 status: "complete"
 year: "2025"
 datePublished: "2025-12-21"
+role: "Backend Engineer"
 stack: [Python, Django, Django Ninja, PostgreSQL, JWT, OAuth]
 repo: "https://github.com/Muizzyranking/wallet_service"
 live: ""
 featured: false
-cover: ""
 ---
 
 ## Overview
 
-A backend wallet system built for real financial operations — deposits via Paystack, internal transfers between wallet accounts, and full transaction history. The kind of system where correctness is not optional.
+A backend wallet system built for real financial operations: deposits via Paystack, internal transfers between wallet accounts, and full transaction history. The kind of system where correctness is not optional.
 
-What makes it more than a basic wallet is the authentication layer. It supports two distinct modes: users authenticate via Google OAuth with JWT tokens, while external services use scoped API keys with granular permissions — deposit-only, transfer-only, or read access. This makes the system composable, usable as a standalone service or embedded into a larger product.
+What makes it more than a basic wallet is the authentication layer. It supports two distinct modes: users authenticate via Google OAuth with JWT tokens, while external services use scoped API keys with granular permissions: deposit-only, transfer-only, or read access. This makes the system composable, usable as a standalone service or embedded into a larger product.
 
-## Challenges
+## Engineering Challenges
 
 ### Preventing duplicate webhook payments
 
-Paystack retries webhook delivery if it doesn't receive a timely response — a normal behavior that becomes dangerous in a financial system. Without protection, a single payment could credit a wallet two or three times.
+Paystack retries webhook delivery if it doesn't receive a timely response. That's normal behavior, but it becomes dangerous in a financial system. Without protection, a single payment could credit a wallet two or three times.
 
-The fix was idempotency at the transaction level. Each transaction is created with a unique reference generated upfront. Before processing any webhook, the system checks whether a transaction with that reference already exists. If it does, the existing record is updated rather than a new one created. The wallet balance never changes twice for the same event, regardless of how many times Paystack delivers it. Incoming webhooks are also validated against a Paystack HMAC signature before any processing begins — unauthenticated requests are rejected immediately.
+The fix was idempotency at the transaction level. Each transaction is created with a unique reference generated upfront. Before processing any webhook, the system checks whether a transaction with that reference already exists. If it does, the existing record is updated rather than a new one created. The wallet balance never changes twice for the same event, regardless of how many times Paystack delivers it. Incoming webhooks are also validated against a Paystack HMAC signature before any processing begins. Unauthenticated requests are rejected immediately.
 
 ### Keeping transfers atomic
 
-A transfer involves at least four writes — debiting the sender, crediting the recipient, and creating transaction records for both. If anything fails midway, the system could lose funds or create phantom balances.
+A transfer involves at least four writes: debiting the sender, crediting the recipient, and creating transaction records for both. If anything fails midway, the system could lose funds or create phantom balances.
 
-All four operations run inside a single database transaction. Either everything commits or nothing does. Django's `atomic()` block handles this cleanly, but the real design decision was making sure transaction records and balance updates lived in the same atomic scope — not separate operations that could succeed independently.
+All four operations run inside a single database transaction. Either everything commits or nothing does. Django's `atomic()` block handles this cleanly, but the real design decision was making sure transaction records and balance updates lived in the same atomic scope, not separate operations that could succeed independently.
 
 ### Building a scoped API key system
 
 Not every integration needs full wallet access. A reporting service should be able to check balances without being able to initiate transfers. Building this as a binary on/off would have been easier but wrong.
 
-API keys are created per-user and carry an explicit permission set drawn from three capabilities — deposit, transfer, and read. Keys are passed via request headers, stored as hashes, never in plaintext, and can expire after configurable durations. A compromised read-only key cannot move money. A compromised transfer key cannot read transaction history it was not granted access to.
+API keys are created per-user and carry an explicit permission set drawn from three capabilities: deposit, transfer, and read. Keys are passed via request headers, stored as hashes, never in plaintext, and can expire after configurable durations. A compromised read-only key cannot move money. A compromised transfer key cannot read transaction history it was not granted access to.
 
-## What I Learned
+## Lessons Learned
 
-Financial systems have a way of exposing every assumption you made about data consistency. I went in knowing about database transactions conceptually — I came out understanding exactly where the boundaries need to be and why getting them wrong is silent and expensive.
+Financial systems have a way of exposing every assumption you made about data consistency. I went in knowing about database transactions conceptually. I came out understanding exactly where the boundaries need to be and why getting them wrong is silent and expensive.
 
 The API key system was the more interesting design problem. Building access control that is both flexible and safe requires thinking about the threat model upfront, not as an afterthought. Scoping permissions to the minimum needed for each integration is a principle I now apply by default.

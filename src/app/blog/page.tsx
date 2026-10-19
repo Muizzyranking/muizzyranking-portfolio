@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import BlogIndex from "@/components/blog/BlogIndex";
 import { getAllCategories, getAllPosts } from "@/lib/blog";
+import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Writing — Muiz Oyebowale",
-  description: "Notes on backend systems, AI/ML, and the occasional rant about tooling. Written and maintained by Muiz Oyebowale.",
-  alternates: { canonical: "https://muizzyranking.me/blog" },
+  title: "Writing",
+  description: "Notes on backend systems, tooling, and how software gets built. Written by Muiz Oyebowale.",
+  alternates: { canonical: `${site.url}/blog` },
 };
 
 export const revalidate = 3600;

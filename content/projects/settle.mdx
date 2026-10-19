@@ -1,9 +1,10 @@
 ---
-title: "Settle — Payment Collection Infrastructure for Nigerian SMEs"
-summary: "A virtual-account payment collection platform built on Nomba's APIs — automatic per-customer reconciliation, calendar-correct recurring billing, and a developer API the dashboard itself runs on."
+title: "Settle: Payment Collection Infrastructure for Nigerian SMEs"
+summary: "A virtual-account payment collection platform built on Nomba's APIs, with automatic per-customer reconciliation, calendar-correct recurring billing, and a developer API the dashboard itself runs on."
 stack: [Python, FastAPI, PostgreSQL, Redis, SQLAlchemy, Next.js, Nomba API, Docker, Uvicorn]
 status: "complete"
 datePublished: "2026-07-14"
+role: "Solo backend engineer"
 repo: "https://github.com/Muizzyranking/settle-be"
 featured: true
 year: "2026"
@@ -12,26 +13,26 @@ live: "https://settle.muizzyranking.me"
 
 ## Overview
 
-Settle is payment collection infrastructure for businesses that collect money from many people into one place — landlords with tenants, schools with student fees, cooperatives with monthly contributions. Normally all those transfers land in a single shared bank account, and the business has no automatic way to know who paid, how much, or whether the payment was complete. At 10 payers that's annoying. At 200 it breaks entirely. Settle fixes this by giving each customer their own dedicated Nomba virtual account number, so every transfer is attributed automatically instead of manually.
+Settle is payment collection infrastructure for businesses that collect money from many people into one place: landlords with tenants, schools with student fees, cooperatives with monthly contributions. Normally all those transfers land in a single shared bank account, and the business has no automatic way to know who paid, how much, or whether the payment was complete. At 10 payers that's annoying. At 200 it breaks entirely. Settle fixes this by giving each customer their own dedicated Nomba virtual account number, so every transfer is attributed automatically instead of manually.
 
-The same reconciliation engine is exposed as a REST API behind API key authentication, so developers building rent collection apps, school fees platforms, or cooperative management systems can integrate Settle instead of rebuilding virtual account provisioning, webhook handling, and ledger management themselves. The dashboard used by non-technical SMEs is itself a consumer of that same developer API — not a coincidence, but a constraint that forces the API to actually be good enough to build a real product on.
+The same reconciliation engine is exposed as a REST API behind API key authentication, so developers building rent collection apps, school fees platforms, or cooperative management systems can integrate Settle instead of rebuilding virtual account provisioning, webhook handling, and ledger management themselves. The dashboard used by non-technical SMEs is itself a consumer of that same developer API. That is not a coincidence; it is a constraint that forces the API to actually be good enough to build a real product on.
 
-## Challenges
+## Engineering Challenges
 
 ### Attributing payments on a shared banking rail
-When money moves through Nigerian bank transfers, there's no native way to tell which of 50 tenants a given transfer came from — the business is left checking names by hand and calling people. The fix was giving every customer their own Nomba virtual account number, provisioned against the business's sub-account, so each inbound webhook carries an `accountRef` that maps to exactly one customer. Reconciliation status — exact, underpaid, overpaid, unmatched, or misdirected — is computed automatically on arrival. The engine is also idempotent: if Nomba delivers the same webhook twice, the second call updates the existing transaction instead of creating a new one, so a retry can't double-credit a customer's balance.
+When money moves through Nigerian bank transfers, there's no native way to tell which of 50 tenants a given transfer came from. The business is left checking names by hand and calling people. The fix was giving every customer their own Nomba virtual account number, provisioned against the business's sub-account, so each inbound webhook carries an `accountRef` that maps to exactly one customer. Reconciliation status, whether exact, underpaid, overpaid, unmatched, or misdirected, is computed automatically on arrival. The engine is also idempotent: if Nomba delivers the same webhook twice, the second call updates the existing transaction instead of creating a new one, so a retry can't double-credit a customer's balance.
 
 ### Calendar-correct recurring billing
-Naive day-counting for monthly billing breaks at month boundaries — adding 30 days to January 31st doesn't land on February 28th or 29th, it drifts forward. Due dates are computed with `dateutil.relativedelta` instead, so monthly billing stays calendar-correct across variable month lengths. The other deliberate decision here: underpayments do not advance `next_due_date`. It would have been simpler to mark a period paid on any inbound transfer, but that would let a partial payment silently clear an obligation the customer still owes on.
+Naive day-counting for monthly billing breaks at month boundaries: adding 30 days to January 31st doesn't land on February 28th or 29th, it drifts forward. Due dates are computed with `dateutil.relativedelta` instead, so monthly billing stays calendar-correct across variable month lengths. The other deliberate decision here: underpayments do not advance `next_due_date`. It would have been simpler to mark a period paid on any inbound transfer, but that would let a partial payment silently clear an obligation the customer still owes on.
 
 ### Two SSE channels instead of one
-Reconciliation needs to notify two different audiences — the business, which needs to see who paid and how much, and the customer, who just wants to know their own payment went through. A single authenticated stream would either leak business-level data to customers or force unnecessary login onto a payment confirmation page. Settle splits this into a tenant notification stream (authenticated, scoped to one business) and a customer payment-page stream (public, scoped to a single payment with no business-sensitive data), both backed by Redis pub/sub. Keeping them separate keeps the security model simple instead of building conditional access rules into one channel.
+Reconciliation needs to notify two different audiences: the business, which needs to see who paid and how much, and the customer, who just wants to know their own payment went through. A single authenticated stream would either leak business-level data to customers or force unnecessary login onto a payment confirmation page. Settle splits this into a tenant notification stream (authenticated, scoped to one business) and a customer payment-page stream (public, scoped to a single payment with no business-sensitive data), both backed by Redis pub/sub. Keeping them separate keeps the security model simple instead of building conditional access rules into one channel.
 
 ### Notification dispatch as a factory
-The reconciliation engine needs to fire off several notifications when a payment lands — in-app, email, an outbound webhook. Checking "does this tenant have a webhook configured? does email work?" at the call site would mean every new notification channel requires touching the reconciliation code. Instead the engine just calls `notification_manager.notify(context)`, and the manager handles dispatch internally — each channel fails independently and logs its own errors. Adding a channel like WhatsApp or SMS later means writing one new channel class, nothing in reconciliation changes.
+The reconciliation engine needs to fire off several notifications when a payment lands: in-app, email, an outbound webhook. Checking "does this tenant have a webhook configured? does email work?" at the call site would mean every new notification channel requires touching the reconciliation code. Instead the engine just calls `notification_manager.notify(context)`, and the manager handles dispatch internally. Each channel fails independently and logs its own errors. Adding a channel like WhatsApp or SMS later means writing one new channel class, nothing in reconciliation changes.
 
-## What I Learned
+## Lessons Learned
 
-Reconciliation is the part of this system that has to be right every time, not most of the time. Building it meant thinking about payments as events that can arrive out of order, twice, or not at all, instead of as a simple call-and-response — idempotency stopped being a nice-to-have and became the default assumption for anything that touches a webhook or moves money.
+Reconciliation is the part of this system that has to be right every time, not most of the time. Building it meant thinking about payments as events that can arrive out of order, twice, or not at all, instead of as a simple call-and-response. Idempotency stopped being a nice-to-have and became the default assumption for anything that touches a webhook or moves money.
 
 The two-audience constraint mattered more than I expected going in. It's easy to build an API that works for the one client you're actively developing against. Making the dashboard consume the exact same endpoints an external developer would forced the API contract to be genuinely well-designed, not just good enough for a single frontend.

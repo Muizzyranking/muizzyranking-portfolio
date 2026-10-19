@@ -24,71 +24,80 @@ export default async function OG({ params }: { params: Promise<{ slug: string }>
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
-        background: "#080808",
-        padding: "72px 96px",
-        fontFamily: "sans-serif",
-        color: "#f5f3ef",
+        background: "#faf8f4",
+        padding: "72px 84px",
+        color: "#1c1917",
         position: "relative",
       }}
     >
-      {/* top eyebrow */}
       <div
         style={{
-          fontSize: "22px",
-          color: "#9a948a",
-          letterSpacing: "4px",
-          textTransform: "uppercase",
+          position: "absolute",
+          top: "84px",
+          right: "84px",
+          width: "14px",
+          height: "14px",
+          borderRadius: "999px",
+          background: "#55702f",
+        }}
+      />
+
+      <div
+        style={{
           display: "flex",
           alignItems: "center",
           gap: "16px",
+          fontFamily: "monospace",
+          fontSize: "22px",
+          letterSpacing: "0.18em",
+          textTransform: "uppercase",
+          color: "#625c4a",
         }}
       >
-        <span style={{ color: "#9fbf6b" }}>~/blog</span>
-        <span style={{ width: "60px", height: "1px", background: "#2f2f2f" }} />
+        <span style={{ color: "#55702f" }}>writing</span>
+        <span style={{ width: "48px", height: "1px", background: "#e3ded4" }} />
         <span>muizzyranking.me</span>
       </div>
 
-      {/* title */}
       <div
         style={{
           display: "flex",
           flexDirection: "column",
-          fontSize: "82px",
-          fontWeight: 700,
-          letterSpacing: "-0.04em",
-          lineHeight: 1.05,
-          color: "#f5f3ef",
+          gap: "28px",
         }}
       >
-        {title}
+        <div
+          style={{
+            fontFamily: "Georgia, 'Times New Roman', serif",
+            fontWeight: 700,
+            letterSpacing: "-0.02em",
+            lineHeight: 1.1,
+            fontSize: "64px",
+            color: "#1c1917",
+            maxWidth: "900px",
+          }}
+        >
+          {title}
+        </div>
       </div>
 
-      {/* bottom row */}
       <div
         style={{
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          fontSize: "24px",
-          color: "#9a948a",
-          letterSpacing: "1px",
+          fontFamily: "monospace",
+          fontSize: "20px",
+          letterSpacing: "0.1em",
+          color: "#625c4a",
         }}
       >
-        <span style={{ color: "#c9c3b8" }}>Muiz Oyebowale</span>
-        <span>{dateLabel}</span>
+        <span>Muiz Oyebowale</span>
+        <span style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <span style={{ width: "8px", height: "8px", borderRadius: "999px", background: "#55702f" }} />
+          {dateLabel}
+        </span>
       </div>
-
-      {/* accent corner */}
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "8px",
-          height: "100%",
-          background: "linear-gradient(to bottom, #9fbf6b, transparent)",
-        }}
-      />
     </div>,
     { ...size },
   );

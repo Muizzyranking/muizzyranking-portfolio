@@ -1,6 +1,7 @@
 import { getAllPosts } from "@/lib/blog";
+import { site } from "@/lib/site";
 
-const SITE_URL = "https://muizzyranking.me";
+const SITE_URL = site.url;
 
 function escapeXml(s: string): string {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&apos;");
@@ -30,7 +31,7 @@ ${categories}
   const xml = `<?xml version="1.0" encoding="UTF-8" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Muiz Oyebowale — Writing</title>
+    <title>Muiz Oyebowale · Writing</title>
     <link>${SITE_URL}/blog</link>
     <atom:link href="${SITE_URL}/blog/rss.xml" rel="self" type="application/rss+xml" />
     <description>Notes on backend systems, AI/ML, and tooling.</description>

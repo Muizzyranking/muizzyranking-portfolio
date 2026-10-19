@@ -3,10 +3,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import PostList from "@/components/blog/PostList";
 import { getAllCategories, getCategoryBySlug, getPostsByCategory } from "@/lib/blog";
+import { site } from "@/lib/site";
 
 type Props = { params: Promise<{ slug: string }> };
-
-const SITE_URL = "https://muizzyranking.me";
 
 export const revalidate = 3600;
 
@@ -20,9 +19,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!category) return { title: "Not found" };
 
   return {
-    title: `${category.label} — Writing | Muiz Oyebowale`,
-    description: `Posts tagged ${category.label} on Muiz Oyebowale's writing.`,
-    alternates: { canonical: `${SITE_URL}/blog/category/${category.slug}` },
+    title: `${category.label} · Writing`,
+    description: `Posts tagged ${category.label} on ${site.name}'s writing.`,
+    alternates: { canonical: `${site.url}/blog/category/${category.slug}` },
   };
 }
 
@@ -35,71 +34,28 @@ export default async function CategoryPage({ params }: Props) {
 
   return (
     <>
-      <div
-        style={{
-          position: "relative",
-          paddingTop: "clamp(6rem, 14vw, 10rem)",
-          paddingBottom: "clamp(3rem, 6vw, 5rem)",
-          borderBottom: "1px solid var(--color-border-subtle)",
-          overflow: "hidden",
-        }}
-      >
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            backgroundImage: `
-              linear-gradient(var(--color-border-subtle) 1px, transparent 1px),
-              linear-gradient(90deg, var(--color-border-subtle) 1px, transparent 1px)
-            `,
-            backgroundSize: "48px 48px",
-            opacity: 0.3,
-            pointerEvents: "none",
-            maskImage: "radial-gradient(ellipse 80% 100% at 50% 0%, black 30%, transparent 100%)",
-            WebkitMaskImage: "radial-gradient(ellipse 80% 100% at 50% 0%, black 30%, transparent 100%)",
-          }}
-        />
+      <header className="container-main pt-[clamp(5rem,10vw,8rem)] pb-[clamp(3rem,6vw,4.5rem)] border-b border-border-subtle">
+        <Link
+          href="/blog"
+          className="group inline-flex items-center gap-2 font-mono text-[0.72rem] tracking-[0.08em] text-text-muted uppercase mb-8 hover:text-text-primary"
+        >
+          <span className="transition-transform duration-150 ease-out group-hover:-translate-x-1" aria-hidden="true">
+            ←
+          </span>
+          all writing
+        </Link>
 
-        <div className="container-main" style={{ position: "relative", zIndex: 2 }}>
-          <p className="eyebrow" style={{ marginBottom: "2rem" }}>
-            <Link href="/blog" className="eyebrow__mark" style={{ textDecoration: "none" }}>
-              ~/blog
-            </Link>
-            <span className="eyebrow__rule" />
-            <span>category</span>
-          </p>
+        <p className="eyebrow mb-6">category</p>
+        <h1 className="font-display font-bold tracking-[-0.02em] leading-[1.05] text-[clamp(2.1rem,5vw,3.5rem)] text-text-primary mb-4">
+          {category.label}
+        </h1>
+        <p className="font-mono text-[0.72rem] tracking-[0.06em] text-text-muted">
+          {posts.length} {posts.length === 1 ? "post" : "posts"}
+        </p>
+      </header>
 
-          <h1
-            style={{
-              fontFamily: "var(--font-display)",
-              fontSize: "clamp(2.4rem, 6vw, 4.25rem)",
-              fontWeight: 700,
-              letterSpacing: "-0.045em",
-              lineHeight: 1,
-              marginBottom: "0.75rem",
-            }}
-          >
-            <span style={{ color: "var(--color-accent)" }}>#</span>{" "}
-            <span style={{ color: "var(--color-text-primary)", fontStyle: "italic" }}>{category.label}</span>
-          </h1>
-
-          <p
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "0.78rem",
-              letterSpacing: "0.06em",
-              color: "var(--color-text-muted)",
-            }}
-          >
-            {posts.length} {posts.length === 1 ? "post" : "posts"}
-          </p>
-        </div>
-      </div>
-
-      <div style={{ padding: "clamp(2.5rem, 5vw, 4rem) 0 clamp(5rem, 10vw, 8rem)" }}>
-        <div className="container-main">
-          <PostList posts={posts} />
-        </div>
+      <div className="container-main py-[clamp(2.5rem,5vw,4rem)] pb-[clamp(4rem,8vw,7rem)]">
+        <PostList posts={posts} />
       </div>
     </>
   );
