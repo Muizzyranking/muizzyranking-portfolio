@@ -21,6 +21,29 @@ const DOT_SIZE = 32;
 const WRAP_PADDING = 7;
 const PRESS_SCALE = 0.92;
 
+/** [top-left, top-right, bottom-right, bottom-left] computed radii. */
+type Radii = [number, number, number, number];
+
+function cornerRadii(el: HTMLElement): Radii {
+  const cs = window.getComputedStyle(el);
+  const val = (v: string) => {
+    const n = Number.parseFloat(v);
+    return Number.isNaN(n) ? 8 : n;
+  };
+  return [val(cs.borderTopLeftRadius), val(cs.borderTopRightRadius), val(cs.borderBottomRightRadius), val(cs.borderBottomLeftRadius)];
+}
+
+/** The part of a rect that is actually visible on screen, intersected with
+ *  an optional clipping ancestor (e.g. a horizontal gallery strip). */
+function visibleRect(rect: DOMRect, clip: DOMRect | null) {
+  const PAD = WRAP_PADDING + 3;
+  const left = Math.max(Math.min(rect.left, rect.right), clip?.left ?? 0, PAD);
+  const right = Math.min(Math.max(rect.left, rect.right), clip?.right ?? window.innerWidth, window.innerWidth - PAD);
+  const top = Math.max(Math.min(rect.top, rect.bottom), clip?.top ?? 0, PAD);
+  const bottom = Math.min(Math.max(rect.top, rect.bottom), clip?.bottom ?? window.innerHeight, window.innerHeight - PAD);
+  return { left, top, right, bottom, width: right - left, height: bottom - top };
+}
+
 export default function CustomCursor() {
   const [enabled, setEnabled] = useState(false);
   const dotRef = useRef<HTMLDivElement>(null);
@@ -32,7 +55,7 @@ export default function CustomCursor() {
   const shown = useRef(false);
   const pressed = useRef(false);
   const pointer = useRef({ x: -100, y: -100 });
-  const radiusCache = useRef(new WeakMap<HTMLElement, number>());
+  const radiusCache = useRef(new WeakMap<HTMLElement, Radii>());
 
   useEffect(() => {
     const finePointer = window.matchMedia("(pointer: fine)").matches;
@@ -62,26 +85,31 @@ export default function CustomCursor() {
     const applyWrap = () => {
       const el = target.current;
       if (!el) return;
-      const rect = el.getBoundingClientRect();
-      const w = rect.width + WRAP_PADDING * 2;
-      const h = rect.height + WRAP_PADDING * 2;
+      const clip = el.closest("[data-cursor-clip]") as HTMLElement | null;
+      const visible = visibleRect(el.getBoundingClientRect(), clip ? clip.getBoundingClientRect() : null);
+      if (visible.width <= 0 || visible.height <= 0) return;
 
-      const cx = rect.left + rect.width / 2;
-      let cy = rect.top + rect.height / 2;
-
-      if (h <= 80) {
-        cy = Math.min(Math.max(cy, h / 2 + 3), window.innerHeight - h / 2 - 3);
-      }
+      const w = visible.width + WRAP_PADDING * 2;
+      const h = visible.height + WRAP_PADDING * 2;
+      const cx = visible.left + visible.width / 2;
+      const cy = visible.top + visible.height / 2;
 
       dot.style.width = `${w}px`;
       dot.style.height = `${h}px`;
 
-      let radius = radiusCache.current.get(el);
-      if (radius === undefined) {
-        radius = Number.parseFloat(window.getComputedStyle(el).borderTopLeftRadius) || 12;
-        radiusCache.current.set(el, radius);
+      // Mirror the element's own corners (slightly opened up by the padding
+      // and clamped to the ring's half-size) so the wrap reads as the
+      // element's border, not a generic pill.
+      const half = Math.min(w, h) / 2;
+      let radii = radiusCache.current.get(el);
+      if (!radii) {
+        radii = cornerRadii(el);
+        radiusCache.current.set(el, radii);
       }
-      dot.style.borderRadius = `${Math.min(radius + 4, Math.min(w, h) / 2)}px`;
+      dot.style.borderTopLeftRadius = `${Math.min(radii[0] + 2, half)}px`;
+      dot.style.borderTopRightRadius = `${Math.min(radii[1] + 2, half)}px`;
+      dot.style.borderBottomRightRadius = `${Math.min(radii[2] + 2, half)}px`;
+      dot.style.borderBottomLeftRadius = `${Math.min(radii[3] + 2, half)}px`;
 
       render(cx, cy);
     };
@@ -109,9 +137,13 @@ export default function CustomCursor() {
     const track = () => {
       const el = target.current;
       if (el) {
-        const rect = el.getBoundingClientRect();
+        const clip = el.closest("[data-cursor-clip]") as HTMLElement | null;
+        const visible = visibleRect(el.getBoundingClientRect(), clip ? clip.getBoundingClientRect() : null);
         const inside =
-          pointer.current.x >= rect.left && pointer.current.x <= rect.right && pointer.current.y >= rect.top && pointer.current.y <= rect.bottom;
+          pointer.current.x >= visible.left &&
+          pointer.current.x <= visible.right &&
+          pointer.current.y >= visible.top &&
+          pointer.current.y <= visible.bottom;
         if (!inside) {
           release(pointer.current.x, pointer.current.y);
         } else {

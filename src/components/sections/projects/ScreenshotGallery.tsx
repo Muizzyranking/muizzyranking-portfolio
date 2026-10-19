@@ -35,8 +35,9 @@ export default function ScreenshotGallery({ screenshots, title }: { screenshots:
 
   return (
     <>
-      {/* Strip — horizontal scroll with snap points */}
-      <div className="-mx-1 flex snap-x snap-mandatory gap-4 overflow-x-auto px-1 pb-3">
+      {/* Strip — horizontal scroll with snap points. data-cursor-clip lets
+          the custom cursor clamp its wrap to the strip's visible bounds. */}
+      <div data-cursor-clip className="-mx-1 flex snap-x snap-mandatory gap-4 overflow-x-auto px-1 pb-3">
         {screenshots.map((src, i) => (
           <button
             key={src}
