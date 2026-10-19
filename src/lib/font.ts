@@ -1,23 +1,18 @@
-import { Fraunces, IBM_Plex_Mono, Poppins } from "next/font/google";
+import { JetBrains_Mono, Space_Grotesk } from "next/font/google";
 
-export const poppins = Poppins({
+export const sans = Space_Grotesk({
   subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-space-grotesk",
   display: "swap",
-  weight: ["400", "500", "600"],
-  variable: "--font-poppins",
 });
 
-export const fraunces = Fraunces({
+export const mono = JetBrains_Mono({
   subsets: ["latin"],
+  weight: ["300", "400", "500", "700"],
+  style: ["normal", "italic"],
+  variable: "--font-jetbrains-mono",
   display: "swap",
-  variable: "--font-fraunces",
 });
 
-export const plexMono = IBM_Plex_Mono({
-  subsets: ["latin"],
-  display: "swap",
-  weight: ["400", "500", "600"],
-  variable: "--font-plex-mono",
-});
-
-export const fontVariables = `${poppins.variable} ${fraunces.variable} ${plexMono.variable}`;
+export const fontVariables = `${sans.variable} ${mono.variable}`;

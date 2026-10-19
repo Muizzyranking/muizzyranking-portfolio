@@ -1,0 +1,59 @@
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import ProjectCaseStudy from "@/components/sections/projects/ProjectCaseStudy";
+import { getProjectBySlugIncludingDrafts } from "@/lib/projects";
+
+type Props = { params: Promise<{ slug: string }> };
+
+export const dynamic = "force-dynamic";
+
+export default async function ProjectPreviewPage({ params }: Props) {
+  const { slug } = await params;
+  const project = getProjectBySlugIncludingDrafts(slug);
+  if (!project) notFound();
+
+  return (
+    <>
+      <div
+        style={{
+          position: "sticky",
+          top: "4rem",
+          zIndex: 50,
+          display: "flex",
+          alignItems: "center",
+          gap: "1rem",
+          padding: "0.7rem 1.25rem",
+          background: "var(--color-bg-elevated)",
+          borderBottom: "1px solid var(--color-border-subtle)",
+          fontFamily: "var(--font-mono)",
+          fontSize: "0.72rem",
+        }}
+      >
+        <Link href={`/editor/projects/${slug}`} style={{ color: "var(--color-accent)", textDecoration: "none" }}>
+          ← back to editor
+        </Link>
+        <span style={{ color: "var(--color-text-muted)", opacity: 0.5 }}>·</span>
+        <span style={{ color: "var(--color-text-muted)" }}>preview · {slug}</span>
+        <div style={{ flex: 1 }} />
+        {project.meta.draft && (
+          <span
+            style={{
+              color: "#6f8c48",
+              border: "1px solid #9fbf6b66",
+              background: "#9fbf6b14",
+              borderRadius: "999px",
+              padding: "0.08rem 0.55rem",
+              textTransform: "uppercase",
+              letterSpacing: "0.1em",
+              fontSize: "0.62rem",
+            }}
+          >
+            draft preview
+          </span>
+        )}
+      </div>
+
+      <ProjectCaseStudy meta={project.meta} parsed={project.parsed} />
+    </>
+  );
+}

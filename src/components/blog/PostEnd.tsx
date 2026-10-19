@@ -20,64 +20,71 @@ export default function PostEnd({
 
   return (
     <>
-      <div className="container-main flex items-center justify-between gap-4 flex-wrap py-6 border-t border-border-subtle">
-        <div className="flex gap-1.5 flex-wrap">
-          {post.categories.map((c) => (
-            <Link
-              key={c.slug}
-              href={`/blog/category/${c.slug}`}
-              className="font-mono text-[0.66rem] text-text-muted border border-border-subtle rounded-sm px-2 py-[0.2rem] transition-colors duration-150 hover:text-text-primary hover:border-accent-dim"
+      {/* share line */}
+      <div className="border-t border-border-subtle">
+        <div className="container-main flex flex-wrap items-center justify-between gap-x-6 gap-y-3 py-5">
+          <p className="flex flex-wrap items-baseline gap-x-4 gap-y-1 font-mono text-[0.7rem] lowercase text-text-muted">
+            filed under
+            {post.categories.length > 0 ? (
+              post.categories.map((c) => (
+                <Link key={c.slug} href={`/blog/category/${c.slug}`} className="text-accent transition-colors duration-150 hover:text-accent-bright">
+                  {c.label}
+                </Link>
+              ))
+            ) : (
+              <span>nothing in particular</span>
+            )}
+          </p>
+          <p className="flex items-center gap-5 font-mono text-[0.7rem] lowercase">
+            <a href={shareX} target="_blank" rel="noopener noreferrer" className="text-text-muted transition-colors duration-150 hover:text-accent">
+              share on x ↗
+            </a>
+            <a
+              href={shareLinkedIn}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-text-muted transition-colors duration-150 hover:text-accent"
             >
-              {c.label}
-            </Link>
-          ))}
-        </div>
-        <div className="flex items-center gap-4 font-mono text-[0.72rem] tracking-[0.08em]">
-          <a
-            href={shareX}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-text-muted uppercase transition-colors duration-150 hover:text-accent"
-          >
-            share on X ↗
-          </a>
-          <a
-            href={shareLinkedIn}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-text-muted uppercase transition-colors duration-150 hover:text-accent"
-          >
-            LinkedIn ↗
-          </a>
+              linkedin ↗
+            </a>
+          </p>
         </div>
       </div>
 
       {related.length > 0 && (
-        <section className="section section-band border-t border-border-subtle">
+        <section className="section section-band">
           <div className="container-main">
-            <div className="flex items-baseline justify-between gap-4 mb-8">
-              <h2 className="font-display font-semibold tracking-[-0.015em] leading-[1.15] text-text-primary text-[clamp(1.4rem,2.6vw,1.9rem)]">
-                Related reading
+            <div className="mb-10 flex items-baseline justify-between gap-6">
+              <h2 className="font-display text-[clamp(1.7rem,3.2vw,2.5rem)] leading-[1.14] tracking-[-0.01em] text-text-primary">
+                Related writings.
               </h2>
-              <Link href="/blog" className="group inline-flex items-center gap-2 font-mono text-[0.75rem] tracking-[0.08em] text-accent uppercase">
-                All writing
-                <span className="transition-transform duration-150 ease-out group-hover:translate-x-1" aria-hidden="true">
+              <Link
+                href="/blog"
+                className="group inline-flex items-center gap-1.5 font-mono text-[0.74rem] lowercase text-text-muted transition-colors duration-150 hover:text-accent"
+              >
+                all writings
+                <span className="transition-transform duration-200 ease-out group-hover:translate-x-1" aria-hidden="true">
                   →
                 </span>
               </Link>
             </div>
             <div className="border-t border-border-subtle">
-              {related.map((p) => (
+              {related.map((p, i) => (
                 <Link
                   key={p.slug}
                   href={`/blog/${p.slug}`}
-                  className="group grid gap-2 py-6 border-b border-border-subtle md:grid-cols-[1fr_auto] md:gap-8 items-baseline transition-colors duration-150"
+                  className="group grid items-baseline gap-x-8 gap-y-1 border-b border-border-subtle py-5 md:grid-cols-[minmax(0,1fr)_auto]"
                 >
-                  <h3 className="font-display font-semibold tracking-[-0.01em] leading-[1.3] text-text-primary text-[1.0625rem] transition-colors duration-150 group-hover:text-accent">
-                    {p.title}
-                  </h3>
-                  <span className="font-mono text-[0.68rem] tracking-[0.08em] text-text-muted md:text-right">
-                    {new Date(p.publishedAtIso).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
+                  <span className="flex min-w-0 items-baseline gap-4">
+                    <span className="font-mono text-[0.68rem] text-accent" aria-hidden="true">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <h3 className="truncate font-display text-[clamp(1.02rem,1.8vw,1.15rem)] leading-[1.35] font-semibold tracking-[-0.015em] text-text-primary transition-colors duration-200 group-hover:text-accent">
+                      {p.title}
+                    </h3>
+                  </span>
+                  <span className="font-mono text-[0.68rem] text-text-muted whitespace-nowrap">
+                    {new Date(p.publishedAtIso).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}
                   </span>
                 </Link>
               ))}
@@ -86,34 +93,32 @@ export default function PostEnd({
         </section>
       )}
 
-      <nav className="container-main py-[clamp(2.5rem,5vw,4rem)] border-t border-border-subtle" aria-label="Post navigation">
-        <div className="flex items-stretch justify-between gap-6 flex-wrap">
+      <nav className="border-t border-border-subtle" aria-label="Post navigation">
+        <div className="container-main grid gap-8 py-12 sm:grid-cols-2">
           {prev ? (
-            <Link
-              href={`/blog/${prev.slug}`}
-              className="group flex-1 min-w-[16rem] rounded-lg border border-border p-6 transition-colors duration-150 hover:border-accent-dim"
-            >
-              <span className="block font-mono text-[0.65rem] uppercase tracking-[0.1em] text-text-muted mb-3">← older</span>
-              <span className="block font-display font-semibold text-[1.05rem] text-text-primary leading-[1.3] group-hover:text-accent transition-colors duration-150">
+            <Link href={`/blog/${prev.slug}`} className="group min-w-0">
+              <span className="mb-2 block font-mono text-[0.68rem] lowercase text-text-muted transition-colors duration-150 group-hover:text-accent">
+                ← older
+              </span>
+              <span className="block font-display text-[1.05rem] font-semibold leading-[1.3] text-text-primary transition-colors duration-200 group-hover:text-accent">
                 {prev.title}
               </span>
             </Link>
           ) : (
-            <span className="flex-1 min-w-[16rem] hidden md:block" />
+            <span aria-hidden="true" />
           )}
 
           {next ? (
-            <Link
-              href={`/blog/${next.slug}`}
-              className="group flex-1 min-w-[16rem] rounded-lg border border-border p-6 text-right transition-colors duration-150 hover:border-accent-dim"
-            >
-              <span className="block font-mono text-[0.65rem] uppercase tracking-[0.1em] text-text-muted mb-3">newer →</span>
-              <span className="block font-display font-semibold text-[1.05rem] text-text-primary leading-[1.3] group-hover:text-accent transition-colors duration-150">
+            <Link href={`/blog/${next.slug}`} className="group min-w-0 sm:text-right">
+              <span className="mb-2 block font-mono text-[0.68rem] lowercase text-text-muted transition-colors duration-150 group-hover:text-accent">
+                newer →
+              </span>
+              <span className="block font-display text-[1.05rem] font-semibold leading-[1.3] text-text-primary transition-colors duration-200 group-hover:text-accent">
                 {next.title}
               </span>
             </Link>
           ) : (
-            <span className="flex-1 min-w-[16rem] hidden md:block" />
+            <span aria-hidden="true" />
           )}
         </div>
       </nav>

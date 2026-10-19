@@ -1,59 +1,42 @@
+@import url("https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&display=swap");
 @import "tailwindcss";
 
 /* ─────────────────────────────────────────────
-   DESIGN TOKENS
-   Token names are stable (editor depends on them).
-   Values switch between light (default) and dark.
-──────────────────────────────────────────────── */
+   DESIGN TOKENS — dark-only. Near-black surfaces,
+   dusty green accent. ───────────────────────── */
 @theme {
-  /* Light palette — warm paper + evergreen */
-  --color-background: #faf8f4;
-  --color-bg-elevated: #f2efe9;
-  --color-surface: #f2efe9;
-  --color-surface-raised: #fffdf9;
-  --color-border: #e3ded4;
-  --color-border-subtle: #ebe7dd;
-  --color-text-primary: #1c1917;
-  --color-text-secondary: #4a463f;
-  --color-text-muted: #625c4a;
-  --color-accent: #55702f;
-  --color-accent-dim: #4c662b;
-  --color-accent-subtle: #edf2e2;
+  --color-background: #080808;
+  --color-bg-elevated: #0f0f0f;
+  --color-surface: #161616;
+  --color-surface-raised: #242424;
+  --color-border: #2f2f2f;
+  --color-border-subtle: #1f1f1f;
+  --color-text-primary: #f5f3ef;
+  --color-text-secondary: #c9c3b8;
+  --color-text-muted: #9a948a;
+  --color-accent: #9fbf6b;
+  --color-accent-bright: #b5d58e;
+  --color-accent-dim: #6f8c48;
+  --color-accent-subtle: #1c2412;
   --color-accent-foreground: #ffffff;
-  --color-success: #2e7d32;
-  --color-error: #c53030;
+  --color-success: #4a7c59;
+  --color-error: #8b3a3a;
 
-  /* Radius */
-  --radius-sm: 6px;
+  /* Radius — quiet, precise. Interactive elements are rectangles. */
+  --radius-sm: 4px;
   --radius-md: 8px;
   --radius-lg: 12px;
   --radius-xl: 16px;
+
+  /* Elevation is carried by borders; shadows only lift floating chrome */
+  --shadow-soft: 0 1px 2px rgb(0 0 0 / 0.4), 0 8px 24px -12px rgb(0 0 0 / 0.5);
+  --shadow-lifted: 0 2px 4px rgb(0 0 0 / 0.4), 0 24px 48px -24px rgb(0 0 0 / 0.6);
 }
 
 @theme inline {
-  /* Fonts — self-hosted via next/font (Poppins / Fraunces / IBM Plex Mono) */
-  --font-sans: var(--font-poppins), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-display: var(--font-fraunces), "Iowan Old Style", Georgia, "Times New Roman", serif;
-  --font-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-}
-
-/* ── Dark palette — near-black base + glowing moss ── */
-[data-theme="dark"] {
-  --color-background: #080808;
-  --color-bg-elevated: #101010;
-  --color-surface: #101010;
-  --color-surface-raised: #181818;
-  --color-border: #222222;
-  --color-border-subtle: #1a1a1a;
-  --color-text-primary: #f5f0ea;
-  --color-text-secondary: #b4ada2;
-  --color-text-muted: #9a9385;
-  --color-accent: #9fbf6b;
-  --color-accent-dim: #6f8c48;
-  --color-accent-subtle: #1c2412;
-  --color-accent-foreground: #1c2412;
-  --color-success: #4ade80;
-  --color-error: #f87171;
+  --font-sans: var(--font-space-grotesk), system-ui, sans-serif;
+  --font-display: "Clash Display", var(--font-space-grotesk), system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), "Fira Code", ui-monospace, monospace;
 }
 
 /* ─────────────────────────────────────────────
@@ -67,14 +50,10 @@
   }
 
   :root {
-    color-scheme: light;
-    --font-sans: var(--font-poppins), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    --font-display: var(--font-fraunces), "Iowan Old Style", Georgia, "Times New Roman", serif;
-    --font-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-  }
-
-  [data-theme="dark"] {
     color-scheme: dark;
+    --font-sans: var(--font-space-grotesk), system-ui, sans-serif;
+    --font-display: "Clash Display", var(--font-space-grotesk), system-ui, sans-serif;
+    --font-mono: var(--font-jetbrains-mono), "Fira Code", ui-monospace, monospace;
   }
 
   html {
@@ -89,6 +68,7 @@
     color: var(--color-text-primary);
     font-family: var(--font-sans);
     font-size: 1.0625rem;
+    font-weight: 400;
     line-height: 1.7;
     -webkit-font-smoothing: antialiased;
     transition:
@@ -105,34 +85,33 @@
     font-family: var(--font-display);
     color: var(--color-text-primary);
     font-weight: 600;
-    line-height: 1.2;
-    letter-spacing: -0.01em;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
     text-wrap: balance;
     scroll-margin-top: 6rem;
   }
 
   h1 {
-    font-size: clamp(2rem, 5vw, 3.25rem);
-    line-height: 1.1;
-    letter-spacing: -0.02em;
-    font-weight: 700;
+    font-size: clamp(2.5rem, 6vw, 3.75rem);
+    line-height: 1.06;
+    letter-spacing: -0.035em;
   }
 
   h2 {
-    font-size: clamp(1.5rem, 3vw, 2.1rem);
-    line-height: 1.15;
-    letter-spacing: -0.015em;
+    font-size: clamp(1.75rem, 3.6vw, 2.5rem);
+    line-height: 1.14;
+    letter-spacing: -0.03em;
   }
 
   h3 {
     font-size: 1.25rem;
     line-height: 1.3;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.02em;
   }
 
   h4 {
-    font-size: 1.0625rem;
-    line-height: 1.35;
+    font-size: 1rem;
+    line-height: 1.4;
   }
 
   p {
@@ -156,12 +135,12 @@
   }
 
   ::selection {
-    background-color: var(--color-accent-subtle);
-    color: var(--color-text-primary);
+    background-color: var(--color-accent);
+    color: var(--color-accent-foreground);
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-accent);
+    outline: 2px solid var(--color-accent-bright);
     outline-offset: 2px;
   }
 
@@ -195,35 +174,388 @@
   padding-inline: clamp(1.25rem, 5vw, 2.5rem);
 }
 
+/* Sections are separated by hairlines, not boxes. Density is low. */
 .section {
-  padding-block: clamp(4rem, 9vw, 7rem);
+  padding-block: clamp(5rem, 10vw, 8rem);
+}
+
+.section-inner {
+  padding-block: clamp(3rem, 7vw, 5rem);
 }
 
 .section-band {
   border-top: 1px solid var(--color-border-subtle);
 }
 
-.section-band--elevated {
-  background: var(--color-bg-elevated);
+.divider {
+  height: 1px;
+  background: var(--color-border-subtle);
+  border: 0;
 }
 
+/* Documentation grid: a quiet left rail (index + label) beside content */
+.doc-grid {
+  display: grid;
+  grid-template-columns: 11rem minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 4rem);
+}
+
+@media (max-width: 860px) {
+  .doc-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Legacy alias — .eyebrow routes to the same treatment */
 .eyebrow {
   font-family: var(--font-mono);
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--color-text-muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.eyebrow::before {
+  content: "";
+  display: inline-block;
+  width: 1.25rem;
+  height: 1px;
+  background: var(--color-accent);
 }
 
 .text-accent {
   color: var(--color-accent);
 }
 
-.divider {
+/* ─────────────────────────────────────────────
+   SHARED UI PRIMITIVES
+──────────────────────────────────────────────── */
+
+/* Buttons: rectangular, border-led, press feedback */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.6rem;
+  border-radius: var(--radius-md);
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    transform 160ms cubic-bezier(0.23, 1, 0.32, 1),
+    background-color 150ms ease,
+    border-color 150ms ease,
+    color 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn--primary {
+  background: var(--color-accent);
+  color: var(--color-accent-foreground);
+}
+
+.btn--primary:hover {
+  background: var(--color-accent-bright);
+  transform: translateY(-1px);
+}
+
+.btn--ghost {
+  background: transparent;
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
+}
+
+.btn--ghost:hover {
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+  transform: translateY(-1px);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.01em;
+  color: var(--color-text-secondary);
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 0.3rem 0.65rem;
+  white-space: nowrap;
+  transition:
+    color 150ms ease,
+    border-color 150ms ease,
+    transform 150ms cubic-bezier(0.23, 1, 0.32, 1),
+    box-shadow 150ms ease;
+}
+
+/* Larger chip used where tech lists are the main content (stack sections) */
+.chip--lg {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  padding: 0.42rem 0.85rem;
+  gap: 0.55rem;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .chip:hover {
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-soft);
+  }
+}
+
+/* Flat surface card — hierarchy comes from the border, not elevation */
+.card {
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+/* Mono metadata row, e.g. "2026 · Django · contract" */
+.meta-line {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+  letter-spacing: 0.02em;
+}
+
+/* Underline that draws in on hover — used on editorial links */
+.link-draw {
+  position: relative;
+}
+
+.link-draw::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
   height: 1px;
-  background: var(--color-border-subtle);
-  border: 0;
+  background: var(--color-accent);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 280ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.link-draw:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* ─────────────────────────────────────────────
+   CUSTOM CURSOR
+──────────────────────────────────────────────── */
+html.custom-cursor-active,
+html.custom-cursor-active a,
+html.custom-cursor-active button,
+html.custom-cursor-active [role="button"],
+html.custom-cursor-active [data-cursor],
+html.custom-cursor-active label,
+html.custom-cursor-active input,
+html.custom-cursor-active textarea,
+html.custom-cursor-active select,
+html.custom-cursor-active svg [data-cursor],
+html.custom-cursor-active svg [role="button"] {
+  cursor: none;
+}
+
+.cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  pointer-events: none;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-accent) 14%, transparent);
+  border: 1.5px solid var(--color-accent);
+  opacity: 0;
+  will-change: transform, width, height;
+  /* No transform transition here on purpose: the spring drives position 1:1.
+     `.cursor-glide` is added temporarily for the dot↔wrap morphs. */
+  transition:
+    width 260ms cubic-bezier(0.23, 1, 0.32, 1),
+    height 260ms cubic-bezier(0.23, 1, 0.32, 1),
+    border-radius 260ms cubic-bezier(0.23, 1, 0.32, 1),
+    background-color 180ms ease,
+    opacity 200ms ease;
+}
+
+.cursor-dot.cursor-glide {
+  transition:
+    transform 300ms cubic-bezier(0.23, 1, 0.32, 1),
+    width 300ms cubic-bezier(0.23, 1, 0.32, 1),
+    height 300ms cubic-bezier(0.23, 1, 0.32, 1),
+    border-radius 300ms cubic-bezier(0.23, 1, 0.32, 1),
+    background-color 180ms ease,
+    opacity 200ms ease;
+}
+
+.cursor-dot.cursor-press {
+  transition:
+    transform 120ms ease-out,
+    background-color 120ms ease;
+}
+
+.cursor-dot.cursor-press[data-wrapped="false"] {
+  background: color-mix(in srgb, var(--color-accent) 26%, transparent);
+}
+
+.cursor-dot[data-visible="true"] {
+  opacity: 1;
+}
+
+.cursor-dot[data-wrapped="true"] {
+  background: color-mix(in srgb, var(--color-accent) 7%, transparent);
+  border-width: 2px;
+}
+
+.cursor-hub {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10001;
+  pointer-events: none;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--color-accent);
+  opacity: 0;
+  will-change: transform;
+  transition: opacity 150ms ease;
+}
+.cursor-hub[data-visible="true"] {
+  opacity: 1;
+}
+
+.cursor-back {
+  position: fixed;
+  top: 0;
+  left: 0;
+  border-radius: 999px;
+  pointer-events: none;
+  z-index: 9997;
+  background-color: var(--color-accent, #6f8c48);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+.cursor-back[data-visible="true"] {
+  opacity: 1;
+}
+
+.cursor-body {
+  position: fixed;
+  top: 0;
+  left: 0;
+  transform-origin: 0 50%;
+  pointer-events: none;
+  z-index: 9997;
+  background-color: var(--color-accent, #6f8c48);
+  opacity: 0;
+}
+
+/* Music control bar equalizer */
+.music-bar {
+  height: 30%;
+  animation: music-bounce 0.9s ease-in-out infinite;
+}
+
+@keyframes music-bounce {
+  0%,
+  100% {
+    height: 25%;
+  }
+  50% {
+    height: 100%;
+  }
+}
+
+/* Slow vinyl-style spin on the navbar music icon while playing minimized */
+.music-spin {
+  animation: music-rotate 3.5s linear infinite;
+}
+
+@keyframes music-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Volume slider in the music control bar */
+.music-volume {
+  appearance: none;
+  -webkit-appearance: none;
+  height: 4px;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--color-accent) 30%, var(--color-border));
+  outline-offset: 4px;
+  cursor: pointer;
+}
+
+.music-volume::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: var(--color-accent);
+  border: none;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 0.25);
+  transition: transform 150ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.music-volume::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+.music-volume::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: var(--color-accent);
+  border: none;
+}
+
+/* Prose links — wrap-safe animated underline (retracts on hover) */
+.post-link {
+  color: var(--color-accent);
+  font-weight: 500;
+  text-decoration: none;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 100% 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition:
+    background-size 220ms cubic-bezier(0.23, 1, 0.32, 1),
+    color 150ms ease;
+}
+
+.post-link:hover {
+  background-size: 0% 1px;
+  background-position: 100% 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor-dot {
+    display: none;
+  }
 }
 
 /* ─────────────────────────────────────────────
@@ -241,6 +573,13 @@
   border-bottom-color: var(--color-border-subtle);
   backdrop-filter: blur(14px) saturate(180%);
   -webkit-backdrop-filter: blur(14px) saturate(180%);
+}
+
+/* ─────────────────────────────────────────────
+   PORTRAIT TREATMENT
+──────────────────────────────────────────────── */
+.portrait-frame img {
+  filter: none;
 }
 
 /* ─────────────────────────────────────────────
@@ -299,7 +638,7 @@
   border-radius: var(--radius-sm);
   color: var(--color-text-muted);
   font-family: var(--font-mono);
-  font-size: 0.68rem;
+  font-size: 0.7rem;
   letter-spacing: 0.08em;
   cursor: pointer;
   opacity: 0;

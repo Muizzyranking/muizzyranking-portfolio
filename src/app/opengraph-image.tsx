@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "Muiz Oyebowale · Backend Engineer";
+export const alt = "Muiz Oyebowale · Software engineer";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -11,24 +11,37 @@ export default function OGImage() {
       style={{
         width: "1200px",
         height: "630px",
-        background: "#faf8f4",
+        background: "#080808",
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
         padding: "72px 84px",
-        color: "#1c1917",
+        color: "#f5f3ef",
         position: "relative",
       }}
     >
       <div
         style={{
           position: "absolute",
-          top: "84px",
-          right: "84px",
-          width: "14px",
-          height: "14px",
-          borderRadius: "999px",
-          background: "#55702f",
+          top: "48px",
+          left: "48px",
+          width: "44px",
+          height: "44px",
+          borderTop: "3px solid #9fbf6b",
+          borderLeft: "3px solid #9fbf6b",
+          display: "flex",
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          bottom: "48px",
+          right: "48px",
+          width: "44px",
+          height: "44px",
+          borderBottom: "3px solid #9fbf6b",
+          borderRight: "3px solid #9fbf6b",
+          display: "flex",
         }}
       />
 
@@ -41,12 +54,12 @@ export default function OGImage() {
           fontSize: "22px",
           letterSpacing: "0.18em",
           textTransform: "uppercase",
-          color: "#625c4a",
+          color: "#9a948a",
         }}
       >
-        <span>muizzyranking.me</span>
-        <span style={{ width: "48px", height: "1px", background: "#e3ded4" }} />
-        <span style={{ color: "#55702f" }}>backend engineer</span>
+        <span style={{ color: "#9fbf6b" }}>muizzyranking.me</span>
+        <span style={{ width: "48px", height: "1px", background: "#2f2f2f" }} />
+        <span>software engineer</span>
       </div>
 
       <div
@@ -63,21 +76,22 @@ export default function OGImage() {
             letterSpacing: "-0.02em",
             lineHeight: 1.05,
             fontSize: "104px",
-            color: "#1c1917",
+            color: "#f5f3ef",
+            display: "flex",
           }}
         >
-          Muiz Oyebowale
+          Muiz&nbsp;<span style={{ fontStyle: "italic", color: "#9fbf6b" }}>Oyebowale</span>
         </div>
         <div
           style={{
             fontSize: "30px",
             lineHeight: 1.5,
-            color: "#4a463f",
-            maxWidth: "800px",
+            color: "#c9c3b8",
+            maxWidth: "820px",
             fontFamily: "sans-serif",
           }}
         >
-          Designs and builds APIs, data pipelines, and distributed systems in Python and Django.
+          I build the part of the software nobody sees — and that&apos;s exactly how I like it.
         </div>
       </div>
 
@@ -89,12 +103,12 @@ export default function OGImage() {
           fontFamily: "monospace",
           fontSize: "20px",
           letterSpacing: "0.1em",
-          color: "#625c4a",
+          color: "#9a948a",
         }}
       >
         <span>projects · writing · about</span>
         <span style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          <span style={{ width: "8px", height: "8px", borderRadius: "999px", background: "#55702f" }} />
+          <span style={{ width: "8px", height: "8px", borderRadius: "999px", background: "#9fbf6b" }} />
           muizzyranking.me
         </span>
       </div>

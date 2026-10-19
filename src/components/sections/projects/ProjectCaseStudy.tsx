@@ -1,285 +1,340 @@
-import Image from "next/image";
 import Link from "next/link";
-import ProjectCard from "@/components/sections/projects/ProjectCard";
+import { CaseFade, CaseInView, CaseItem, CaseRule, CaseSidebar, CaseStagger } from "@/components/sections/projects/CaseMotion";
 import ProjectMdx from "@/components/sections/projects/ProjectMdx";
-import ProjectSection from "@/components/sections/projects/ProjectSection";
+import ScreenshotGallery from "@/components/sections/projects/ScreenshotGallery";
 import type { Project, ProjectContent } from "@/types";
 
-const STATUS_LABEL: Record<Project["status"], { label: string; dot: string }> = {
-  complete: { label: "complete", dot: "bg-success" },
-  "in-progress": { label: "in progress", dot: "bg-accent" },
-  archived: { label: "archived", dot: "bg-text-muted" },
-};
-
-const iconProps = {
-  width: 16,
-  height: 16,
-  viewBox: "0 0 24 24",
-  fill: "none",
-  stroke: "currentColor",
-  strokeWidth: 1.75,
-  strokeLinecap: "round",
-  strokeLinejoin: "round",
-} as const;
-
-const ICONS: Record<"overview" | "challenges" | "screenshots" | "outcomes" | "lessons", React.ReactNode> = {
-  overview: (
-    <svg {...iconProps} aria-hidden="true">
-      <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z" />
-      <circle cx="12" cy="12" r="3" />
-    </svg>
-  ),
-  challenges: (
-    <svg {...iconProps} aria-hidden="true">
-      <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
-    </svg>
-  ),
-  screenshots: (
-    <svg {...iconProps} aria-hidden="true">
-      <rect x="3" y="3" width="18" height="18" rx="2" />
-      <circle cx="8.5" cy="8.5" r="1.5" />
-      <path d="m21 15-5-5L5 21" />
-    </svg>
-  ),
-  outcomes: (
-    <svg {...iconProps} aria-hidden="true">
-      <polyline points="22 7 13.5 15.5 8.5 10.5 2 17" />
-      <polyline points="16 7 22 7 22 13" />
-    </svg>
-  ),
-  lessons: (
-    <svg {...iconProps} aria-hidden="true">
-      <path d="M9 18h6" />
-      <path d="M10 22h4" />
-      <path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.3h6c0-1 .4-1.8 1-2.3A7 7 0 0 0 12 2Z" />
-    </svg>
-  ),
+const STATUS_LABEL: Record<Project["status"], { label: string; color: string; border: string }> = {
+  complete: {
+    label: "complete",
+    color: "var(--color-success)",
+    border: "var(--color-accent-dim)",
+  },
+  "in-progress": {
+    label: "in progress",
+    color: "var(--color-accent)",
+    border: "var(--color-accent-dim)",
+  },
+  archived: {
+    label: "archived",
+    color: "var(--color-text-muted)",
+    border: "var(--color-border)",
+  },
 };
 
 export default function ProjectCaseStudy({
   meta,
   parsed,
-  related,
   prev,
   next,
 }: {
   meta: Project;
   parsed: ProjectContent;
-  related: Project[];
   prev?: Project | null;
   next?: Project | null;
 }) {
-  const status = STATUS_LABEL[meta.status];
+  const s = STATUS_LABEL[meta.status];
   const screenshots = meta.screenshots ?? [];
-  const hasChallenges = parsed.challenges.length > 0;
-
-  let sectionIndex = 1;
-  const nextIndex = () => String(sectionIndex++).padStart(2, "0");
 
   return (
     <>
-      <header className="container-main pt-[clamp(5rem,10vw,8rem)] pb-[clamp(2.5rem,5vw,4rem)] border-b border-border-subtle">
-        <Link
-          href="/projects"
-          className="group inline-flex items-center gap-2 font-mono text-[0.72rem] tracking-[0.08em] text-text-muted uppercase mb-8 hover:text-text-primary"
-        >
-          <span className="transition-transform duration-150 ease-out group-hover:-translate-x-1" aria-hidden="true">
-            ←
-          </span>
-          all projects
-        </Link>
+      {/* ── Header — breadcrumb, italic title, faded year ── */}
+      <div className="relative pt-[clamp(6rem,14vw,10rem)] pb-[clamp(3rem,6vw,5rem)] overflow-hidden">
+        <CaseRule
+          top="clamp(6rem,14vw,10rem)"
+          style={{
+            height: 1,
+            background: "linear-gradient(to right, var(--color-accent), var(--color-border), transparent)",
+          }}
+          className="left-[clamp(1.25rem,5vw,2.5rem)] right-[clamp(1.25rem,5vw,2.5rem)]"
+        />
 
-        <h1 className="font-display font-bold tracking-[-0.02em] leading-[1.06] text-[clamp(2.1rem,5vw,3.5rem)] text-text-primary mb-5 max-w-[24ch]">
-          {meta.title}
-        </h1>
-
-        <p className="text-text-secondary text-[clamp(1rem,1.8vw,1.15rem)] leading-[1.65] max-w-[62ch] mb-8">{meta.summary}</p>
-
-        <div className="flex flex-wrap items-center gap-x-6 gap-y-3 font-mono text-[0.72rem] tracking-[0.06em] text-text-muted">
-          <span className="flex items-center gap-2">
-            <span className={`inline-block size-1.5 rounded-full ${status.dot}`} aria-hidden="true" />
-            {status.label}
-          </span>
-          <span aria-hidden="true" className="opacity-40">
-            ·
-          </span>
-          <span>{meta.year}</span>
-          {meta.role && (
-            <>
-              <span aria-hidden="true" className="opacity-40">
-                ·
-              </span>
-              <span>{meta.role}</span>
-            </>
-          )}
-          <span aria-hidden="true" className="hidden sm:inline opacity-40">
-            ·
-          </span>
-          <span className="hidden sm:flex items-center gap-4 ml-auto">
-            {meta.live && (
-              <a href={meta.live} target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors duration-150">
-                live site ↗
-              </a>
-            )}
-            {meta.repo && (
-              <a href={meta.repo} target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors duration-150">
-                source ↗
-              </a>
-            )}
-          </span>
-        </div>
-
-        <div className="flex flex-wrap gap-1.5 mt-6">
-          {meta.stack.map((s) => (
-            <span key={s} className="font-mono text-[0.68rem] text-text-muted bg-surface border border-border-subtle rounded-sm px-2 py-[0.2rem]">
-              {s}
-            </span>
-          ))}
-        </div>
-
-        <div className="flex items-center gap-4 sm:hidden mt-6">
-          {meta.live && (
-            <a href={meta.live} target="_blank" rel="noopener noreferrer" className="text-accent font-mono text-[0.72rem] hover:text-accent-dim">
-              live site ↗
-            </a>
-          )}
-          {meta.repo && (
-            <a href={meta.repo} target="_blank" rel="noopener noreferrer" className="text-accent font-mono text-[0.72rem] hover:text-accent-dim">
-              source ↗
-            </a>
-          )}
-        </div>
-      </header>
-
-      <div className="py-[clamp(2.5rem,5vw,4rem)] pb-[clamp(3.5rem,7vw,6rem)]">
-        <div className="container-main">
-          <ProjectSection index={nextIndex()} label="Overview" icon={ICONS.overview}>
-            <div className="rounded-lg border border-border bg-bg-elevated px-[clamp(1.25rem,3vw,2.75rem)] py-[clamp(1.5rem,3.5vw,3rem)]">
-              <ProjectMdx source={parsed.overview} />
+        <div className="container-main relative z-[2]">
+          {/* Breadcrumb */}
+          <CaseFade delay={0}>
+            <div className="mb-10 flex items-center gap-2 font-mono text-[0.68rem] tracking-[0.1em] text-text-muted">
+              <Link href="/projects" className="text-accent no-underline transition-opacity duration-150 hover:opacity-65">
+                ~/projects
+              </Link>
+              <span className="opacity-40">/</span>
+              <span>{meta.slug}</span>
             </div>
-          </ProjectSection>
+          </CaseFade>
 
-          {screenshots.length > 0 && (
-            <ProjectSection index={nextIndex()} label="Screenshots" icon={ICONS.screenshots}>
-              <div className="grid gap-6 overflow-x-clip md:grid-cols-2">
-                {screenshots.map((src, i) => (
-                  <figure
-                    key={src}
-                    className="relative overflow-hidden rounded-lg border border-border bg-bg-elevated"
-                    style={{ aspectRatio: "16 / 10" }}
+          {/* Title + year */}
+          <div className="grid grid-cols-1 items-end gap-8 lg:grid-cols-[1fr_auto]">
+            <CaseFade delay={0.08} y={14}>
+              <div>
+                <h1 className="mb-5 font-display text-[clamp(2.2rem,5.5vw,4rem)] leading-none font-bold tracking-[-0.045em] text-text-primary italic">
+                  {meta.title}
+                </h1>
+              </div>
+            </CaseFade>
+
+            {/* Giant faded year badge */}
+            <CaseFade delay={0.4} y={0}>
+              <div
+                className="hidden shrink-0 font-mono text-[clamp(2rem,4vw,3rem)] leading-none font-bold tracking-[-0.04em] text-accent lg:block"
+                style={{ opacity: 0.15 }}
+              >
+                {meta.year}
+              </div>
+            </CaseFade>
+          </div>
+
+          {/* Status + tags + links row */}
+          <CaseFade delay={0.26} y={8}>
+            <div className="mt-8 flex flex-wrap items-center gap-4 border-t border-border-subtle pt-6">
+              <span
+                className="flex items-center gap-[0.35rem] rounded-sm px-[0.55rem] py-[0.18rem] font-mono text-[0.62rem] uppercase tracking-[0.1em]"
+                style={{ color: s.color, border: `1px solid ${s.border}` }}
+              >
+                <span className="h-1 w-1 rounded-full" style={{ background: s.color }} />
+                {s.label}
+              </span>
+
+              <span aria-hidden="true" className="h-4 w-px bg-border" />
+
+              <div className="flex flex-wrap gap-[0.35rem]">
+                {meta.stack.map((tag) => (
+                  <span
+                    key={tag}
+                    className="rounded-sm border border-border-subtle bg-surface px-2 py-[0.2rem] font-mono text-[0.67rem] text-text-muted"
                   >
-                    <Image
-                      src={src}
-                      alt={`${meta.title} screenshot ${i + 1}`}
-                      fill
-                      sizes="(max-width: 768px) 100vw, 50vw"
-                      style={{ objectFit: "cover" }}
-                      quality={90}
-                    />
-                  </figure>
+                    {tag}
+                  </span>
                 ))}
               </div>
-            </ProjectSection>
-          )}
 
-          {hasChallenges && (
-            <ProjectSection index={nextIndex()} label="Engineering challenges" icon={ICONS.challenges}>
-              <div className="grid gap-4 overflow-x-clip md:grid-cols-2">
-                {parsed.challenges.map((challenge, i) => (
-                  <div key={challenge.title} className="flex min-w-0 flex-col rounded-lg border border-border bg-bg-elevated p-7">
-                    <span className="font-mono text-[0.7rem] tracking-[0.08em] text-accent mb-4">{String(i + 1).padStart(2, "0")}</span>
-                    <h3 className="font-display font-semibold tracking-[-0.01em] leading-[1.3] text-text-primary text-[1.125rem] mb-3">
-                      {challenge.title}
-                    </h3>
-                    <div className="project-challenge-body">
-                      <ProjectMdx source={challenge.body} />
-                    </div>
-                  </div>
-                ))}
+              <div className="ml-auto flex items-center gap-3">
+                {meta.live && (
+                  <a
+                    href={meta.live}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-[0.4rem] rounded-sm bg-accent px-4 py-[0.55rem] text-[0.78rem] font-semibold tracking-[0.03em] text-accent-foreground no-underline transition-opacity duration-150 hover:opacity-85"
+                  >
+                    ↗ live
+                  </a>
+                )}
+                {meta.repo && (
+                  <a
+                    href={meta.repo}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-[0.4rem] rounded-sm border border-border px-4 py-[0.55rem] font-mono text-[0.78rem] tracking-[0.03em] text-text-secondary no-underline transition-[border-color,color] duration-150 hover:border-accent-dim hover:text-text-primary"
+                  >
+                    ⌥ source
+                  </a>
+                )}
               </div>
-            </ProjectSection>
-          )}
-
-          {parsed.outcomes.trim() && (
-            <ProjectSection index={nextIndex()} label="Outcomes" icon={ICONS.outcomes}>
-              <ProjectMdx source={parsed.outcomes} />
-            </ProjectSection>
-          )}
-
-          {parsed.learned.trim() && (
-            <ProjectSection index={nextIndex()} label="Lessons learned" icon={ICONS.lessons}>
-              <ProjectMdx source={parsed.learned} />
-            </ProjectSection>
-          )}
+            </div>
+          </CaseFade>
         </div>
       </div>
 
-      {related.length > 0 && (
-        <section className="section section-band border-t border-border-subtle">
-          <div className="container-main">
-            <div className="flex items-baseline justify-between gap-4 mb-8">
-              <h2 className="font-display font-semibold tracking-[-0.015em] leading-[1.15] text-text-primary text-[clamp(1.4rem,2.6vw,1.9rem)]">
-                Related projects
-              </h2>
-              <Link
-                href="/projects"
-                className="group inline-flex items-center gap-2 font-mono text-[0.75rem] tracking-[0.08em] text-accent uppercase"
-              >
-                All projects
-                <span className="transition-transform duration-150 ease-out group-hover:translate-x-1" aria-hidden="true">
-                  →
-                </span>
-              </Link>
-            </div>
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 overflow-x-clip">
-              {related.map((project) => (
-                <ProjectCard key={project.slug} project={project} />
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
+      {/* ── Body — content + sticky sidebar ── */}
+      <div className="py-[clamp(3.5rem,7vw,6rem)]">
+        <div className="container-main grid grid-cols-1 items-start gap-y-14 lg:grid-cols-[minmax(0,1fr)_16rem] lg:gap-x-20">
+          {/* Left — editorial content */}
+          <div className="min-w-0">
+            {/* Overview */}
+            <CaseFade delay={0.15} y={16} className="mb-16">
+              <section>
+                <SectionLabel label="Overview" />
+                <div className="case-body overview-body flex flex-col">
+                  <ProjectMdx source={parsed.overview} />
+                </div>
+              </section>
+            </CaseFade>
 
+            {/* Screenshots */}
+            {screenshots.length > 0 && (
+              <section className="mb-16">
+                <SectionLabel label="Screenshots" />
+                <ScreenshotGallery screenshots={screenshots} title={meta.title} />
+              </section>
+            )}
+
+            {/* Challenges */}
+            {parsed.challenges.length > 0 && (
+              <section className="mb-16">
+                <CaseInView>
+                  <SectionLabel label="Challenges" />
+                </CaseInView>
+
+                <CaseStagger className="flex flex-col gap-6">
+                  {parsed.challenges.map((challenge, i) => (
+                    <CaseItem key={challenge.title} className="challenge-card relative rounded-lg border border-border bg-bg-elevated px-7 py-6">
+                      <span aria-hidden="true" className="absolute top-6 right-6 font-mono text-[0.65rem] tracking-[0.1em] text-accent opacity-50">
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+
+                      <h3 className="mb-3 pr-8 font-display text-base leading-[1.3] font-semibold tracking-[-0.02em] text-text-primary">
+                        {challenge.title}
+                      </h3>
+                      <div className="challenge-body">
+                        <ProjectMdx source={challenge.body} />
+                      </div>
+                    </CaseItem>
+                  ))}
+                </CaseStagger>
+              </section>
+            )}
+
+            {/* Outcomes */}
+            {parsed.outcomes.trim() && (
+              <section className="mb-16">
+                <CaseInView>
+                  <SectionLabel label="Outcomes" />
+                  <div className="case-body">
+                    <ProjectMdx source={parsed.outcomes} />
+                  </div>
+                </CaseInView>
+              </section>
+            )}
+
+            {/* What I learned — the accent panel */}
+            {parsed.learned.trim() && (
+              <CaseInView>
+                <section>
+                  <SectionLabel label="What I learned" />
+                  <div className="rounded-lg border border-accent-dim bg-accent-subtle p-8">
+                    <div className="case-body learned-body">
+                      <ProjectMdx source={parsed.learned} />
+                    </div>
+                  </div>
+                </section>
+              </CaseInView>
+            )}
+          </div>
+
+          {/* Right — sticky sidebar (definition sheet) */}
+          <aside className="detail-sidebar static max-lg:order-first lg:sticky lg:top-24" aria-label="Project details">
+            <CaseSidebar>
+              <div className="mb-4 overflow-hidden rounded-lg border border-border bg-surface">
+                {[
+                  { label: "Year", value: meta.year },
+                  { label: "Status", value: s.label, accent: true },
+                  { label: "Featured", value: meta.featured ? "Yes" : "No" },
+                ].map(({ label, value, accent }) => (
+                  <div key={label} className="flex items-center justify-between border-b border-border-subtle px-5 py-[0.875rem]">
+                    <span className="font-mono text-[0.65rem] uppercase tracking-[0.12em] text-text-muted">{label}</span>
+                    <span className="font-mono text-[0.75rem] tracking-[0.04em]" style={{ color: accent ? s.color : "var(--color-text-secondary)" }}>
+                      {value}
+                    </span>
+                  </div>
+                ))}
+
+                <div className="px-5 py-4">
+                  <p className="mb-3 font-mono text-[0.65rem] uppercase tracking-[0.12em] text-text-muted">Stack</p>
+                  <div className="flex flex-wrap gap-[0.35rem]">
+                    {meta.stack.map((tag) => (
+                      <span
+                        key={tag}
+                        className="rounded-sm border border-border-subtle bg-background px-2 py-[0.2rem] font-mono text-[0.68rem] text-text-muted"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-2">
+                {meta.live && (
+                  <a
+                    href={meta.live}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center gap-2 rounded-md bg-accent py-3 font-mono text-[0.75rem] font-semibold tracking-[0.08em] text-accent-foreground no-underline transition-opacity duration-150 hover:opacity-85"
+                  >
+                    ↗ View live
+                  </a>
+                )}
+                {meta.repo && (
+                  <a
+                    href={meta.repo}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center gap-2 rounded-md border border-border bg-transparent py-3 font-mono text-[0.75rem] tracking-[0.08em] text-text-secondary no-underline transition-[border-color,color] duration-150 hover:border-accent-dim hover:text-text-primary"
+                  >
+                    ⌥ View source
+                  </a>
+                )}
+                <Link
+                  href="/projects"
+                  className="mt-1 flex justify-center rounded-md py-3 font-mono text-[0.72rem] tracking-[0.08em] text-text-muted no-underline transition-colors duration-150 hover:text-accent"
+                >
+                  ← all projects
+                </Link>
+              </div>
+            </CaseSidebar>
+          </aside>
+        </div>
+      </div>
+
+      {/* Prev / next */}
       {(prev || next) && (
-        <nav className="container-main py-[clamp(2.5rem,5vw,4rem)] border-t border-border-subtle" aria-label="Project navigation">
-          <div className="flex items-stretch justify-between gap-6 flex-wrap">
+        <nav className="border-t border-border-subtle" aria-label="Project navigation">
+          <div className="container-main grid gap-8 py-12 sm:grid-cols-2">
             {prev ? (
-              <Link
-                href={`/projects/${prev.slug}`}
-                className="group flex-1 min-w-[16rem] rounded-lg border border-border p-6 transition-colors duration-150 hover:border-accent-dim"
-              >
-                <span className="block font-mono text-[0.65rem] uppercase tracking-[0.1em] text-text-muted mb-3">← previous</span>
-                <span className="block font-display font-semibold text-[1.05rem] text-text-primary leading-[1.3] group-hover:text-accent transition-colors duration-150">
+              <Link href={`/projects/${prev.slug}`} className="group min-w-0">
+                <span className="mb-2 block font-mono text-[0.68rem] lowercase text-text-muted transition-colors duration-150 group-hover:text-accent">
+                  ← previous
+                </span>
+                <span className="block font-display text-[1.05rem] leading-[1.3] font-semibold text-text-primary italic transition-colors duration-200 group-hover:text-accent">
                   {prev.title}
                 </span>
               </Link>
             ) : (
-              <span className="flex-1 min-w-[16rem] hidden md:block" />
+              <span aria-hidden="true" />
             )}
 
             {next ? (
-              <Link
-                href={`/projects/${next.slug}`}
-                className="group flex-1 min-w-[16rem] rounded-lg border border-border p-6 text-right transition-colors duration-150 hover:border-accent-dim"
-              >
-                <span className="block font-mono text-[0.65rem] uppercase tracking-[0.1em] text-text-muted mb-3">next →</span>
-                <span className="block font-display font-semibold text-[1.05rem] text-text-primary leading-[1.3] group-hover:text-accent transition-colors duration-150">
+              <Link href={`/projects/${next.slug}`} className="group min-w-0 sm:text-right">
+                <span className="mb-2 block font-mono text-[0.68rem] lowercase text-text-muted transition-colors duration-150 group-hover:text-accent">
+                  next →
+                </span>
+                <span className="block font-display text-[1.05rem] leading-[1.3] font-semibold text-text-primary italic transition-colors duration-200 group-hover:text-accent">
                   {next.title}
                 </span>
               </Link>
             ) : (
-              <span className="flex-1 min-w-[16rem] hidden md:block" />
+              <span aria-hidden="true" />
             )}
           </div>
         </nav>
       )}
 
       <style>{`
-        .project-challenge-body > div > *:last-child,
-        .project-challenge-body p:last-child {
+        .case-body p:last-child,
+        .case-body ul:last-child,
+        .case-body ol:last-child {
+          margin-bottom: 0;
+        }
+        .overview-body p:first-of-type {
+          font-weight: 500;
+          color: var(--color-text-primary);
+        }
+        .learned-body p:first-of-type {
+          font-style: italic;
+        }
+        .challenge-body p {
+          font-size: 0.88rem;
+          line-height: 1.78;
           margin-bottom: 0;
         }
       `}</style>
     </>
+  );
+}
+
+function SectionLabel({ label }: { label: string }) {
+  return (
+    <div className="mb-6 flex items-center gap-3">
+      <h2 style={{ fontSize: "1.5rem" }}>{label}</h2>
+      <div className="h-px flex-1" style={{ background: "linear-gradient(to right, var(--color-accent), transparent)" }} />
+    </div>
   );
 }

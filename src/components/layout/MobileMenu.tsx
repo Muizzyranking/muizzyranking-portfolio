@@ -15,26 +15,25 @@ export default function MobileMenu({ open, onClose }: { open: boolean; onClose: 
       inert={!open ? true : undefined}
     >
       <nav className="container-main flex flex-col py-3" aria-label="Mobile navigation">
-        {site.nav.map((item) => (
+        {site.nav.map((item, i) => (
           <Link
             key={item.href}
             href={item.href}
             onClick={onClose}
-            className="py-3 text-[0.95rem] font-semibold lowercase text-text-secondary transition-colors duration-150 border-b border-border-subtle last:border-b-0 hover:text-text-primary"
+            className="flex items-baseline gap-3 border-b border-border-subtle py-3.5 last:border-b-0"
           >
-            {item.label}
+            <span className="font-mono text-[0.68rem] text-accent" aria-hidden="true">
+              0{i + 1}
+            </span>
+            <span className="font-mono text-[0.92rem] lowercase text-text-primary">{item.label}</span>
           </Link>
         ))}
-        <a
-          href={site.resume}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={onClose}
-          className="py-3 text-[0.95rem] font-medium text-text-primary transition-colors duration-150"
-        >
-          Résumé
-          <span className="ml-1 text-accent" aria-hidden="true">
-            ↗
+        <a href={site.resume} target="_blank" rel="noopener noreferrer" onClick={onClose} className="flex items-baseline gap-3 py-3.5">
+          <span className="font-mono text-[0.68rem] text-accent" aria-hidden="true">
+            05
+          </span>
+          <span className="font-mono text-[0.92rem] lowercase text-text-primary">
+            résumé<span className="ml-1 text-text-muted">↗</span>
           </span>
         </a>
       </nav>

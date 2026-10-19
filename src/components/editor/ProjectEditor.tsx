@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ChipInput from "./ChipInput";
 import MarkdownField from "./MarkdownField";
 import TextField from "./TextField";
@@ -105,6 +105,26 @@ export default function ProjectEditor({ initial }: { initial: ProjectEditorIniti
       setBusy(null);
     }
   }
+
+  // ⌘S / Ctrl+S → save draft. Ref is refreshed after every render so the
+  // handler always calls the latest `persist` closure with current field state.
+  const saveNow = useRef<() => void>(() => {});
+  useEffect(() => {
+    saveNow.current = () => {
+      if (busy === null) void persist(true, "stay");
+    };
+  });
+
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "s") {
+        e.preventDefault();
+        saveNow.current();
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
 
   function updateChallenge(i: number, patch: Partial<ChallengeEntry>) {
     setChallenges((arr) => arr.map((c, idx) => (idx === i ? { ...c, ...patch } : c)));

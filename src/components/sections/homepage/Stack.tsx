@@ -2,118 +2,69 @@
 
 import { m, useInView, useReducedMotion } from "framer-motion";
 import { useRef } from "react";
-import SectionHeader from "@/components/sections/homepage/SectionHeader";
+import DocSection from "@/components/ui/DocSection";
+import { GenericTechGlyph, TECH_ICONS, TechGlyph } from "@/components/ui/icons";
 import { EASE, SCROLL_REVEAL } from "@/lib/motion";
+import { STACK_GROUPS } from "@/lib/stack";
 
-type Tier = "production" | "comfortable" | "exploring";
-
-type Group = {
-  label: string;
-  blurb: string;
-  tags: { name: string; tier: Tier }[];
-};
-
-const GROUPS: Group[] = [
-  {
-    label: "Languages",
-    blurb: "What I reach for first. Rust is the one I'm currently learning to argue with.",
-    tags: [
-      { name: "Python", tier: "production" },
-      { name: "TypeScript", tier: "production" },
-      { name: "JavaScript", tier: "comfortable" },
-      { name: "Bash", tier: "comfortable" },
-      { name: "C", tier: "comfortable" },
-      { name: "Lua", tier: "comfortable" },
-      { name: "Go", tier: "exploring" },
-      { name: "Rust", tier: "exploring" },
-    ],
-  },
-  {
-    label: "Frameworks",
-    blurb: "Mostly Django and FastAPI on the backend. Next.js on the frontend when one is involved.",
-    tags: [
-      { name: "Django", tier: "production" },
-      { name: "FastAPI", tier: "production" },
-      { name: "Django Ninja", tier: "production" },
-      { name: "Django REST Framework", tier: "comfortable" },
-      { name: "Flask", tier: "comfortable" },
-      { name: "React", tier: "comfortable" },
-      { name: "Next.js", tier: "production" },
-    ],
-  },
-  {
-    label: "Infrastructure",
-    blurb: "PostgreSQL, Redis, and Docker do most of the lifting on a fresh server.",
-    tags: [
-      { name: "PostgreSQL", tier: "production" },
-      { name: "Redis", tier: "production" },
-      { name: "Docker", tier: "production" },
-      { name: "Celery", tier: "comfortable" },
-      { name: "Nginx", tier: "comfortable" },
-      { name: "GitHub Actions", tier: "comfortable" },
-      { name: "Linux", tier: "production" },
-    ],
-  },
-];
-
-const TIER_STYLES: Record<Tier, string> = {
-  production: "bg-accent-subtle border-accent-dim text-text-primary",
-  comfortable: "bg-bg-elevated border-border text-text-secondary",
-  exploring: "border-dashed border-border bg-transparent text-text-muted",
-};
-
-const TIER_DOT: Record<Tier, string> = {
-  production: "bg-accent",
-  comfortable: "border border-text-muted",
-  exploring: "border border-text-muted/50 rounded-full",
+// ─── Left column copy — edit me ───
+const SIDE = {
+  title: "The tools I've worked with.",
+  body: "A starting point, not the boundary. The problem determines the tool, and these are the ones I've used to solve problems so far.",
 };
 
 export default function Stack() {
-  const ref = useRef<HTMLElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, SCROLL_REVEAL);
   const reduce = useReducedMotion();
   const from = reduce ? {} : { y: 12 };
 
   return (
-    <section ref={ref} className="section section-band">
-      <div className="container-main">
-        <SectionHeader eyebrow="Stack" title="The tools I use." />
-
+    <DocSection title="The working set.">
+      <div ref={ref} className="grid gap-x-16 gap-y-12 lg:grid-cols-[minmax(15rem,21rem)_minmax(0,1fr)]">
+        {/* Left column — shorter, so it pins while the lists scroll */}
         <m.div
           initial={{ opacity: 0, ...from }}
           animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, ...from }}
-          transition={{ duration: 0.45, ease: EASE, delay: 0.1 }}
-          className="grid gap-4 md:grid-cols-3"
+          transition={{ duration: 0.5, ease: EASE }}
+          className="self-start lg:sticky lg:top-28"
         >
-          {GROUPS.map((group) => (
-            <div key={group.label} className="rounded-lg bg-bg-elevated border border-border p-7 flex flex-col">
-              <p className="font-mono text-[0.65rem] uppercase tracking-[0.14em] text-accent mb-2">{group.label}</p>
-              <p className="text-text-muted text-[0.85rem] leading-[1.6] mb-6">{group.blurb}</p>
-              <div className="flex flex-wrap gap-1.5 mt-auto">
-                {group.tags.map((tag) => (
-                  <span key={tag.name} className={`font-mono text-[0.72rem] border rounded-sm px-2 py-[0.25rem] ${TIER_STYLES[tag.tier]}`}>
-                    {tag.name}
-                  </span>
-                ))}
-              </div>
-            </div>
-          ))}
+          <h3 className="font-display text-[clamp(1.4rem,2.6vw,1.9rem)] leading-[1.25] tracking-[-0.02em] font-semibold text-text-primary">
+            {SIDE.title}
+          </h3>
+          <p className="mt-3 max-w-[42ch] text-[0.96rem] leading-[1.7] text-text-secondary">{SIDE.body}</p>
         </m.div>
 
-        <m.div
-          initial={{ opacity: 0, ...from }}
-          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, ...from }}
-          transition={{ duration: 0.45, ease: EASE, delay: 0.16 }}
-          className="flex items-center gap-6 flex-wrap mt-8 font-mono text-[0.62rem] uppercase tracking-[0.12em] text-text-muted"
-        >
-          {(["production", "comfortable", "exploring"] as Tier[]).map((tier) => (
-            <span key={tier} className="inline-flex items-center gap-2">
-              <span className={`inline-block size-2 rounded-full ${TIER_DOT[tier]}`} aria-hidden="true" />
-              {tier}
-            </span>
+        {/* Right column — group title, then every tech as an icon + name row */}
+        <div className="min-w-0 flex flex-col gap-9">
+          {STACK_GROUPS.map((group, i) => (
+            <m.div
+              key={group.label}
+              initial={{ opacity: 0, ...from }}
+              animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, ...from }}
+              transition={{ duration: 0.45, ease: EASE, delay: 0.05 + 0.05 * i }}
+            >
+              <h4 className="font-mono text-[0.8rem] uppercase tracking-[0.16em] text-text-muted">{group.label}</h4>
+              <ul className="mt-4 flex flex-wrap gap-x-6 gap-y-3">
+                {group.tags.map((tag) => {
+                  const icon = tag.icon && TECH_ICONS[tag.icon];
+                  return (
+                    <li
+                      key={tag.name}
+                      className="inline-flex items-center gap-2.5 text-[0.92rem] text-text-secondary transition-colors duration-150 hover:text-text-primary"
+                    >
+                      <span className="text-accent" aria-hidden="true">
+                        {icon ? <TechGlyph path={icon.path} /> : <GenericTechGlyph />}
+                      </span>
+                      {tag.name}
+                    </li>
+                  );
+                })}
+              </ul>
+            </m.div>
           ))}
-        </m.div>
+        </div>
       </div>
-    </section>
+    </DocSection>
   );
 }

@@ -2,80 +2,62 @@
 
 import { m, useInView, useReducedMotion } from "framer-motion";
 import { useRef } from "react";
+import DocSection from "@/components/ui/DocSection";
 import { SOCIAL_ICONS } from "@/components/ui/icons";
 import { EASE, SCROLL_REVEAL } from "@/lib/motion";
 import { site } from "@/lib/site";
 
-const ICON_KEY: Record<string, keyof typeof SOCIAL_ICONS> = {
-  GitHub: "github",
-  LinkedIn: "linkedin",
-  "X / Twitter": "twitter",
-};
-
 export default function Contact() {
-  const ref = useRef<HTMLElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, SCROLL_REVEAL);
   const reduce = useReducedMotion();
   const from = reduce ? {} : { y: 12 };
 
   return (
-    <section ref={ref} className="section section-band">
-      <div className="container-main text-center">
-        <m.p
-          initial={{ opacity: 0, ...from }}
-          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, ...from }}
-          transition={{ duration: 0.45, ease: EASE }}
-          className="eyebrow mb-7"
-        >
-          Contact
-        </m.p>
+    <DocSection id="contact">
+      <div ref={ref} className="text-center">
+        <div className="mx-auto max-w-[56ch]">
+          <m.h2
+            initial={{ opacity: 0, ...from }}
+            animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, ...from }}
+            transition={{ duration: 0.5, ease: EASE }}
+            className="font-display text-[clamp(1.8rem,3.4vw,2.6rem)] leading-[1.15] tracking-[-0.01em] text-text-primary"
+          >
+            Let's build something that has to work.
+          </m.h2>
 
-        <m.h2
-          initial={{ opacity: 0, ...from }}
-          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, ...from }}
-          transition={{ duration: 0.45, ease: EASE, delay: 0.06 }}
-          className="font-display font-semibold tracking-[-0.03em] leading-[1.1] text-[clamp(2rem,5vw,3rem)] text-text-primary max-w-[16ch] mx-auto mb-5"
-        >
-          Let&apos;s build something that has to work.
-        </m.h2>
-
-        <m.p
-          initial={{ opacity: 0, ...from }}
-          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, ...from }}
-          transition={{ duration: 0.45, ease: EASE, delay: 0.12 }}
-          className="text-text-secondary text-[0.95rem] leading-[1.7] max-w-[46ch] mx-auto mb-10"
-        >
-          I&apos;m open to backend engineering roles. Production systems, APIs, and data pipelines that have to stay up. A good conversation about
-          systems works too.
-        </m.p>
+          <m.p
+            initial={{ opacity: 0, ...from }}
+            animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, ...from }}
+            transition={{ duration: 0.5, ease: EASE, delay: 0.08 }}
+            className="mt-4 text-[1.02rem] leading-[1.7] text-text-secondary"
+          >
+            Open to software engineering roles — or a good conversation about systems.
+          </m.p>
+        </div>
 
         <m.div
           initial={{ opacity: 0, ...from }}
           animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, ...from }}
-          transition={{ duration: 0.45, ease: EASE, delay: 0.18 }}
-          className="flex items-center justify-center gap-3 flex-wrap mb-12"
+          transition={{ duration: 0.5, ease: EASE, delay: 0.14 }}
+          className="mt-9 flex flex-wrap items-center justify-center gap-3"
         >
-          <a
-            href={`mailto:${site.email}`}
-            className="inline-flex items-center gap-2 rounded-md bg-accent px-6 py-3 text-[0.95rem] font-medium text-accent-foreground transition-colors duration-150 hover:bg-accent-dim"
-          >
-            {site.email}
+          <a href={`mailto:${site.email}`} className="btn btn--primary">
+            email me
             <span aria-hidden="true">→</span>
           </a>
-          <a
-            href={site.resume}
-            className="inline-flex items-center gap-2 rounded-md border border-border bg-transparent px-6 py-3 text-[0.95rem] font-medium text-text-primary transition-colors duration-150 hover:border-accent-dim"
-          >
-            Résumé
+          <a href={site.resume} target="_blank" rel="noopener noreferrer" className="btn btn--ghost">
+            résumé
             <span aria-hidden="true">↗</span>
           </a>
         </m.div>
 
+        {/* Social links — icon + label, centered under the CTAs */}
         <m.div
-          initial={{ opacity: 0, ...from }}
-          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, ...from }}
-          transition={{ duration: 0.45, ease: EASE, delay: 0.24 }}
-          className="flex items-center justify-center gap-2 flex-wrap"
+          initial={{ opacity: 0 }}
+          animate={inView ? { opacity: 1 } : { opacity: 0 }}
+          transition={{ duration: 0.5, ease: EASE, delay: 0.2 }}
+          className="mt-10 flex flex-wrap items-center justify-center gap-x-2 border-t border-border-subtle pt-6"
         >
           {site.socials.map((social) => (
             <a
@@ -83,14 +65,16 @@ export default function Contact() {
               href={social.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="group inline-flex items-center gap-2 rounded-md border border-border bg-bg-elevated px-4 py-2 text-text-secondary text-[0.85rem] transition-colors duration-150 hover:border-accent-dim hover:text-text-primary"
+              className="group inline-flex items-center gap-2.5 px-3 py-2 text-text-muted transition-colors duration-150 hover:text-accent"
             >
-              <span className="text-accent">{SOCIAL_ICONS[ICON_KEY[social.label]]}</span>
-              {social.label}
+              {social.label === "GitHub" && SOCIAL_ICONS.github}
+              {social.label === "LinkedIn" && SOCIAL_ICONS.linkedin}
+              {social.label === "X / Twitter" && SOCIAL_ICONS.twitter}
+              <span className="font-mono text-[0.76rem] lowercase">{social.label.toLowerCase()}</span>
             </a>
           ))}
         </m.div>
       </div>
-    </section>
+    </DocSection>
   );
 }

@@ -1,175 +1,90 @@
 "use client";
 
-import { m } from "framer-motion";
+import { m, useReducedMotion } from "framer-motion";
 import Image from "next/image";
-import { fadeUp } from "@/lib/motion";
+import { EASE } from "@/lib/motion";
 
 const PARAGRAPHS = [
   {
-    text: "It started with curiosity, like most things do. I wanted to know how things worked. Not the surface, but the mechanism underneath. I started with C, which isn't the friendliest place to begin, but it taught me the fundamentals properly. The questions never really stopped.",
+    text: "It started with curiosity. I wanted to understand how things worked, not just what they did, but what happened underneath. I started with C, which isn't exactly the easiest place to begin, but it gave me a solid foundation and taught me to think beyond the surface. The questions never really stopped.",
   },
   {
-    text: "Backend engineering felt like a natural home. I like the parts nobody sees: the performance work, the data modelling, the failure modes, the 3am alerts that teach you more about a system than a week of reading docs. If you did it right, nobody knows you were there.",
+    text: "Over time, I found myself drawn to software engineering as a whole. I enjoy working across the stack, from building interfaces that feel intuitive to designing the systems, APIs, and data models that power them. I'm interested in how the pieces fit together, how to make them perform well, and what happens when things go wrong. For me, building software is as much about understanding the problem and making sound engineering decisions as it is about writing code.",
   },
   {
-    text: "People who know me call me muizzy. You're welcome to too. Now I'm pointing the same obsession at AI and ML. The intersection of systems and intelligence is the most interesting problem space I've found, and I'm still early in it. I'm paying attention.",
+    text: "Lately, I've been exploring AI and machine learning, particularly where they intersect with software engineering. I'm interested in understanding how these technologies work and how to turn them into useful products. There's still a lot to learn, and that's part of what makes it interesting.",
     accent: true,
   },
+  { text: "My friends call me Muizzy. You're should too..", accent: true },
 ];
 
 export default function AboutHero() {
+  const reduce = useReducedMotion();
+  const rise = reduce ? {} : { y: 16 };
+
   return (
-    <section
-      style={{
-        position: "relative",
-        paddingTop: "clamp(6rem, 14vw, 10rem)",
-        paddingBottom: "clamp(4rem, 8vw, 6rem)",
-        borderBottom: "1px solid var(--color-border-subtle)",
-        overflow: "hidden",
-      }}
-    >
-      <div className="container-main text-center">
-        <m.p custom={0} initial="hidden" animate="visible" variants={fadeUp} className="eyebrow" style={{ marginBottom: "2.5rem" }}>
+    <section className="border-b border-border-subtle">
+      <div className="container-main pt-[clamp(6rem,13vw,9.5rem)] pb-[clamp(4rem,8vw,6rem)]">
+        <m.p initial={{ opacity: 0, ...rise }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease: EASE }} className="eyebrow mb-8">
           who am i
         </m.p>
 
-        <m.h1
-          custom={1}
-          initial="hidden"
-          animate="visible"
-          variants={fadeUp}
-          style={{
-            fontFamily: "var(--font-display)",
-            fontSize: "clamp(2.8rem, 7vw, 5rem)",
-            fontWeight: 700,
-            letterSpacing: "-0.04em",
-            lineHeight: 1,
-            color: "var(--color-text-primary)",
-            marginBottom: "2.5rem",
-          }}
-        >
-          <span className="inline-block italic px-[0.12em] rounded-sm bg-accent text-background">Muiz</span> <span>Oyebowale</span>
-        </m.h1>
+        <div className="grid gap-x-16 gap-y-12 lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-start">
+          <div>
+            <m.h1
+              initial={{ opacity: 0, ...rise }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.55, ease: EASE, delay: 0.08 }}
+              className="font-display text-[clamp(2.75rem,7vw,5rem)] leading-[1.02] tracking-[-0.03em] font-semibold text-text-primary mb-8"
+            >
+              Muiz <em className="text-accent">Oyebowale</em>
+            </m.h1>
 
-        {/* Bio + avatar */}
-        <div className="about-hero-grid">
-          <div className="about-hero-bio">
-            {PARAGRAPHS.map(({ text, accent }, idx) => (
-              <m.p
-                key={text.slice(0, 24)}
-                custom={2 + idx}
-                initial="hidden"
-                animate="visible"
-                variants={fadeUp}
-                style={{
-                  color: accent ? "var(--color-text-primary)" : "var(--color-text-secondary)",
-                  fontSize: accent ? "0.98rem" : "1.02rem",
-                  lineHeight: 1.75,
-                  fontWeight: accent ? 500 : 400,
-                  padding: accent ? "1.1rem 1.4rem" : undefined,
-                  background: accent ? "var(--color-accent-subtle)" : undefined,
-                  borderLeft: accent ? "2px solid var(--color-accent-dim)" : undefined,
-                  borderRadius: accent ? "0 var(--radius-sm) var(--radius-sm) 0" : undefined,
-                  marginBottom: "1.25rem",
-                }}
-              >
-                {text.trim()}
-              </m.p>
-            ))}
+            <div className="max-w-[62ch] flex flex-col gap-5">
+              {PARAGRAPHS.map(({ text, accent }, idx) => (
+                <m.p
+                  key={text.slice(0, 24)}
+                  initial={{ opacity: 0, ...rise }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, ease: EASE, delay: 0.16 + idx * 0.08 }}
+                  className={
+                    accent
+                      ? "border-l-2 border-accent bg-accent-subtle px-5 py-4 text-[0.98rem] leading-[1.75] font-medium text-text-primary"
+                      : "text-[1.02rem] leading-[1.75] text-text-secondary"
+                  }
+                >
+                  {text.trim()}
+                </m.p>
+              ))}
+            </div>
           </div>
 
-          <m.div
-            initial={{ opacity: 0, scale: 0.97 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.5, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            className="about-avatar"
-            style={{
-              width: "100%",
-              maxWidth: 320,
-              aspectRatio: "1",
-              borderRadius: "var(--radius-lg)",
-              border: "1px solid var(--color-border)",
-              background: "var(--color-surface)",
-              position: "relative",
-              overflow: "hidden",
-              margin: "0 auto",
-            }}
+          {/* Portrait — warm duotone so it belongs to the palette */}
+          <m.figure
+            initial={reduce ? { opacity: 0 } : { opacity: 0, clipPath: "inset(10% 6% 10% 6% round 24px)" }}
+            animate={reduce ? { opacity: 1 } : { opacity: 1, clipPath: "inset(0% 0% 0% 0% round 24px)" }}
+            transition={{ duration: 0.85, ease: EASE, delay: 0.3 }}
+            className="portrait-frame relative mx-auto w-full max-w-[20rem]"
           >
-            <Image
-              src="/muizzy.jpg"
-              alt="Muiz Oyebowale"
-              fill
-              sizes="(max-width: 760px) 85vw, 320px"
-              style={{ objectFit: "cover", objectPosition: "center center" }}
-              quality={90}
-            />
-
-            {[
-              { top: "10px", left: "10px", borderTop: "1px solid", borderLeft: "1px solid" },
-              { top: "10px", right: "10px", borderTop: "1px solid", borderRight: "1px solid" },
-              { bottom: "10px", left: "10px", borderBottom: "1px solid", borderLeft: "1px solid" },
-              { bottom: "10px", right: "10px", borderBottom: "1px solid", borderRight: "1px solid" },
-            ].map((s, _) => (
-              <div
-                key={JSON.stringify(s)}
-                style={{
-                  position: "absolute",
-                  width: "16px",
-                  height: "16px",
-                  borderColor: "var(--color-accent-dim)",
-                  ...s,
-                }}
+            <div className="relative aspect-square overflow-hidden rounded-[var(--radius-xl)] border border-border bg-bg-elevated">
+              <Image
+                src="/muizzy.jpg"
+                alt="Portrait of Muiz Oyebowale"
+                fill
+                priority
+                sizes="(min-width: 1024px) 20rem, 85vw"
+                className="object-cover"
+                quality={90}
               />
-            ))}
-
-            <p
-              style={{
-                position: "absolute",
-                bottom: "8px",
-                left: 0,
-                right: 0,
-                textAlign: "center",
-                fontFamily: "var(--font-mono)",
-                fontSize: "0.6rem",
-                letterSpacing: "0.15em",
-                textTransform: "uppercase",
-                color: "var(--color-background)",
-                opacity: 0.85,
-                background: "var(--color-text-primary)",
-                padding: "0.25rem 0",
-              }}
-            >
-              muizzyranking
-            </p>
-          </m.div>
+              <div className="portrait-grain" aria-hidden="true" />
+            </div>
+            <figcaption className="mt-4 flex items-center justify-center gap-2 font-mono text-[0.68rem] font-semibold tracking-[0.12em] lowercase text-text-muted">
+              <span className="block size-1.5 rounded-full bg-accent" aria-hidden="true" />
+              @muizzyranking
+            </figcaption>
+          </m.figure>
         </div>
       </div>
-
-      <style>{`
-        .about-hero-grid {
-          display: grid;
-          grid-template-areas: "bio photo";
-          grid-template-columns: minmax(0, 1fr) 320px;
-          column-gap: 3.5rem;
-          row-gap: 2.5rem;
-          align-items: start;
-          max-width: 880px;
-          margin: 0 auto;
-          text-align: left;
-        }
-        .about-hero-bio {
-          grid-area: bio;
-        }
-        .about-avatar {
-          grid-area: photo;
-        }
-        @media (max-width: 760px) {
-          .about-hero-grid {
-            grid-template-areas: "photo" "bio";
-            grid-template-columns: 1fr;
-          }
-        }
-      `}</style>
     </section>
   );
 }

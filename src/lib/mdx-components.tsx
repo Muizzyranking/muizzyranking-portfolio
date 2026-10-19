@@ -57,20 +57,15 @@ export const mdxComponents: MDXComponents = {
   a: ({ children, href, ...rest }) => {
     const isInternal = href?.startsWith("/") ?? false;
     const className = "post-link";
-    const style: React.CSSProperties = {
-      color: "var(--color-accent)",
-      borderBottom: "1px solid var(--color-accent-dim)",
-      transition: "opacity 0.15s",
-    };
     if (isInternal && href) {
       return (
-        <Link href={href} className={className} style={style}>
+        <Link href={href} className={className}>
           {children}
         </Link>
       );
     }
     return (
-      <a href={href} target="_blank" rel="noopener noreferrer" className={className} style={style} {...rest}>
+      <a href={href} target="_blank" rel="noopener noreferrer" className={className} {...rest}>
         {children}
       </a>
     );

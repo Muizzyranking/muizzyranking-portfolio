@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRef } from "react";
 import { EMAIL } from "@/lib/data";
 import { fadeUp, SCROLL_REVEAL } from "@/lib/motion";
+import { site } from "@/lib/site";
 
 export default function AboutCTA() {
   const ref = useRef<HTMLElement>(null);
@@ -28,7 +29,6 @@ export default function AboutCTA() {
           style={{ marginBottom: "3rem" }}
         >
           What&apos;s next
-          <span className="eyebrow__rule" />
         </m.p>
 
         <m.h2
@@ -46,7 +46,7 @@ export default function AboutCTA() {
             maxWidth: "24ch",
           }}
         >
-          If you got here, you read <em style={{ fontStyle: "italic", color: "var(--color-accent)", fontWeight: 500 }}>enough.</em>
+          If you got here, you read <span style={{ color: "var(--color-accent)", fontWeight: 600 }}>enough.</span>
         </m.h2>
 
         <m.p
@@ -114,7 +114,7 @@ export default function AboutCTA() {
                 lineHeight: 1.15,
               }}
             >
-              Projects that <em style={{ fontStyle: "italic", color: "var(--color-accent)", fontWeight: 500 }}>shipped.</em>
+              Projects that <span style={{ color: "var(--color-accent)", fontWeight: 600 }}>shipped.</span>
             </h3>
             <p
               style={{
@@ -183,7 +183,7 @@ export default function AboutCTA() {
                 lineHeight: 1.15,
               }}
             >
-              What I <em style={{ fontStyle: "italic", color: "var(--color-accent)", fontWeight: 500 }}>reach for.</em>
+              What I <span style={{ color: "var(--color-accent)", fontWeight: 600 }}>reach for.</span>
             </h3>
             <p
               style={{
@@ -251,7 +251,7 @@ export default function AboutCTA() {
                 lineHeight: 1.15,
               }}
             >
-              Backend roles. AI/ML work. <em style={{ fontStyle: "italic", color: "var(--color-accent)", fontWeight: 500 }}>Interesting problems.</em>
+              Backend roles. AI/ML work. <span style={{ color: "var(--color-accent)", fontWeight: 600 }}>Interesting problems.</span>
             </h3>
             <p
               style={{
@@ -283,7 +283,7 @@ export default function AboutCTA() {
               </a>
               <span style={{ color: "var(--color-text-muted)", opacity: 0.4 }}>·</span>
               <a
-                href="/Muiz-Oyebowale-Resume.pdf"
+                href={site.resume}
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{

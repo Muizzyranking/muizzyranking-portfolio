@@ -5,7 +5,7 @@ export default function NotFound() {
     <main className="container-main flex min-h-[100svh] flex-col items-center justify-center pb-20 pt-24 text-center">
       <p className="font-mono text-[0.72rem] font-semibold uppercase tracking-[0.12em] text-text-muted mb-[clamp(2rem,5vw,3rem)]">404</p>
 
-      <h1 className="font-display font-bold tracking-[-0.03em] leading-[1.05] text-text-primary text-[clamp(2.4rem,6vw,4.5rem)] mb-6">
+      <h1 className="font-display font-semibold tracking-[-0.03em] leading-[1.05] text-text-primary text-[clamp(2.4rem,6vw,4.5rem)] mb-6">
         This page doesn&apos;t exist.
       </h1>
 
@@ -14,17 +14,11 @@ export default function NotFound() {
       </p>
 
       <div className="flex items-center justify-center gap-3 flex-wrap">
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2 rounded-md bg-accent px-6 py-3 text-[0.95rem] font-semibold text-accent-foreground transition-colors duration-150 hover:bg-accent-dim"
-        >
+        <Link href="/" className="btn btn--primary">
           go home
           <span aria-hidden="true">→</span>
         </Link>
-        <Link
-          href="/projects"
-          className="inline-flex items-center gap-2 rounded-md border border-border bg-transparent px-6 py-3 text-[0.95rem] font-semibold text-text-primary transition-colors duration-150 hover:border-accent-dim"
-        >
+        <Link href="/projects" className="btn btn--ghost">
           see projects
           <span aria-hidden="true">→</span>
         </Link>

@@ -61,7 +61,6 @@ export default function WhatIDo() {
           style={{ marginBottom: "3rem" }}
         >
           What I do
-          <span className="eyebrow__rule" />
         </m.p>
 
         <m.h2

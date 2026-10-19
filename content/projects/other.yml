@@ -1,0 +1,20 @@
+- name: "Kweri"
+  description: "Query builder for SQL, Mongo and Graphql"
+  stack: [Typescript, Next.js]
+  link: "https://github.com/Muizzyranking/kweri"
+  live: "https://kweri.muizzyranking.me"
+
+- name: "Locked In — Backend"
+  description: "Goal-setting and tracking app: authentication, user management, and the goal engine."
+  stack: [Python, Django, Django Ninja]
+  link: "https://github.com/Muizzyranking"
+
+- name: "Cake & Juice Store"
+  description: "E-commerce for a small business — Paystack checkout with server-side webhook verification."
+  stack: [Python, Django, Paystack]
+  link: "https://github.com/Muizzyranking/dabelo_and_montee"
+
+- name: "Concert Ticketing Page"
+  description: "Ticket sales with inventory checks and Paystack payments for a live event."
+  stack: [Python]
+  live: ""

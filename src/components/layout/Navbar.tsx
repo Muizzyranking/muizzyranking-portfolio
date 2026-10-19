@@ -6,7 +6,8 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import CommandPalette from "@/components/layout/CommandPalette";
 import MobileMenu from "@/components/layout/MobileMenu";
-import ThemeToggle from "@/components/layout/ThemeToggle";
+import MusicPopover from "@/components/music/MusicPopover";
+import { useMusic } from "@/components/music/MusicProvider";
 import { site } from "@/lib/site";
 
 export default function Navbar({ projects, posts }: { projects: { slug: string; title: string }[]; posts: { slug: string; title: string }[] }) {
@@ -15,6 +16,9 @@ export default function Navbar({ projects, posts }: { projects: { slug: string; 
   const [mobileOpen, setMobileOpen] = useState(false);
   const [paletteOpen, setPaletteOpen] = useState(false);
   const { scrollY } = useScroll();
+  const { playback, panel, togglePanel } = useMusic();
+  const musicActive = playback === "playing";
+  const musicSpin = musicActive && panel !== "open";
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
@@ -42,12 +46,12 @@ export default function Navbar({ projects, posts }: { projects: { slug: string; 
         <div className="container-main flex h-14 items-center justify-between gap-4">
           <Link
             href="/"
-            className="text-[0.95rem] font-semibold tracking-tight text-text-primary transition-colors duration-150 hover:text-text-secondary"
+            className="font-mono text-[0.85rem] font-medium tracking-tight text-text-primary transition-colors duration-150 hover:text-text-secondary"
           >
-            muizzy<span className="inline-block italic px-[0.12em] rounded-sm bg-accent text-background">ranking</span>
+            muizzy<span className="text-accent italic">ranking</span>.
           </Link>
 
-          <nav className="hidden md:flex items-center gap-1" aria-label="Primary navigation">
+          <nav className="hidden md:flex items-center gap-0.5" aria-label="Primary navigation">
             {site.nav.map((item) => {
               const active = isActive(item.href);
               return (
@@ -55,14 +59,14 @@ export default function Navbar({ projects, posts }: { projects: { slug: string; 
                   key={item.href}
                   href={item.href}
                   aria-current={active ? "page" : undefined}
-                  className="relative rounded-sm px-3 py-2 text-[0.9rem] font-semibold lowercase transition-colors duration-150"
-                  style={{ color: active ? "var(--color-text-primary)" : "var(--color-text-secondary)" }}
+                  className="relative px-2.5 py-2 font-mono text-[0.76rem] font-semibold leading-none lowercase tracking-[0.06em] transition-colors duration-150"
+                  style={{ color: active ? "var(--color-text-primary)" : "var(--color-text-muted)" }}
                 >
                   {item.label}
                   {active && (
                     <m.span
                       layoutId="nav-underline"
-                      className="absolute inset-x-3 -bottom-px h-px bg-accent"
+                      className="absolute inset-x-2.5 -bottom-px h-px bg-accent"
                       transition={{ type: "spring", stiffness: 400, damping: 30 }}
                     />
                   )}
@@ -71,16 +75,55 @@ export default function Navbar({ projects, posts }: { projects: { slug: string; 
             })}
           </nav>
 
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1">
+            <div className="relative">
+              <button
+                type="button"
+                onClick={togglePanel}
+                aria-label={panel === "open" ? "Minimize music player" : "Open music player"}
+                aria-expanded={panel === "open"}
+                data-music-trigger
+                title="Music"
+                className={`inline-flex h-8 w-8 items-center justify-center transition-colors duration-150 ${
+                  panel === "open" || musicActive ? "text-accent" : "text-text-secondary hover:text-text-primary"
+                }`}
+              >
+                {musicSpin ? (
+                  <span className="flex h-3.5 items-end gap-[2.5px]" aria-hidden="true">
+                    {[0, 1, 2, 3].map((i) => (
+                      <span key={i} className="music-bar w-[2.5px] rounded-full bg-accent" style={{ animationDelay: `${i * 0.25}s` }} />
+                    ))}
+                  </span>
+                ) : (
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.75"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M9 18V5l12-2v13" />
+                    <circle cx="6" cy="18" r="3" />
+                    <circle cx="18" cy="16" r="3" />
+                  </svg>
+                )}
+              </button>
+              <MusicPopover />
+            </div>
+
             <button
               type="button"
               onClick={() => setPaletteOpen(true)}
               aria-label="Search"
-              className="inline-flex h-8 items-center gap-2 rounded-md border border-border px-2.5 text-text-secondary transition-colors duration-150 hover:text-text-primary hover:border-border"
+              className="inline-flex h-8 items-center gap-1.5 border border-border bg-surface-raised px-2.5 text-text-muted transition-colors duration-150 hover:border-text-secondary hover:text-text-primary"
             >
               <svg
-                width="13"
-                height="13"
+                width="12"
+                height="12"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -91,24 +134,18 @@ export default function Navbar({ projects, posts }: { projects: { slug: string; 
                 <circle cx="11" cy="11" r="7" />
                 <path d="m21 21-4.3-4.3" />
               </svg>
-              <span className="hidden sm:inline font-mono text-[0.62rem] uppercase tracking-[0.1em]">search</span>
-              <kbd
-                className="hidden lg:inline-flex items-center rounded-sm border border-border px-1 py-px font-mono text-[0.6rem] text-text-muted"
-                aria-label="Keyboard shortcut"
-              >
+              <kbd className="hidden sm:inline font-mono text-[0.68rem]" aria-label="Keyboard shortcut">
                 ⌘K
               </kbd>
             </button>
-
-            <ThemeToggle />
 
             <a
               href={site.resume}
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden lg:inline-flex items-center gap-1 rounded-md border border-border px-3 h-8 text-xs font-medium text-text-secondary transition-colors duration-150 hover:text-text-primary hover:border-border"
+              className="hidden lg:inline-flex h-8 items-center gap-1.5 border border-border bg-surface-raised px-3 font-mono text-[0.72rem] lowercase text-text-secondary transition-colors duration-150 hover:border-text-secondary hover:text-text-primary"
             >
-              Résumé
+              résumé
               <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
                 <path d="M4 1h5v5M9 1 4 6" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
@@ -119,7 +156,7 @@ export default function Navbar({ projects, posts }: { projects: { slug: string; 
               onClick={() => setMobileOpen((o) => !o)}
               aria-label="Toggle menu"
               aria-expanded={mobileOpen}
-              className="md:hidden inline-flex h-8 w-8 items-center justify-center rounded-md text-text-secondary transition-colors duration-150 hover:text-text-primary hover:bg-bg-elevated"
+              className="md:hidden inline-flex h-8 w-8 items-center justify-center text-text-secondary transition-colors duration-150 hover:text-text-primary"
             >
               <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
                 {mobileOpen ? (

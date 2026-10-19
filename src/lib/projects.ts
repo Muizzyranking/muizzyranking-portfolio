@@ -1,10 +1,46 @@
 import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
+import yaml from "js-yaml";
 import { extractToc } from "@/lib/mdx";
 import type { Challenge, Project, ProjectContent, TocItem } from "@/types";
 
 const projectsDir = path.join(process.cwd(), "content/projects");
+
+/** Smaller projects and OSS-heavy contributions — flat entries with no page. */
+export type FlatProject = {
+  name: string;
+  description?: string;
+  link?: string;
+  live?: string;
+  stack?: string[];
+};
+
+function readFlatYaml(filename: string): FlatProject[] {
+  const filepath = path.join(projectsDir, filename);
+  if (!fs.existsSync(filepath)) return [];
+  const raw = fs.readFileSync(filepath, "utf8");
+  const parsed = yaml.load(raw);
+  if (!Array.isArray(parsed)) return [];
+  return parsed
+    .filter((e): e is Record<string, unknown> => Boolean(e) && typeof e === "object")
+    .map((e) => ({
+      name: typeof e.name === "string" ? e.name : "",
+      description: typeof e.description === "string" ? e.description : undefined,
+      link: typeof e.link === "string" && e.link ? e.link : undefined,
+      live: typeof e.live === "string" && e.live ? e.live : undefined,
+      stack: Array.isArray(e.stack) ? e.stack.filter((s): s is string => typeof s === "string") : undefined,
+    }))
+    .filter((e) => e.name && (e.link || e.live));
+}
+
+export function getOtherProjects(): FlatProject[] {
+  return readFlatYaml("other.yml");
+}
+
+export function getContributions(): FlatProject[] {
+  return readFlatYaml("contributions.yml");
+}
 
 export type ProjectRecord = {
   meta: Project;

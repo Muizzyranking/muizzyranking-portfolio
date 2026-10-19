@@ -3,6 +3,7 @@
 import { AnimatePresence, m, useReducedMotion } from "framer-motion";
 import { useMemo, useState } from "react";
 import PostRow from "@/components/blog/PostRow";
+import FilterDropdown from "@/components/ui/FilterDropdown";
 import { EASE } from "@/lib/motion";
 import type { Category, PostMeta } from "@/types";
 
@@ -22,110 +23,81 @@ export default function BlogIndex({ posts, categories }: { posts: PostMeta[]; ca
   }, [posts, query, activeCategory]);
 
   return (
-    <>
-      <header className="container-main pt-[clamp(5rem,10vw,8rem)] pb-[clamp(3rem,6vw,4.5rem)]">
-        <p className="eyebrow mb-6">writing</p>
-        <h1 className="font-display font-bold tracking-[-0.02em] leading-[1.05] text-[clamp(2.5rem,6vw,4.5rem)] text-text-primary mb-6">Writing.</h1>
-        <p className="text-text-secondary text-[clamp(1rem,1.8vw,1.15rem)] leading-[1.65] max-w-[52ch]">
-          Notes on backend systems, tooling, and how software gets built.
-        </p>
-      </header>
+    <div className="min-w-0">
+      {/* toolbar: search + topic dropdown + live count */}
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-x-8 gap-y-3 border-b border-border pb-4">
+        <label className="group relative block w-full max-w-[20rem]">
+          <span className="sr-only">Search writing</span>
+          <span
+            aria-hidden="true"
+            className="absolute top-1/2 left-3 -translate-y-1/2 text-text-muted transition-colors duration-150 group-focus-within:text-text-primary"
+          >
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" role="presentation">
+              <circle cx="11" cy="11" r="7" />
+              <path d="m21 21-4.3-4.3" />
+            </svg>
+          </span>
+          <input
+            type="search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="search writing"
+            className="w-full border border-border bg-surface-raised py-1.5 pr-3 pl-9 font-mono text-[0.78rem] text-text-primary transition-colors duration-150 outline-none rounded-[var(--radius-sm)] placeholder:text-text-muted focus:border-text-secondary"
+          />
+        </label>
 
-      <div className="container-main pb-[clamp(4rem,8vw,7rem)]">
-        <div className="flex flex-col gap-5 border-t border-border-subtle pt-7 mb-10">
-          <div className="flex items-center justify-between gap-4 flex-wrap">
-            <label className="relative block w-full max-w-[22rem]">
-              <span className="sr-only">Search writing</span>
-              <span aria-hidden="true" className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" role="presentation">
-                  <circle cx="11" cy="11" r="7" />
-                  <path d="m21 21-4.3-4.3" />
-                </svg>
-              </span>
-              <input
-                type="search"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search writing..."
-                className="w-full bg-surface border border-border rounded-sm pl-9 pr-3 py-2 font-mono text-[0.78rem] text-text-primary placeholder:text-text-muted outline-none transition-colors duration-150 focus:border-accent-dim"
-              />
-            </label>
-            <span className="font-mono text-[0.7rem] text-text-muted">
-              {filtered.length} {filtered.length === 1 ? "post" : "posts"}
-            </span>
-          </div>
-
+        <div className="flex items-center gap-4">
           {categories.length > 0 && (
-            <fieldset className="flex flex-wrap gap-2">
-              <legend className="sr-only">Filter by category</legend>
-              <button
-                type="button"
-                onClick={() => setActiveCategory(null)}
-                aria-pressed={activeCategory === null}
-                className={`font-mono text-[0.72rem] tracking-[0.06em] rounded-sm px-3 py-1.5 transition-colors duration-150 ${
-                  activeCategory === null
-                    ? "bg-accent text-accent-foreground"
-                    : "text-text-muted border border-border hover:border-accent-dim hover:text-text-primary"
-                }`}
-              >
-                All
-              </button>
-              {categories.map((c) => {
-                const active = activeCategory === c.slug;
-                return (
-                  <button
-                    key={c.slug}
-                    type="button"
-                    onClick={() => setActiveCategory(active ? null : c.slug)}
-                    aria-pressed={active}
-                    className={`font-mono text-[0.72rem] tracking-[0.06em] rounded-sm px-3 py-1.5 transition-colors duration-150 ${
-                      active
-                        ? "bg-accent text-accent-foreground"
-                        : "text-text-muted border border-border hover:border-accent-dim hover:text-text-primary"
-                    }`}
-                  >
-                    {c.label}
-                    <span className="opacity-70 ml-1.5">{c.count}</span>
-                  </button>
-                );
-              })}
-            </fieldset>
+            <FilterDropdown
+              idleLabel="topics"
+              ariaLabel="Filter by topic"
+              allLabel="all topics"
+              allCount={posts.length}
+              options={categories.map((c) => ({ key: c.slug, label: c.label, count: c.count }))}
+              value={activeCategory ? (categories.find((c) => c.slug === activeCategory)?.label ?? activeCategory) : null}
+              onChange={setActiveCategory}
+            />
           )}
+          <span className="font-mono text-[0.7rem] text-text-muted" aria-live="polite">
+            {filtered.length} / {posts.length}
+          </span>
         </div>
+      </div>
 
-        {filtered.length === 0 ? (
-          <div className="py-20 text-center">
-            <p className="font-mono text-[0.8rem] text-text-muted mb-2">No posts match.</p>
-            <button
-              type="button"
-              onClick={() => {
-                setQuery("");
-                setActiveCategory(null);
-              }}
-              className="font-mono text-[0.75rem] text-accent underline underline-offset-4 hover:text-accent-dim"
-            >
-              clear filters
-            </button>
-          </div>
-        ) : (
-          <m.div layout initial={false} animate={{ opacity: 1 }} transition={{ duration: 0.35, ease: EASE }}>
+      {filtered.length === 0 ? (
+        <div className="border-t border-border-subtle py-20 text-center">
+          <p className="mb-2 font-mono text-[0.8rem] text-text-muted">No posts match.</p>
+          <button
+            type="button"
+            onClick={() => {
+              setQuery("");
+              setActiveCategory(null);
+            }}
+            className="font-mono text-[0.75rem] text-accent underline underline-offset-4 hover:text-accent-dim"
+          >
+            clear filters
+          </button>
+        </div>
+      ) : (
+        <div className="border-t border-border-subtle overflow-x-clip">
+          <m.div layout={!reduce} initial={false} animate={{ opacity: 1 }} transition={{ duration: 0.35, ease: EASE }}>
             <AnimatePresence mode="popLayout">
-              {filtered.map((post) => (
+              {filtered.map((post, i) => (
                 <m.div
                   key={post.slug}
                   layout={!reduce}
-                  initial={{ opacity: 0, y: 12 }}
+                  initial={{ opacity: 0, y: reduce ? 0 : 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.35, ease: EASE }}
                 >
-                  <PostRow post={post} />
+                  <PostRow post={post} n={i + 1} />
                 </m.div>
               ))}
             </AnimatePresence>
           </m.div>
-        )}
-      </div>
-    </>
+        </div>
+      )}
+    </div>
   );
 }

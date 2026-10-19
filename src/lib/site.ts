@@ -1,12 +1,12 @@
 export const site = {
   name: "Muiz Oyebowale",
   handle: "muizzyranking",
-  title: "Backend Engineer",
+  title: "Software Engineer",
   description:
-    "Muiz Oyebowale is a backend engineer who designs and builds APIs, data pipelines, and distributed systems in Python and Django, with a focus on reliability and maintainability at scale.",
+    "Muiz Oyebowale is a software engineer who designs and builds complete products — APIs, data pipelines, and the interfaces on top — in Python, Django, and TypeScript, with a focus on reliability and maintainability at scale.",
   url: "https://muizzyranking.me",
   email: "oyebowaleabdulmuiz@gmail.com",
-  resume: "/Muiz-Oyebowale-Resume.pdf",
+  resume: "/resume.pdf",
   nav: [
     { label: "home", href: "/" },
     { label: "about", href: "/about" },

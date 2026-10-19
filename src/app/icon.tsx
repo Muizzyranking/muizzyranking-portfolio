@@ -10,36 +10,39 @@ export default function Icon() {
       style={{
         width: "32px",
         height: "32px",
-        background: "#faf8f4",
+        background: "#080808",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        borderRadius: "6px",
+        borderRadius: "7px",
         position: "relative",
+        border: "1px solid #2f2f2f",
       }}
     >
       <span
         style={{
           fontFamily: "Georgia, 'Times New Roman', serif",
-          fontSize: "14px",
+          fontStyle: "italic",
+          fontSize: "17px",
           fontWeight: 700,
-          color: "#55702f",
-          letterSpacing: "-0.05em",
+          color: "#9fbf6b",
+          letterSpacing: "-0.04em",
           lineHeight: 1,
+          marginTop: "-2px",
         }}
       >
-        MO
+        m
       </span>
 
       <div
         style={{
           position: "absolute",
-          bottom: "4px",
-          right: "4px",
+          bottom: "5px",
+          right: "5px",
           width: "4px",
           height: "4px",
           borderRadius: "50%",
-          background: "#55702f",
+          background: "#f5f3ef",
         }}
       />
     </div>,
