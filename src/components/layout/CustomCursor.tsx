@@ -21,16 +21,32 @@ const DOT_SIZE = 32;
 const WRAP_PADDING = 7;
 const PRESS_SCALE = 0.92;
 
-/** [top-left, top-right, bottom-right, bottom-left] computed radii. */
+/** [top-left, top-right, bottom-right, bottom-left] radii for the wrap. */
 type Radii = [number, number, number, number];
 
-function cornerRadii(el: HTMLElement): Radii {
+/** Elements with a visible border mirror their own corner radius (square
+ *  element → square wrap, rounded → rounded). Borderless elements follow
+ *  their own shape when they declare one — the hero's accent CTA rounds
+ *  like its radius-md — while plain text sticks (logo, nav links, palette
+ *  rows) fall back to a modest rounded default instead of a full pill. */
+function wrapRadii(el: HTMLElement): Radii {
   const cs = window.getComputedStyle(el);
-  const val = (v: string) => {
-    const n = Number.parseFloat(v);
-    return Number.isNaN(n) ? 8 : n;
-  };
-  return [val(cs.borderTopLeftRadius), val(cs.borderTopRightRadius), val(cs.borderBottomRightRadius), val(cs.borderBottomLeftRadius)];
+  const SIDE_WIDTH = ["borderTopWidth", "borderRightWidth", "borderBottomWidth", "borderLeftWidth"] as const;
+  const SIDE_STYLE = ["borderTopStyle", "borderRightStyle", "borderBottomStyle", "borderLeftStyle"] as const;
+  const bordered = SIDE_WIDTH.some((w, i) => {
+    const width = Number.parseFloat(cs[w]);
+    return width > 0 && cs[SIDE_STYLE[i]] !== "none";
+  });
+  const radii = (() => {
+    const val = (v: string) => {
+      const n = Number.parseFloat(v);
+      return Number.isNaN(n) ? 0 : n;
+    };
+    return [val(cs.borderTopLeftRadius), val(cs.borderTopRightRadius), val(cs.borderBottomRightRadius), val(cs.borderBottomLeftRadius)] as Radii;
+  })();
+
+  if (bordered) return radii;
+  return radii.every((r) => r <= 4) ? [12, 12, 12, 12] : radii;
 }
 
 /** The part of a rect that is actually visible on screen, intersected with
@@ -97,13 +113,13 @@ export default function CustomCursor() {
       dot.style.width = `${w}px`;
       dot.style.height = `${h}px`;
 
-      // Mirror the element's own corners (slightly opened up by the padding
-      // and clamped to the ring's half-size) so the wrap reads as the
-      // element's border, not a generic pill.
+      // Wrap outline follows the element: bordered elements mirror their
+      // own corners (clamped to the ring's half-size) so the wrap reads as
+      // the element's border; borderless ones come through as a pill.
       const half = Math.min(w, h) / 2;
       let radii = radiusCache.current.get(el);
       if (!radii) {
-        radii = cornerRadii(el);
+        radii = wrapRadii(el);
         radiusCache.current.set(el, radii);
       }
       dot.style.borderTopLeftRadius = `${Math.min(radii[0] + 2, half)}px`;
