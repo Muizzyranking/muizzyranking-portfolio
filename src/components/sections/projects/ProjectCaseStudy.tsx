@@ -1,14 +1,10 @@
-"use client";
-
-import { m, useInView } from "framer-motion";
 import Link from "next/link";
-import { useRef } from "react";
+import { CaseFade, CaseInView, CaseItem, CaseRule, CaseSidebar, CaseStagger } from "@/components/sections/projects/CaseMotion";
 import ProjectMdx from "@/components/sections/projects/ProjectMdx";
 import ScreenshotGallery from "@/components/sections/projects/ScreenshotGallery";
-import { SCROLL_REVEAL, staggerContainer, staggerItem } from "@/lib/motion";
 import type { Project, ProjectContent } from "@/types";
 
-const STATUS_STYLE: Record<Project["status"], { label: string; color: string; border: string }> = {
+const STATUS_LABEL: Record<Project["status"], { label: string; color: string; border: string }> = {
   complete: {
     label: "complete",
     color: "var(--color-success)",
@@ -26,15 +22,6 @@ const STATUS_STYLE: Record<Project["status"], { label: string; color: string; bo
   },
 };
 
-const GRID_STYLE = {
-  backgroundImage:
-    "linear-gradient(var(--color-border-subtle) 1px, transparent 1px), linear-gradient(90deg, var(--color-border-subtle) 1px, transparent 1px)",
-  backgroundSize: "48px 48px",
-  opacity: 0.35,
-  maskImage: "radial-gradient(ellipse 80% 100% at 50% 0%, black 30%, transparent 100%)",
-  WebkitMaskImage: "radial-gradient(ellipse 80% 100% at 50% 0%, black 30%, transparent 100%)",
-} as const;
-
 export default function ProjectCaseStudy({
   meta,
   parsed,
@@ -46,131 +33,103 @@ export default function ProjectCaseStudy({
   prev?: Project | null;
   next?: Project | null;
 }) {
-  const s = STATUS_STYLE[meta.status];
-  const challengesRef = useRef<HTMLDivElement>(null);
-  const outcomesRef = useRef<HTMLDivElement>(null);
-  const learnedRef = useRef<HTMLDivElement>(null);
-  const challengesInView = useInView(challengesRef, SCROLL_REVEAL);
-  const outcomesInView = useInView(outcomesRef, SCROLL_REVEAL);
-  const learnedInView = useInView(learnedRef, SCROLL_REVEAL);
+  const s = STATUS_LABEL[meta.status];
   const screenshots = meta.screenshots ?? [];
 
   return (
     <>
-      {/* ── Header — grid backdrop, breadcrumb, italic title, faded year ── */}
+      {/* ── Header — breadcrumb, italic title, faded year ── */}
       <div className="relative pt-[clamp(6rem,14vw,10rem)] pb-[clamp(3rem,6vw,5rem)] overflow-hidden">
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0" style={GRID_STYLE} />
-
-        <m.div
-          aria-hidden="true"
-          initial={{ scaleX: 0, opacity: 0 }}
-          animate={{ scaleX: 1, opacity: 1 }}
-          transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
-          className="absolute top-[clamp(6rem,14vw,10rem)] right-[clamp(1.25rem,5vw,2.5rem)] left-[clamp(1.25rem,5vw,2.5rem)] origin-left"
-          style={{ height: 1, background: "linear-gradient(to right, var(--color-accent), var(--color-border), transparent)" }}
+        <CaseRule
+          top="clamp(6rem,14vw,10rem)"
+          style={{
+            height: 1,
+            background: "linear-gradient(to right, var(--color-accent), var(--color-border), transparent)",
+          }}
+          className="left-[clamp(1.25rem,5vw,2.5rem)] right-[clamp(1.25rem,5vw,2.5rem)]"
         />
 
         <div className="container-main relative z-[2]">
           {/* Breadcrumb */}
-          <m.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-            className="mb-10 flex items-center gap-2 font-mono text-[0.68rem] tracking-[0.1em] text-text-muted"
-          >
-            <Link href="/projects" className="text-accent no-underline transition-opacity duration-150 hover:opacity-65">
-              ~/projects
-            </Link>
-            <span className="opacity-40">/</span>
-            <span>{meta.slug}</span>
-          </m.div>
+          <CaseFade delay={0}>
+            <div className="mb-10 flex items-center gap-2 font-mono text-[0.68rem] tracking-[0.1em] text-text-muted">
+              <Link href="/projects" className="text-accent no-underline transition-opacity duration-150 hover:opacity-65">
+                ~/projects
+              </Link>
+              <span className="opacity-40">/</span>
+              <span>{meta.slug}</span>
+            </div>
+          </CaseFade>
 
           {/* Title + year */}
           <div className="grid grid-cols-1 items-end gap-8 lg:grid-cols-[1fr_auto]">
-            <div>
-              <m.h1
-                initial={{ opacity: 0, y: 14 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.08, duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-                className="mb-5 font-display text-[clamp(2.2rem,5.5vw,4rem)] leading-none font-bold tracking-[-0.045em] text-text-primary italic"
-              >
-                {meta.title}
-              </m.h1>
-
-              {meta.summary && (
-                <m.p
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.17, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                  className="max-w-[60ch] text-[clamp(0.95rem,1.8vw,1.1rem)] leading-[1.65] text-text-secondary"
-                >
-                  {meta.summary}
-                </m.p>
-              )}
-            </div>
+            <CaseFade delay={0.08} y={14}>
+              <div>
+                <h1 className="mb-5 font-display text-[clamp(2.2rem,5.5vw,4rem)] leading-none font-bold tracking-[-0.045em] text-text-primary italic">
+                  {meta.title}
+                </h1>
+              </div>
+            </CaseFade>
 
             {/* Giant faded year badge */}
-            <m.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.15 }}
-              transition={{ delay: 0.4, duration: 0.5 }}
-              className="hidden shrink-0 font-mono text-[clamp(2rem,4vw,3rem)] leading-none font-bold tracking-[-0.04em] text-accent lg:block"
-            >
-              {meta.year}
-            </m.div>
+            <CaseFade delay={0.4} y={0}>
+              <div
+                className="hidden shrink-0 font-mono text-[clamp(2rem,4vw,3rem)] leading-none font-bold tracking-[-0.04em] text-accent lg:block"
+                style={{ opacity: 0.15 }}
+              >
+                {meta.year}
+              </div>
+            </CaseFade>
           </div>
 
           {/* Status + tags + links row */}
-          <m.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.26, duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-            className="mt-8 flex flex-wrap items-center gap-4 border-t border-border-subtle pt-6"
-          >
-            <span
-              className="flex items-center gap-[0.35rem] rounded-sm px-[0.55rem] py-[0.18rem] font-mono text-[0.62rem] uppercase tracking-[0.1em]"
-              style={{ color: s.color, border: `1px solid ${s.border}` }}
-            >
-              <span className="h-1 w-1 rounded-full" style={{ background: s.color }} />
-              {s.label}
-            </span>
+          <CaseFade delay={0.26} y={8}>
+            <div className="mt-8 flex flex-wrap items-center gap-4 border-t border-border-subtle pt-6">
+              <span
+                className="flex items-center gap-[0.35rem] rounded-sm px-[0.55rem] py-[0.18rem] font-mono text-[0.62rem] uppercase tracking-[0.1em]"
+                style={{ color: s.color, border: `1px solid ${s.border}` }}
+              >
+                <span className="h-1 w-1 rounded-full" style={{ background: s.color }} />
+                {s.label}
+              </span>
 
-            <span aria-hidden="true" className="h-4 w-px bg-border" />
+              <span aria-hidden="true" className="h-4 w-px bg-border" />
 
-            <div className="flex flex-wrap gap-[0.35rem]">
-              {meta.stack.map((tag) => (
-                <span
-                  key={tag}
-                  className="rounded-sm border border-border-subtle bg-surface px-2 py-[0.2rem] font-mono text-[0.67rem] text-text-muted"
-                >
-                  {tag}
-                </span>
-              ))}
+              <div className="flex flex-wrap gap-[0.35rem]">
+                {meta.stack.map((tag) => (
+                  <span
+                    key={tag}
+                    className="rounded-sm border border-border-subtle bg-surface px-2 py-[0.2rem] font-mono text-[0.67rem] text-text-muted"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+
+              <div className="ml-auto flex items-center gap-3">
+                {meta.live && (
+                  <a
+                    href={meta.live}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-[0.4rem] rounded-sm bg-accent px-4 py-[0.55rem] text-[0.78rem] font-semibold tracking-[0.03em] text-accent-foreground no-underline transition-opacity duration-150 hover:opacity-85"
+                  >
+                    ↗ live
+                  </a>
+                )}
+                {meta.repo && (
+                  <a
+                    href={meta.repo}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-[0.4rem] rounded-sm border border-border px-4 py-[0.55rem] font-mono text-[0.78rem] tracking-[0.03em] text-text-secondary no-underline transition-[border-color,color] duration-150 hover:border-accent-dim hover:text-text-primary"
+                  >
+                    ⌥ source
+                  </a>
+                )}
+              </div>
             </div>
-
-            <div className="ml-auto flex items-center gap-3">
-              {meta.live && (
-                <a
-                  href={meta.live}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-[0.4rem] rounded-sm bg-accent px-4 py-[0.55rem] text-[0.78rem] font-semibold tracking-[0.03em] text-accent-foreground no-underline transition-opacity duration-150 hover:opacity-85"
-                >
-                  ↗ live
-                </a>
-              )}
-              {meta.repo && (
-                <a
-                  href={meta.repo}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-[0.4rem] rounded-sm border border-border px-4 py-[0.55rem] font-mono text-[0.78rem] tracking-[0.03em] text-text-secondary no-underline transition-[border-color,color] duration-150 hover:border-accent-dim hover:text-text-primary"
-                >
-                  ⌥ source
-                </a>
-              )}
-            </div>
-          </m.div>
+          </CaseFade>
         </div>
       </div>
 
@@ -180,17 +139,14 @@ export default function ProjectCaseStudy({
           {/* Left — editorial content */}
           <div className="min-w-0">
             {/* Overview */}
-            <m.section
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.15, duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-              className="mb-16"
-            >
-              <SectionLabel label="Overview" />
-              <div className="case-body overview-body flex flex-col">
-                <ProjectMdx source={parsed.overview} />
-              </div>
-            </m.section>
+            <CaseFade delay={0.15} y={16} className="mb-16">
+              <section>
+                <SectionLabel label="Overview" />
+                <div className="case-body overview-body flex flex-col">
+                  <ProjectMdx source={parsed.overview} />
+                </div>
+              </section>
+            </CaseFade>
 
             {/* Screenshots */}
             {screenshots.length > 0 && (
@@ -201,25 +157,15 @@ export default function ProjectCaseStudy({
             )}
 
             {/* Challenges */}
-            <div ref={challengesRef} className="mb-16">
-              <m.div
-                initial={{ opacity: 0, y: 16 }}
-                animate={challengesInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-              >
-                <SectionLabel label="Challenges" />
-              </m.div>
+            {parsed.challenges.length > 0 && (
+              <section className="mb-16">
+                <CaseInView>
+                  <SectionLabel label="Challenges" />
+                </CaseInView>
 
-              {parsed.challenges.length > 0 && (
-                <m.div variants={staggerContainer} initial="hidden" animate={challengesInView ? "visible" : "hidden"} className="flex flex-col gap-6">
+                <CaseStagger className="flex flex-col gap-6">
                   {parsed.challenges.map((challenge, i) => (
-                    <m.div
-                      key={challenge.title}
-                      variants={staggerItem}
-                      whileHover={{ y: -2, borderColor: "var(--color-accent-dim)" }}
-                      transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-                      className="challenge-card relative rounded-lg border border-border bg-bg-elevated px-7 py-6"
-                    >
+                    <CaseItem key={challenge.title} className="challenge-card relative rounded-lg border border-border bg-bg-elevated px-7 py-6">
                       <span aria-hidden="true" className="absolute top-6 right-6 font-mono text-[0.65rem] tracking-[0.1em] text-accent opacity-50">
                         {String(i + 1).padStart(2, "0")}
                       </span>
@@ -230,56 +176,42 @@ export default function ProjectCaseStudy({
                       <div className="challenge-body">
                         <ProjectMdx source={challenge.body} />
                       </div>
-                    </m.div>
+                    </CaseItem>
                   ))}
-                </m.div>
-              )}
-            </div>
+                </CaseStagger>
+              </section>
+            )}
 
             {/* Outcomes */}
-            <div ref={outcomesRef} className="mb-16">
-              <m.div
-                initial={{ opacity: 0, y: 16 }}
-                animate={outcomesInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-              >
-                <SectionLabel label="Outcomes" />
-                <div className="case-body">
-                  <ProjectMdx source={parsed.outcomes} />
-                </div>
-              </m.div>
-            </div>
+            {parsed.outcomes.trim() && (
+              <section className="mb-16">
+                <CaseInView>
+                  <SectionLabel label="Outcomes" />
+                  <div className="case-body">
+                    <ProjectMdx source={parsed.outcomes} />
+                  </div>
+                </CaseInView>
+              </section>
+            )}
 
             {/* What I learned — the accent panel */}
-            <div ref={learnedRef}>
-              <m.div
-                initial={{ opacity: 0, y: 16 }}
-                animate={learnedInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-              >
-                <SectionLabel label="What I learned" />
-
-                <m.div
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={learnedInView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ delay: 0.1, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                  className="rounded-lg border border-accent-dim bg-accent-subtle p-8"
-                >
-                  <div className="case-body learned-body">
-                    <ProjectMdx source={parsed.learned} />
+            {parsed.learned.trim() && (
+              <CaseInView>
+                <section>
+                  <SectionLabel label="What I learned" />
+                  <div className="rounded-lg border border-accent-dim bg-accent-subtle p-8">
+                    <div className="case-body learned-body">
+                      <ProjectMdx source={parsed.learned} />
+                    </div>
                   </div>
-                </m.div>
-              </m.div>
-            </div>
+                </section>
+              </CaseInView>
+            )}
           </div>
 
           {/* Right — sticky sidebar (definition sheet) */}
           <aside className="detail-sidebar static max-lg:order-first lg:sticky lg:top-24" aria-label="Project details">
-            <m.div
-              initial={{ opacity: 0, x: 16 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.4, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            >
+            <CaseSidebar>
               <div className="mb-4 overflow-hidden rounded-lg border border-border bg-surface">
                 {[
                   { label: "Year", value: meta.year },
@@ -337,7 +269,7 @@ export default function ProjectCaseStudy({
                   ← all projects
                 </Link>
               </div>
-            </m.div>
+            </CaseSidebar>
           </aside>
         </div>
       </div>
