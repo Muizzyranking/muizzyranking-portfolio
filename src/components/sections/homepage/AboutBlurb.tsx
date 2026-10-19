@@ -26,7 +26,6 @@ export default function AboutBlurb() {
             behind them. I enjoy understanding problems deeply, making thoughtful engineering decisions, and building software that works well and
             stands the test of time. Lately, I've been exploring AI and machine learning, particularly how to turn them into useful products.
           </m.p>
-          
         </div>
 
         <m.figure

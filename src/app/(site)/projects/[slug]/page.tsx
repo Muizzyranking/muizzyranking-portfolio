@@ -49,12 +49,7 @@ export default async function ProjectPage({ params }: Props) {
   return (
     <>
       <ReadingProgress />
-      <ProjectCaseStudy
-        meta={project.meta}
-        parsed={project.parsed}
-        prev={getPrevNextProject(slug).prev}
-        next={getPrevNextProject(slug).next}
-      />
+      <ProjectCaseStudy meta={project.meta} parsed={project.parsed} prev={getPrevNextProject(slug).prev} next={getPrevNextProject(slug).next} />
     </>
   );
 }

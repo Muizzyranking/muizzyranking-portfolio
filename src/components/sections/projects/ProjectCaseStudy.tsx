@@ -153,7 +153,6 @@ export default function ProjectCaseStudy({
         </aside>
       </div>
 
-
       {(prev || next) && (
         <nav className="border-t border-border-subtle" aria-label="Project navigation">
           <div className="container-main grid gap-8 py-12 sm:grid-cols-2">
