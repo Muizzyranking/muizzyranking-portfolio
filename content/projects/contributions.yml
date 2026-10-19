@@ -1,0 +1,20 @@
+- name: "Rizz-Base"
+  link: "https://github.com/pazti/Rizz-Base"
+
+- name: "HNG Fast API boilerplate"
+  link: "https://github.com/hngprojects/hng_boilerplate_python_fastapi_web"
+
+- name: "Lyra"
+  link: "https://github.com/eisewilliam/project-lyra"
+
+- name: "HNG distributed system"
+  link: "https://github.com/hng-group-30/distributed-notification-system"
+
+- name: "Nvim Treesittter textobject"
+  link: "https://github.com/nvim-treesitter/nvim-treesitter-textobjects"
+
+- name: "Kulala nvim"
+  link: "https://github.com/dont-be-evil-company/kulala.nvim"
+
+- name: "Zsh Magic dashboard"
+  link: "https://github.com/chrisgrieser/zsh-magic-dashboard"
