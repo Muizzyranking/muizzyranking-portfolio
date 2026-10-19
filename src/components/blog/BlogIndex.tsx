@@ -3,6 +3,7 @@
 import { AnimatePresence, m, useReducedMotion } from "framer-motion";
 import { useMemo, useState } from "react";
 import PostRow from "@/components/blog/PostRow";
+import FilterDropdown from "@/components/ui/FilterDropdown";
 import { EASE } from "@/lib/motion";
 import type { Category, PostMeta } from "@/types";
 
@@ -10,7 +11,6 @@ export default function BlogIndex({ posts, categories }: { posts: PostMeta[]; ca
   const reduce = useReducedMotion();
   const [query, setQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
-  const [showAllTopics, setShowAllTopics] = useState(false);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -22,12 +22,9 @@ export default function BlogIndex({ posts, categories }: { posts: PostMeta[]; ca
     });
   }, [posts, query, activeCategory]);
 
-  const visibleCategories = showAllTopics ? categories : categories.slice(0, 8);
-  const hiddenCount = categories.length - visibleCategories.length;
-
   return (
     <div className="min-w-0">
-      {/* toolbar: search + count, then the topic index */}
+      {/* toolbar: search + topic dropdown + live count */}
       <div className="mb-6 flex flex-wrap items-center justify-between gap-x-8 gap-y-3 border-b border-border pb-4">
         <label className="group relative block w-full max-w-[20rem]">
           <span className="sr-only">Search writing</span>
@@ -48,63 +45,24 @@ export default function BlogIndex({ posts, categories }: { posts: PostMeta[]; ca
             className="w-full border border-border bg-surface-raised py-1.5 pr-3 pl-9 font-mono text-[0.78rem] text-text-primary transition-colors duration-150 outline-none rounded-[var(--radius-sm)] placeholder:text-text-muted focus:border-text-secondary"
           />
         </label>
-        <span className="font-mono text-[0.7rem] text-text-muted" aria-live="polite">
-          {filtered.length} / {posts.length}
-        </span>
-      </div>
 
-      {categories.length > 0 && (
-        <fieldset className="mb-8" aria-label="Filter by topic">
-          <legend className="sr-only">Filter by topic</legend>
-          <div className="flex flex-wrap items-baseline gap-x-5 gap-y-2">
-            <button
-              type="button"
-              onClick={() => setActiveCategory(null)}
-              aria-pressed={activeCategory === null}
-              className="relative py-0.5 font-mono text-[0.74rem] lowercase transition-colors duration-150"
-              style={{ color: activeCategory === null ? "var(--color-text-primary)" : "var(--color-text-muted)" }}
-            >
-              all topics
-              {activeCategory === null && <span className="absolute inset-x-0 -bottom-1 h-px bg-accent" aria-hidden="true" />}
-            </button>
-            {visibleCategories.map((c) => {
-              const active = activeCategory === c.slug;
-              return (
-                <button
-                  key={c.slug}
-                  type="button"
-                  onClick={() => setActiveCategory(active ? null : c.slug)}
-                  aria-pressed={active}
-                  className="relative py-0.5 font-mono text-[0.74rem] lowercase transition-colors duration-150"
-                  style={{ color: active ? "var(--color-text-primary)" : "var(--color-text-muted)" }}
-                >
-                  {c.label}
-                  <span className={active ? "text-accent" : "text-text-muted/60"}> {c.count}</span>
-                  {active && <span className="absolute inset-x-0 -bottom-1 h-px bg-accent" aria-hidden="true" />}
-                </button>
-              );
-            })}
-            {hiddenCount > 0 && (
-              <button
-                type="button"
-                onClick={() => setShowAllTopics(true)}
-                className="py-0.5 font-mono text-[0.74rem] lowercase text-accent underline decoration-accent/40 underline-offset-4 transition-colors duration-150 hover:decoration-accent"
-              >
-                +{hiddenCount} more topics
-              </button>
-            )}
-            {showAllTopics && categories.length > 8 && (
-              <button
-                type="button"
-                onClick={() => setShowAllTopics(false)}
-                className="py-0.5 font-mono text-[0.74rem] lowercase text-text-muted transition-colors duration-150 hover:text-text-primary"
-              >
-                show less
-              </button>
-            )}
-          </div>
-        </fieldset>
-      )}
+        <div className="flex items-center gap-4">
+          {categories.length > 0 && (
+            <FilterDropdown
+              idleLabel="topics"
+              ariaLabel="Filter by topic"
+              allLabel="all topics"
+              allCount={posts.length}
+              options={categories.map((c) => ({ key: c.slug, label: c.label, count: c.count }))}
+              value={activeCategory ? (categories.find((c) => c.slug === activeCategory)?.label ?? activeCategory) : null}
+              onChange={setActiveCategory}
+            />
+          )}
+          <span className="font-mono text-[0.7rem] text-text-muted" aria-live="polite">
+            {filtered.length} / {posts.length}
+          </span>
+        </div>
+      </div>
 
       {filtered.length === 0 ? (
         <div className="border-t border-border-subtle py-20 text-center">
