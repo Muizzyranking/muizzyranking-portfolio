@@ -60,6 +60,17 @@ export default function CommandPalette({
     }
   }, [open]);
 
+  // ESC closes from anywhere: focus can sit on <body> or a scrollbar, and
+  // then the dialog's own onKeyDown never sees the key.
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open, onClose]);
+
   const go = (item: PaletteItem) => {
     onClose();
     if (item.kind === "action" && item.external) {
