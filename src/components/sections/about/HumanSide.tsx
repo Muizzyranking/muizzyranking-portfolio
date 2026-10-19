@@ -21,8 +21,14 @@ const HOBBIES = [
   },
   {
     label: "Playing",
-    title: "Video games.",
-    body: "How I unwind after a long build. Good stories, good mechanics, the occasional rage quit.",
+    title: "Strategy, RPGs, multiplayer.",
+    body: "How I unwind after a long build. A good campaign, a hard boss, or chaos with friends. The occasional rage quit is part of the process.",
+    tags: ["RPGs", "Strategy", "Multiplayer"],
+  },
+  {
+    label: "Reading",
+    title: "Fiction and history.",
+    body: "Stories first, then the true ones — I fall into rabbit holes about how things happened and why. Takes forever to finish a book; keeps starting new ones.",
     tags: [],
   },
   {
@@ -32,9 +38,15 @@ const HOBBIES = [
     tags: [],
   },
   {
+    label: "Stargazing",
+    title: "Astrophysics and astronomy.",
+    body: "The night sky is the oldest screen there is. Astronomy videos, cosmology rabbit holes, and pointing out Venus to anyone standing nearby.",
+    tags: [],
+  },
+  {
     label: "Exploring",
-    title: "Travel, nature, and rabbit holes.",
-    body: "New places and fresh air with no laptop. At home: history, science and space documentaries I fall into at 1am.",
+    title: "Travel, nature, fresh air.",
+    body: "New places and long walks with no laptop in sight.",
     tags: [],
   },
 ];
@@ -104,18 +116,20 @@ export default function HumanSide() {
           <m.div
             initial={{ opacity: 0, ...from }}
             animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, ...from }}
-            transition={{ duration: 0.45, ease: EASE, delay: 0.24 }}
+            transition={{ duration: 0.45, ease: EASE, delay: 0.06 * HOBBIES.length }}
             className="card group flex flex-col gap-4 border-accent/25 !bg-accent-subtle p-7 sm:col-span-2 sm:flex-row sm:items-center"
           >
             <div className="flex-1">
               <span className="eyebrow transition-colors duration-200 group-hover:text-white">dad joke free sample</span>
-              <p className="mt-3 font-display text-[clamp(1.1rem,2vw,1.35rem)] leading-snug font-semibold text-text-primary">&ldquo;{joke}&rdquo;</p>
+              <p className="mt-3 font-display text-[clamp(1.1rem,2vw,1.35rem)] leading-snug font-semibold text-text-primary transition-colors duration-200 group-hover:text-white">
+                &ldquo;{joke}&rdquo;
+              </p>
             </div>
             <button
               type="button"
               onClick={cycleJoke}
               aria-label="Show the next dad joke"
-              className="group inline-flex shrink-0 items-center gap-2 self-start rounded-full border border-accent/40 px-4 py-2 font-mono text-[0.72rem] font-semibold tracking-[0.08em] text-accent uppercase transition-colors duration-150 hover:bg-accent hover:text-accent-foreground sm:self-center"
+              className="group inline-flex shrink-0 items-center gap-2 self-start rounded-full border border-accent/40 px-4 py-2 font-mono text-[0.72rem] font-semibold tracking-[0.08em] uppercase text-accent transition-colors duration-150 hover:bg-accent hover:text-white sm:self-center"
             >
               another one
               <span aria-hidden="true" className="transition-transform duration-200 ease-out group-hover:rotate-90">
