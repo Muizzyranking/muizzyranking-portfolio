@@ -201,7 +201,7 @@ function ProjectsList({ rows }: { rows: ProjectRow[] }) {
 function Badge({ kind, children }: { kind: "draft" | "featured"; children: React.ReactNode }) {
   const styles =
     kind === "draft"
-      ? { color: "#b45309", borderColor: "#d9770666", background: "#d9770614" }
+      ? { color: "#6f8c48", borderColor: "#9fbf6b66", background: "#9fbf6b14" }
       : { color: "var(--color-accent)", borderColor: "var(--color-accent-dim)", background: "transparent" };
   return (
     <span

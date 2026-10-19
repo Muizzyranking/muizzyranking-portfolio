@@ -39,9 +39,9 @@ export default async function BlogPreviewPage({ params }: Props) {
         <div style={{ flex: 1 }} />
         <span
           style={{
-            color: "#b45309",
-            border: "1px solid #d9770666",
-            background: "#d9770614",
+            color: "#6f8c48",
+            border: "1px solid #9fbf6b66",
+            background: "#9fbf6b14",
             borderRadius: "999px",
             padding: "0.08rem 0.55rem",
             textTransform: "uppercase",
