@@ -6,15 +6,16 @@ import { EASE } from "@/lib/motion";
 
 const PARAGRAPHS = [
   {
-    text: "It started with curiosity, like most things do. I wanted to know how things worked. Not the surface, but the mechanism underneath. I started with C, which isn't the friendliest place to begin, but it taught me the fundamentals properly. The questions never really stopped.",
+    text: "It started with curiosity. I wanted to understand how things worked, not just what they did, but what happened underneath. I started with C, which isn't exactly the easiest place to begin, but it gave me a solid foundation and taught me to think beyond the surface. The questions never really stopped.",
   },
   {
-    text: "Backend engineering felt like a natural home. I like the parts nobody sees: the performance work, the data modelling, the failure modes, the 3am alerts that teach you more about a system than a week of reading docs. If you did it right, nobody knows you were there.",
+    text: "Over time, I found myself drawn to software engineering as a whole. I enjoy working across the stack, from building interfaces that feel intuitive to designing the systems, APIs, and data models that power them. I'm interested in how the pieces fit together, how to make them perform well, and what happens when things go wrong. For me, building software is as much about understanding the problem and making sound engineering decisions as it is about writing code.",
   },
   {
-    text: "People who know me call me muizzy. You're welcome to too. Now I'm pointing the same obsession at AI and ML. The intersection of systems and intelligence is the most interesting problem space I've found, and I'm still early in it. I'm paying attention.",
+    text: "Lately, I've been exploring AI and machine learning, particularly where they intersect with software engineering. I'm interested in understanding how these technologies work and how to turn them into useful products. There's still a lot to learn, and that's part of what makes it interesting.",
     accent: true,
   },
+  { text: "My friends call me Muizzy. You're should too..", accent: true },
 ];
 
 export default function AboutHero() {
@@ -34,9 +35,9 @@ export default function AboutHero() {
               initial={{ opacity: 0, ...rise }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.55, ease: EASE, delay: 0.08 }}
-              className="font-display text-[clamp(2.75rem,7vw,5rem)] leading-[1.02] tracking-[-0.03em] font-bold text-text-primary mb-8"
+              className="font-display text-[clamp(2.75rem,7vw,5rem)] leading-[1.02] tracking-[-0.03em] font-semibold text-text-primary mb-8"
             >
-              Muiz <em className="italic text-accent">Oyebowale</em>
+              Muiz <em className="text-accent">Oyebowale</em>
             </m.h1>
 
             <div className="max-w-[62ch] flex flex-col gap-5">

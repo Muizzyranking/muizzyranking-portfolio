@@ -72,7 +72,7 @@ export default function HumanSide() {
           initial={{ opacity: 0, ...from }}
           animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, ...from }}
           transition={{ duration: 0.5, ease: EASE, delay: 0.06 }}
-          className="font-display text-[clamp(1.75rem,3.5vw,2.5rem)] leading-[1.12] font-bold text-text-primary mb-10"
+          className="font-display text-[clamp(1.75rem,3.5vw,2.5rem)] leading-[1.12] font-semibold text-text-primary mb-10"
         >
           What I like to do.
         </m.h2>
@@ -105,10 +105,10 @@ export default function HumanSide() {
             initial={{ opacity: 0, ...from }}
             animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, ...from }}
             transition={{ duration: 0.45, ease: EASE, delay: 0.24 }}
-            className="card flex flex-col gap-4 border-accent/25 !bg-accent-subtle p-7 sm:col-span-2 sm:flex-row sm:items-center"
+            className="card group flex flex-col gap-4 border-accent/25 !bg-accent-subtle p-7 sm:col-span-2 sm:flex-row sm:items-center"
           >
             <div className="flex-1">
-              <span className="eyebrow">dad joke free sample</span>
+              <span className="eyebrow transition-colors duration-200 group-hover:text-white">dad joke free sample</span>
               <p className="mt-3 font-display text-[clamp(1.1rem,2vw,1.35rem)] leading-snug font-semibold text-text-primary">&ldquo;{joke}&rdquo;</p>
             </div>
             <button

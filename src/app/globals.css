@@ -1,62 +1,62 @@
 @import "tailwindcss";
 
 @theme {
-  /* Light palette — bright porcelain + ink + blood red */
-  --color-background: #fffdf9;
-  --color-bg-elevated: #f7f4ee;
-  --color-surface: #f7f4ee;
-  --color-surface-raised: #ffffff;
-  --color-border: #e9e4da;
-  --color-border-subtle: #f0ece4;
+  /* Light palette — warm off-white + amber experiment */
+  --color-background: #f7f3ec;
+  --color-bg-elevated: #f1ede4;
+  --color-surface: #f1ede4;
+  --color-surface-raised: #fdfbf7;
+  --color-border: #e4ddd0;
+  --color-border-subtle: #ece6da;
   --color-text-primary: #191512;
   --color-text-secondary: #463f37;
   --color-text-muted: #6d655a;
-  --color-accent: #881600;
-  --color-accent-bright: #a81c00;
-  --color-accent-dim: #690f00;
-  --color-accent-subtle: #fbeeea;
-  --color-accent-foreground: #fff6f2;
+  --color-accent: #d97706;
+  --color-accent-bright: #b45309;
+  --color-accent-dim: #92400e;
+  --color-accent-subtle: #faf0e0;
+  --color-accent-foreground: #ffffff;
   --color-success: #1a7f37;
   --color-error: #c0271c;
 
-  /* Radius — generous, friendly */
-  --radius-sm: 8px;
-  --radius-md: 14px;
-  --radius-lg: 18px;
-  --radius-xl: 24px;
+  /* Radius — quiet, precise. Interactive elements are rectangles. */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
 
-  /* Soft elevation */
-  --shadow-soft: 0 2px 6px -2px rgb(25 21 18 / 0.06), 0 12px 32px -16px rgb(25 21 18 / 0.14);
-  --shadow-lifted: 0 4px 10px -4px rgb(25 21 18 / 0.08), 0 24px 56px -24px rgb(25 21 18 / 0.22);
+  /* Elevation is carried by borders; shadows only lift floating chrome */
+  --shadow-soft: 0 1px 2px rgb(25 21 18 / 0.04), 0 8px 24px -12px rgb(25 21 18 / 0.1);
+  --shadow-lifted: 0 2px 4px rgb(25 21 18 / 0.05), 0 24px 48px -24px rgb(25 21 18 / 0.16);
 }
 
 @theme inline {
-  --font-sans: var(--font-poppins), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-display: var(--font-bricolage), "Poppins", -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-sans: var(--font-poppins), "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-display: var(--font-fraunces), "Fraunces", Georgia, "Times New Roman", serif;
+  --font-mono: var(--font-ibm-plex-mono), "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
-/* ── Dark palette — true night black + glowing bordeaux ── */
+/* ── Dark palette — neutral near-black + amber accent ── */
 [data-theme="dark"] {
-  --color-background: #0a0a0b;
-  --color-bg-elevated: #121114;
-  --color-surface: #121114;
-  --color-surface-raised: #18171b;
-  --color-border: #26242a;
-  --color-border-subtle: #1d1c21;
-  --color-text-primary: #f3f1ee;
-  --color-text-secondary: #c7c3bc;
-  --color-text-muted: #9a958d;
-  --color-accent: #e2543e;
-  --color-accent-bright: #f07357;
-  --color-accent-dim: #b03a28;
-  --color-accent-subtle: #291009;
-  --color-accent-foreground: #1c0703;
+  --color-background: #0a0a0c;
+  --color-bg-elevated: #121214;
+  --color-surface: #121214;
+  --color-surface-raised: #17171a;
+  --color-border: #242428;
+  --color-border-subtle: #1d1d20;
+  --color-text-primary: #f4f4f2;
+  --color-text-secondary: #c6c5c2;
+  --color-text-muted: #999791;
+  --color-accent: #f59e0b;
+  --color-accent-bright: #fbbf24;
+  --color-accent-dim: #b45309;
+  --color-accent-subtle: #271b06;
+  --color-accent-foreground: #191403;
   --color-success: #4ade80;
   --color-error: #f87171;
 
-  --shadow-soft: 0 2px 6px -2px rgb(0 0 0 / 0.5), 0 12px 32px -16px rgb(0 0 0 / 0.55);
-  --shadow-lifted: 0 4px 10px -4px rgb(0 0 0 / 0.5), 0 24px 56px -24px rgb(0 0 0 / 0.7);
+  --shadow-soft: 0 1px 2px rgb(0 0 0 / 0.4), 0 8px 24px -12px rgb(0 0 0 / 0.5);
+  --shadow-lifted: 0 2px 4px rgb(0 0 0 / 0.4), 0 24px 48px -24px rgb(0 0 0 / 0.6);
 }
 
 /* ─────────────────────────────────────────────
@@ -71,9 +71,10 @@
 
   :root {
     color-scheme: light;
-    --font-sans: var(--font-poppins), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    --font-display: var(--font-bricolage), "Poppins", -apple-system, BlinkMacSystemFont, sans-serif;
-    --font-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    --font-sans:
+      var(--font-schibsted), "Schibsted Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-display: var(--font-fraunces), "Fraunces", Georgia, "Times New Roman", serif;
+    --font-mono: var(--font-ibm-plex-mono), "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   }
 
   [data-theme="dark"] {
@@ -92,6 +93,7 @@
     color: var(--color-text-primary);
     font-family: var(--font-sans);
     font-size: 1.0625rem;
+    font-weight: 400;
     line-height: 1.7;
     -webkit-font-smoothing: antialiased;
     transition:
@@ -107,33 +109,34 @@
   h6 {
     font-family: var(--font-display);
     color: var(--color-text-primary);
-    font-weight: 700;
+    font-weight: 600;
     line-height: 1.15;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.005em;
     text-wrap: balance;
     scroll-margin-top: 6rem;
   }
 
   h1 {
-    font-size: clamp(2rem, 5vw, 3.25rem);
-    line-height: 1.08;
-    letter-spacing: -0.03em;
-    font-weight: 800;
+    font-size: clamp(2.5rem, 6vw, 3.75rem);
+    line-height: 1.06;
+    letter-spacing: -0.015em;
   }
 
   h2 {
-    font-size: clamp(1.6rem, 3.2vw, 2.35rem);
+    font-size: clamp(1.75rem, 3.6vw, 2.5rem);
     line-height: 1.14;
+    letter-spacing: -0.01em;
   }
 
   h3 {
-    font-size: 1.3rem;
-    line-height: 1.28;
+    font-size: 1.25rem;
+    line-height: 1.3;
+    letter-spacing: -0.015em;
   }
 
   h4 {
-    font-size: 1.0625rem;
-    line-height: 1.35;
+    font-size: 1rem;
+    line-height: 1.4;
   }
 
   p {
@@ -196,42 +199,17 @@
   padding-inline: clamp(1.25rem, 5vw, 2.5rem);
 }
 
+/* Sections are separated by hairlines, not boxes. Density is low. */
 .section {
-  padding-block: clamp(4rem, 9vw, 7rem);
+  padding-block: clamp(5rem, 10vw, 8rem);
+}
+
+.section-inner {
+  padding-block: clamp(3rem, 7vw, 5rem);
 }
 
 .section-band {
   border-top: 1px solid var(--color-border-subtle);
-}
-
-.section-band--elevated {
-  background: var(--color-bg-elevated);
-}
-
-.eyebrow {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--color-text-muted);
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-}
-
-/* Small red tick before eyebrow labels — a quiet recurring brand mark */
-.eyebrow::before {
-  content: "";
-  display: inline-block;
-  width: 1.25rem;
-  height: 2px;
-  border-radius: 1px;
-  background: var(--color-accent);
-}
-
-.text-accent {
-  color: var(--color-accent);
 }
 
 .divider {
@@ -240,18 +218,56 @@
   border: 0;
 }
 
+/* Documentation grid: a quiet left rail (index + label) beside content */
+.doc-grid {
+  display: grid;
+  grid-template-columns: 11rem minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 4rem);
+}
+
+@media (max-width: 860px) {
+  .doc-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Legacy alias — .eyebrow routes to the same treatment */
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.eyebrow::before {
+  content: "";
+  display: inline-block;
+  width: 1.25rem;
+  height: 1px;
+  background: var(--color-accent);
+}
+
+.text-accent {
+  color: var(--color-accent);
+}
+
 /* ─────────────────────────────────────────────
    SHARED UI PRIMITIVES
 ──────────────────────────────────────────────── */
 
-/* Buttons: pill geometry, press feedback, precise transitions */
+/* Buttons: rectangular, border-led, press feedback */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  padding: 0.85rem 1.65rem;
-  border-radius: 999px;
+  padding: 0.85rem 1.6rem;
+  border-radius: var(--radius-md);
   font-size: 0.95rem;
   font-weight: 600;
   line-height: 1;
@@ -271,24 +287,22 @@
 .btn--primary {
   background: var(--color-accent);
   color: var(--color-accent-foreground);
-  box-shadow: 0 10px 24px -12px color-mix(in srgb, var(--color-accent) 75%, transparent);
 }
 
 .btn--primary:hover {
-  background: var(--color-accent-dim);
+  background: var(--color-accent-bright);
   transform: translateY(-1px);
-  box-shadow: 0 16px 32px -14px color-mix(in srgb, var(--color-accent) 80%, transparent);
 }
 
 .btn--ghost {
   background: transparent;
   color: var(--color-text-primary);
-  border: 1.5px solid var(--color-border);
+  border: 1px solid var(--color-border);
 }
 
 .btn--ghost:hover {
-  border-color: var(--color-accent);
   color: var(--color-accent);
+  border-color: var(--color-accent);
   transform: translateY(-1px);
 }
 
@@ -297,19 +311,28 @@
   align-items: center;
   gap: 0.45rem;
   font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.02em;
+  font-size: 0.7rem;
+  letter-spacing: 0.01em;
   color: var(--color-text-secondary);
   background: var(--color-surface-raised);
   border: 1px solid var(--color-border);
-  border-radius: 999px;
-  padding: 0.26rem 0.75rem;
+  border-radius: var(--radius-sm);
+  padding: 0.3rem 0.65rem;
   white-space: nowrap;
   transition:
     color 150ms ease,
     border-color 150ms ease,
     transform 150ms cubic-bezier(0.23, 1, 0.32, 1),
     box-shadow 150ms ease;
+}
+
+/* Larger chip used where tech lists are the main content (stack sections) */
+.chip--lg {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  padding: 0.42rem 0.85rem;
+  gap: 0.55rem;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -321,21 +344,46 @@
   }
 }
 
+/* Flat surface card — hierarchy comes from the border, not elevation */
 .card {
   background: var(--color-surface-raised);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-soft);
+  border-radius: var(--radius-md);
+}
+
+/* Mono metadata row, e.g. "2026 · Django · contract" */
+.meta-line {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+  letter-spacing: 0.02em;
+}
+
+/* Underline that draws in on hover — used on editorial links */
+.link-draw {
+  position: relative;
+}
+
+.link-draw::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 1px;
+  background: var(--color-accent);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 280ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.link-draw:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
 }
 
 /* ─────────────────────────────────────────────
    CUSTOM CURSOR
-   Amber-bordeaux circle that replaces the native
-   cursor on fine-pointer devices and expands over
-   anything clickable. Rendered by <CustomCursor/>;
-   the html.custom-cursor-active class is added by
-   JS only when it's actually running, so no-JS,
-   touch and reduced-motion users keep normal cursors.
 ──────────────────────────────────────────────── */
 html.custom-cursor-active,
 html.custom-cursor-active a,
@@ -399,6 +447,24 @@ html.custom-cursor-active svg [role="button"] {
 .cursor-dot[data-wrapped="true"] {
   background: color-mix(in srgb, var(--color-accent) 7%, transparent);
   border-width: 2px;
+}
+
+.cursor-hub {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10001;
+  pointer-events: none;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--color-accent);
+  opacity: 0;
+  will-change: transform;
+  transition: opacity 150ms ease;
+}
+.cursor-hub[data-visible="true"] {
+  opacity: 1;
 }
 
 .cursor-back {
@@ -511,23 +577,6 @@ html.custom-cursor-active svg [role="button"] {
   background-position: 100% 100%;
 }
 
-/* Hero diagram: no focus outline on the (huge) station group box; keyboard
-   users get the badge circle itself highlighted instead */
-.system-diagram [role="button"]:focus,
-.system-diagram [role="button"]:focus-visible {
-  outline: none;
-}
-
-.system-diagram [role="button"]:focus-visible circle {
-  stroke: var(--color-accent-bright);
-  stroke-width: 3;
-}
-
-.post-link:hover {
-  background-size: 0% 1px;
-  background-position: 100% 100%;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .cursor-dot {
     display: none;
@@ -614,7 +663,7 @@ html.custom-cursor-active svg [role="button"] {
   border-radius: var(--radius-sm);
   color: var(--color-text-muted);
   font-family: var(--font-mono);
-  font-size: 0.68rem;
+  font-size: 0.7rem;
   letter-spacing: 0.08em;
   cursor: pointer;
   opacity: 0;

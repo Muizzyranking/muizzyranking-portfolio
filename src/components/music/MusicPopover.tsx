@@ -114,7 +114,7 @@ export default function MusicPopover() {
             <p className="font-mono text-[0.62rem] uppercase tracking-[0.14em] text-text-muted mb-1">
               {playback === "paused" ? "paused" : "now playing"}
             </p>
-            <p className="font-display text-[1.05rem] font-bold text-text-primary">{MUSIC_TRACKS[trackIndex].label}</p>
+            <p className="font-display text-[1.05rem] font-semibold text-text-primary">{MUSIC_TRACKS[trackIndex].label}</p>
             {MUSIC_TRACKS[trackIndex].credit && (
               <p className="mt-0.5 font-mono text-[0.6rem] text-text-muted/80">{MUSIC_TRACKS[trackIndex].credit}</p>
             )}

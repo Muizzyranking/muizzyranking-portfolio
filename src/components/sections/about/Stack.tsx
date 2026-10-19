@@ -1,34 +1,27 @@
 "use client";
 
-import { m, useInView, useReducedMotion } from "framer-motion";
-import { useRef } from "react";
-import { TierDot } from "@/components/sections/homepage/FullStack";
+import { AnimatePresence, m, useInView, useReducedMotion } from "framer-motion";
+import { useRef, useState } from "react";
+import TierDot from "@/components/ui/TierDot";
 import { EASE, SCROLL_REVEAL } from "@/lib/motion";
 import { STACK_GROUPS } from "@/lib/stack";
 
 export default function Stack() {
-  const ref = useRef<HTMLElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, SCROLL_REVEAL);
   const reduce = useReducedMotion();
-  const from = reduce ? {} : { y: 14 };
+  const from = reduce ? {} : { y: 12 };
+  const [active, setActive] = useState(0);
+  const current = STACK_GROUPS[active] ?? STACK_GROUPS[0];
 
   return (
     <section ref={ref} id="stack" className="section section-band">
       <div className="container-main">
-        <m.p
-          initial={{ opacity: 0, ...from }}
-          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, ...from }}
-          transition={{ duration: 0.45, ease: EASE }}
-          className="eyebrow mb-6"
-        >
-          stack
-        </m.p>
-
         <m.h2
           initial={{ opacity: 0, ...from }}
           animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, ...from }}
           transition={{ duration: 0.5, ease: EASE, delay: 0.06 }}
-          className="font-display text-[clamp(1.75rem,3.5vw,2.5rem)] leading-[1.12] font-bold text-text-primary mb-4"
+          className="mb-4 font-display text-[clamp(1.75rem,3.5vw,2.5rem)] leading-[1.14] text-text-primary"
         >
           What I use to work.
         </m.h2>
@@ -37,53 +30,84 @@ export default function Stack() {
           initial={{ opacity: 0, ...from }}
           animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, ...from }}
           transition={{ duration: 0.5, ease: EASE, delay: 0.12 }}
-          className="text-text-secondary text-[1rem] leading-[1.7] max-w-[52ch] mb-10"
+          className="mb-10 max-w-[52ch] text-[1.02rem] leading-[1.7] text-text-secondary"
         >
           Not a boast, a working inventory. Grouped the way I think about a system, from the language down to the shell.
         </m.p>
 
-        <div className="flex flex-col gap-4">
-          {STACK_GROUPS.map(({ label, blurb, tags }, idx) => (
-            <m.div
-              key={label}
-              initial={{ opacity: 0, ...from }}
-              animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, ...from }}
-              transition={{ duration: 0.45, ease: EASE, delay: 0.05 * idx }}
-              className="card grid gap-x-10 gap-y-4 p-7 transition-[box-shadow,border-color] duration-200 hover:border-accent/40 hover:shadow-[var(--shadow-lifted)] md:grid-cols-[15rem_minmax(0,1fr)] md:items-start"
-            >
-              <div>
-                <p className="font-mono text-[0.72rem] font-semibold tracking-[0.14em] text-accent uppercase">{label}</p>
-                <p className="mt-1.5 text-[0.88rem] leading-relaxed text-text-secondary">{blurb}</p>
-              </div>
+        {/* Category tabs left, active group's panel right */}
+        <div className="grid gap-x-10 gap-y-8 md:grid-cols-[13rem_minmax(0,1fr)]">
+          <div
+            role="tablist"
+            aria-label="Stack categories"
+            className="flex items-start gap-5 max-md:overflow-x-auto md:flex-col md:gap-1.5 md:border-r md:border-border-subtle md:pr-6"
+          >
+            {STACK_GROUPS.map((group, i) => {
+              const selected = i === active;
+              return (
+                <button
+                  key={group.label}
+                  type="button"
+                  role="tab"
+                  id={`stack-tab-${i}`}
+                  aria-selected={selected}
+                  aria-controls="stack-panel"
+                  onClick={() => setActive(i)}
+                  style={{ color: selected ? "var(--color-accent)" : "var(--color-text-muted)" }}
+                  className="group relative shrink-0 py-2 text-left font-mono text-[0.88rem] lowercase transition-colors duration-150"
+                >
+                  {selected && (
+                    <m.span
+                      layoutId="stack-tick"
+                      className="absolute top-1/2 hidden h-[0.9rem] w-px -translate-y-1/2 -left-4 bg-accent md:block"
+                      transition={{ type: "spring", stiffness: 400, damping: 32 }}
+                      aria-hidden="true"
+                    />
+                  )}
+                  <span className="block transition-colors duration-150 group-hover:text-text-primary">{group.label}</span>
+                </button>
+              );
+            })}
+          </div>
 
-              <div className="flex flex-wrap gap-2">
-                {tags.map(({ name, tier }) => (
-                  <span key={name} className="chip !text-[0.75rem]">
-                    <TierDot tier={tier} />
-                    {name}
-                  </span>
-                ))}
-              </div>
-            </m.div>
-          ))}
+          <div className="min-w-0 md:pl-3">
+            <div id="stack-panel" role="tabpanel" aria-labelledby={`stack-tab-${active}`}>
+              <AnimatePresence mode="wait" initial={false}>
+                <m.div
+                  key={current.label}
+                  layout
+                  initial={{ opacity: 0, ...from }}
+                  animate={inView ? { opacity: 1, y: 0 } : { opacity: 0 }}
+                  exit={{ opacity: 0, y: reduce ? 0 : -8 }}
+                  transition={{ duration: 0.28, ease: EASE, layout: { type: "spring", stiffness: 300, damping: 34 } }}
+                >
+                  <p className="max-w-[56ch] text-[1.02rem] leading-[1.7] text-text-secondary">{current.blurb}</p>
+
+                  <ul className="mt-6 flex flex-wrap items-center gap-2">
+                    {current.tags.map(({ name, tier }) => (
+                      <li key={name}>
+                        <span className="chip chip--lg">
+                          <TierDot tier={tier} />
+                          {name}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  {/* Legend for the tier dots */}
+                  <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-1.5 border-t border-border-subtle pt-4">
+                    {(["production", "comfortable", "exploring"] as const).map((tier) => (
+                      <span key={tier} className="inline-flex items-center gap-2 font-mono text-[0.72rem] lowercase text-text-muted">
+                        <TierDot tier={tier} />
+                        {tier}
+                      </span>
+                    ))}
+                  </div>
+                </m.div>
+              </AnimatePresence>
+            </div>
+          </div>
         </div>
-
-        <m.div
-          initial={{ opacity: 0 }}
-          animate={inView ? { opacity: 1 } : { opacity: 0 }}
-          transition={{ duration: 0.5, ease: EASE, delay: 0.3 }}
-          className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 font-mono text-[0.68rem] tracking-[0.1em] text-text-muted uppercase"
-        >
-          <span className="inline-flex items-center gap-2">
-            <TierDot tier="production" /> production
-          </span>
-          <span className="inline-flex items-center gap-2">
-            <TierDot tier="comfortable" /> comfortable
-          </span>
-          <span className="inline-flex items-center gap-2">
-            <TierDot tier="exploring" /> exploring
-          </span>
-        </m.div>
       </div>
     </section>
   );

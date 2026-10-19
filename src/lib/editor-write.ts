@@ -39,7 +39,6 @@ export type ProjectFrontmatterInput = {
 export function buildProjectFrontmatter(fm: ProjectFrontmatterInput): Record<string, unknown> {
   const out: Record<string, unknown> = {
     title: fm.title.trim(),
-    summary: fm.summary?.trim() ?? "",
     status: fm.status,
     year: fm.year,
     stack: fm.stack ?? [],
@@ -47,6 +46,7 @@ export function buildProjectFrontmatter(fm: ProjectFrontmatterInput): Record<str
     live: fm.live ?? "",
     featured: Boolean(fm.featured),
   };
+  if (fm.summary?.trim()) out.summary = fm.summary.trim();
   if (fm.screenshots && fm.screenshots.length > 0) out.screenshots = fm.screenshots;
   if (fm.draft) out.draft = true;
   return out;

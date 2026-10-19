@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     template: `%s · ${site.name}`,
   },
   description: site.description,
-  keywords: ["backend engineer", "Python", "Django", "FastAPI", "PostgreSQL", "Redis", "API development", "distributed systems", "software engineer"],
+  keywords: ["software engineer", "Python", "Django", "FastAPI", "PostgreSQL", "Redis", "API development", "React", "TypeScript"],
   authors: [{ name: site.name }, { name: site.handle }],
   creator: site.name,
   icons: {
@@ -66,7 +66,7 @@ export default function RootLayout({
         >
           Skip to content
         </a>
-        <ThemeProvider attribute="data-theme" defaultTheme="light" enableSystem>
+        <ThemeProvider attribute="data-theme" forcedTheme="dark" disableTransitionOnChange>
           <MotionConfig reducedMotion="user">
             <LazyMotion features={domAnimation} strict>
               <CustomCursor />

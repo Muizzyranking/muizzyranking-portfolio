@@ -1,33 +1,43 @@
 # [muizzyranking.me](https://muizzyranking.me)
 
-Personal portfolio and blog of **Muiz Oyebowale** — backend-heavy fullstack
-engineer. Built with Next.js, Tailwind v4, and Framer Motion. Content lives
-as files in this repo; there is a built-in dev-only editor for writing.
+Personal portfolio and blog.
+Built with Next.js, Tailwind v4, and Framer Motion. Content lives as files
+in this repo; there is a built-in dev-only editor for writing.
 
 > **AI agents**: start with [AGENTS.md](./AGENTS.md) — it's the entry point
 > covering the design system, architecture and common tasks.
+
+## Design language
+
+- **Dark-only** — neutral near-black surfaces (`#0a0a0c`–`#17171a`), amber
+  accent (`#f59e0b`), hairline borders and mono metadata. Light tokens
+  still exist in CSS but the theme is pinned dark (`forcedTheme`).
+- **Type** — Fraunces (display, with real italics for accent moments),
+  Poppins (body), IBM Plex Mono (labels, code, metadata)
+- **Sections** — ruled doc-style blocks with hairline dividers; section
+  headers are plain, the sidebar rails and fake `01/02` numbering are gone
+- **Custom cursor** — a hub dot tracks the pointer 1:1 while an amber ring
+  wraps hoverable elements like a border (fine-pointer devices only).
+  How it works: [cursor.md](./cursor.md)
 
 ## Stack
 
 - **Framework** — Next.js 16 (App Router, Turbopack) + React 19 + React Compiler
 - **Styling** — Tailwind CSS v4 (CSS-first tokens in `globals.css`)
 - **Animations** — Framer Motion (LazyMotion, strict)
-- **Content** — MDX files in `content/` (projects + blog), parsed at build
-- **Fonts** — Bricolage Grotesque (display), Poppins (body), IBM Plex Mono (code)
+- **Content** — MDX + YAML files in `content/`, parsed at build
+- **Fonts** — Fraunces (display), Poppins (body), IBM Plex Mono (mono)
 - **Linting/Formatting** — Biome
 - **Deployment** — Vercel
 
 ## Features
 
-- **Design system** — bright porcelain light mode / night-black dark mode
-  with a blood-red accent; tokens in `src/app/globals.css`
-- **Custom cursor** — a bordeaux ring that replaces the native cursor and
-  wraps clickable elements like a border (fine-pointer devices only).
-  How it works: [cursor.md](./cursor.md)
-- **Interactive hero** — an animated "how I build" journey diagram
-  (SVG, click any stage)
-- **Case studies** — MDX-driven with roman-numeral challenge timelines,
-  splash images and a sticky meta rail
+- **Homepage** — big-name hero (copy lives in a `HERO` constant at the top
+  of `Hero.tsx`), a 2×2 featured-projects grid, tech-stack inventory,
+  tabbed experience selector, blog teaser, about blurb, centered contact
+- **Projects** — card-grid index with status/tech filters; case studies are
+  MDX with optional screenshot galleries (horizontal strip + lightbox),
+  roman-numeral challenge timelines and a sticky meta rail
 - **Blog** — MDX posts with categories, search, TOC, reading progress
 - **Music player** — ambient tracks with a mac-style popover in the navbar
   (progress, playlist, volume; auto-advances)
@@ -40,9 +50,9 @@ as files in this repo; there is a built-in dev-only editor for writing.
 ```
 src/
 ├── app/
-│   ├── layout.tsx            # Root: theme, cursor, music, fonts, analytics
+│   ├── layout.tsx            # Root: dark theme, cursor, music, fonts, analytics
 │   ├── (site)/               # Pages with navbar/footer chrome
-│   │   ├── page.tsx          # Homepage
+│   │   ├── page.tsx          # Homepage (assembles the sections below)
 │   │   ├── about/            # About
 │   │   ├── projects/         # Projects index + [slug] case studies
 │   │   ├── blog/             # Blog index, posts, categories, RSS
@@ -53,17 +63,21 @@ src/
 ├── components/
 │   ├── layout/               # Navbar, Footer, CustomCursor, CommandPalette
 │   ├── music/                # Ambient music player + popover
-│   ├── sections/             # Homepage / about / projects / blog sections
+│   ├── sections/             # Homepage / about / projects section blocks
 │   ├── blog/                 # Post hero, body, TOC, code blocks
+│   ├── ui/                   # DocSection, TierDot, icons and other primitives
 │   └── editor/               # Dev editor UI
 └── lib/                      # Content loaders, site identity, motion, fonts
 
 content/
-├── projects/*.mdx            # One file per case study
+├── projects/
+│   ├── *.mdx                 # One file per case study
+│   ├── other.yml             # "Other projects" card list
+│   └── contributions.yml     # Open-source contribution rows
 └── blog/YYYY/MM/slug.mdx     # One file per post
 
 public/
-├── projects/                 # Case-study splash images
+├── projects/                 # Case-study screenshots (optional)
 ├── audio/                    # Ambient music tracks
 └── muizzy.jpg                # Portrait
 ```
@@ -86,29 +100,37 @@ draft: true                  # omit to publish
 Body in MDX.
 ```
 
-### Add a project
+### Add a featured project
 
-Create `content/projects/<slug>.mdx` and a splash at
-`public/projects/<slug>.png`:
+Create `content/projects/<slug>.mdx` (screenshots are optional — put files
+under `public/projects/` and list their paths; the case study renders no
+image section when the list is empty or missing):
 
 ```mdx
 ---
 title: "Project Name"
-summary: "One sentence."
+summary: "One sentence."     # optional now
 stack: [Python, FastAPI, PostgreSQL]
 status: "complete"           # complete | in-progress | archived
 year: "2026"
-repo: "https://github.com/Muizzyranking/repo"
-live: ""
-screenshots: ["/projects/<slug>.png"]
-featured: true               # homepage shows the first 3 featured
+repo: "https://github.com/Muizzyranking/repo"   # optional
+live: ""                     # optional
+screenshots: ["/projects/<slug>/<shot>.png"]    # optional
+featured: true               # homepage shows the first 4 featured
 ---
 
 ## Overview
-## Engineering Challenges    # ### per challenge → roman-numeral timeline
-## Outcomes
-## Lessons Learned
+## Engineering Challenges    # optional; ### per challenge → roman-numeral list
+## Outcomes                  # optional
+## Lessons Learned           # optional
 ```
+
+### Other projects & contributions
+
+- `content/projects/other.yml` — cards for smaller builds: `name`,
+  `description`, optional `link` (source) / `live`, optional `stack`
+- `content/projects/contributions.yml` — rows for open-source
+  contributions: `name` + `link`
 
 Or use the dev editor at `/editor` (drafts, preview, ⌘S).
 

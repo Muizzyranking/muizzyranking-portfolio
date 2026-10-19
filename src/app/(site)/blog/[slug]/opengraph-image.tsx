@@ -38,7 +38,7 @@ export default async function OG({ params }: { params: Promise<{ slug: string }>
           width: "14px",
           height: "14px",
           borderRadius: "999px",
-          background: "#881600",
+          background: "#d97706",
         }}
       />
 
@@ -54,7 +54,7 @@ export default async function OG({ params }: { params: Promise<{ slug: string }>
           color: "#6d655a",
         }}
       >
-        <span style={{ color: "#881600" }}>writing</span>
+        <span style={{ color: "#d97706" }}>writing</span>
         <span style={{ width: "48px", height: "1px", background: "#e9e4da" }} />
         <span>muizzyranking.me</span>
       </div>
@@ -94,7 +94,7 @@ export default async function OG({ params }: { params: Promise<{ slug: string }>
       >
         <span>Muiz Oyebowale</span>
         <span style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          <span style={{ width: "8px", height: "8px", borderRadius: "999px", background: "#881600" }} />
+          <span style={{ width: "8px", height: "8px", borderRadius: "999px", background: "#d97706" }} />
           {dateLabel}
         </span>
       </div>

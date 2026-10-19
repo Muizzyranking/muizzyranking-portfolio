@@ -8,8 +8,8 @@ export default function PostList({ posts }: { posts: PostMeta[] }) {
 
   return (
     <div className="border-t border-border-subtle">
-      {posts.map((post) => (
-        <PostRow key={post.slug} post={post} />
+      {posts.map((post, i) => (
+        <PostRow key={post.slug} post={post} n={i + 1} />
       ))}
     </div>
   );
