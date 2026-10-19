@@ -4,6 +4,18 @@ import { useSpring } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 
 const WRAP_SELECTOR = "a, button, [role='button'], input, textarea, select, label, summary, [data-cursor]";
+const IGNORE_SELECTOR = "[data-cursor-ignore]";
+
+/** Resolve the wrap element for a pointer event. Containers may set
+ *  [data-cursor-ignore] to opt the whole box out of wrapping; any
+ *  [data-cursor] opt-in nested inside an ignored container still wraps. */
+function pickWrapTarget(target: EventTarget | null): HTMLElement | null {
+  const node = target as HTMLElement | null;
+  const ignore = node?.closest?.(IGNORE_SELECTOR) as HTMLElement | null;
+  const el = node?.closest?.(WRAP_SELECTOR) as HTMLElement | null;
+  if (ignore && el === ignore) return null;
+  return el;
+}
 
 const DOT_SIZE = 32;
 const WRAP_PADDING = 7;
@@ -12,6 +24,7 @@ const PRESS_SCALE = 0.92;
 export default function CustomCursor() {
   const [enabled, setEnabled] = useState(false);
   const dotRef = useRef<HTMLDivElement>(null);
+  const hubRef = useRef<HTMLDivElement>(null);
 
   const x = useSpring(-100, { stiffness: 900, damping: 70, mass: 0.5 });
   const y = useSpring(-100, { stiffness: 900, damping: 70, mass: 0.5 });
@@ -32,6 +45,11 @@ export default function CustomCursor() {
     const render = (cx: number, cy: number) => {
       const scale = pressed.current ? PRESS_SCALE : 1;
       dot.style.transform = `translate3d(${cx}px, ${cy}px, 0) translate(-50%, -50%) scale(${scale})`;
+    };
+
+    const positionHub = (cx: number, cy: number) => {
+      const hub = hubRef.current;
+      if (hub) hub.style.transform = `translate3d(${cx}px, ${cy}px, 0) translate(-50%, -50%)`;
     };
 
     const applyDot = (cx: number, cy: number) => {
@@ -107,9 +125,9 @@ export default function CustomCursor() {
       pointer.current = { x: e.clientX, y: e.clientY };
       x.set(e.clientX);
       y.set(e.clientY);
+      positionHub(e.clientX, e.clientY);
 
-      const el = (e.target as HTMLElement | null)?.closest?.(WRAP_SELECTOR) as HTMLElement | null;
-      const next = el && el !== dot ? el : null;
+      const next = pickWrapTarget(e.target);
 
       if (next !== target.current) {
         target.current = next;
@@ -126,26 +144,33 @@ export default function CustomCursor() {
       if (!shown.current) {
         shown.current = true;
         dot.dataset.visible = "true";
+        if (hubRef.current) hubRef.current.dataset.visible = "true";
       }
     };
 
     const onPress = () => {
       pressed.current = true;
       dot.classList.add("cursor-press");
+      hubRef.current?.classList.add("cursor-press");
       if (target.current) applyWrap();
       else applyDot(x.get(), y.get());
     };
     const onRelease = () => {
       pressed.current = false;
       dot.classList.add("cursor-press");
+      hubRef.current?.classList.add("cursor-press");
       if (target.current) applyWrap();
       else applyDot(x.get(), y.get());
-      window.setTimeout(() => dot.classList.remove("cursor-press"), 140);
+      window.setTimeout(() => {
+        dot.classList.remove("cursor-press");
+        hubRef.current?.classList.remove("cursor-press");
+      }, 140);
     };
 
     const onLeave = () => {
       shown.current = false;
       dot.dataset.visible = "false";
+      if (hubRef.current) hubRef.current.dataset.visible = "false";
     };
 
     setEnabled(true);
@@ -169,17 +194,21 @@ export default function CustomCursor() {
   }, [x, y]);
 
   return (
-    <div
-      ref={dotRef}
-      aria-hidden="true"
-      className="cursor-dot"
-      data-visible="false"
-      data-wrapped="false"
-      style={{
-        width: DOT_SIZE,
-        height: DOT_SIZE,
-        ...(enabled ? undefined : { display: "none" }),
-      }}
-    />
+    <>
+      <div
+        ref={dotRef}
+        aria-hidden="true"
+        className="cursor-dot"
+        data-visible="false"
+        data-wrapped="false"
+        style={{
+          width: DOT_SIZE,
+          height: DOT_SIZE,
+          ...(enabled ? undefined : { display: "none" }),
+        }}
+      />
+      {/* Fixed 1:1 companion dot: marks the pointer inside (and outside) the wrap */}
+      <div ref={hubRef} aria-hidden="true" className="cursor-hub" data-visible="false" style={enabled ? undefined : { display: "none" }} />
+    </>
   );
 }
