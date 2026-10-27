@@ -1,7 +1,7 @@
 ---
 title: "Galleria: Event Photo Sharing Powered by Face Recognition"
 summary: "An event photo platform where attendees scan their face once and get back only the photos they're in, built on RetinaFace detection, ArcFace embeddings, and an async Celery pipeline that processes uploads at scale."
-stack: [Python, FastAPI, PostgreSQL, Redis, Celery, Next.js, DeepFace/ArcFace]
+stack: [Python, FastAPI, PostgreSQL, pgvector, Redis, Celery, RetinaFace, ArcFace, SSE]
 status: "complete"
 datePublished: "2026-07-14"
 role: "Solo backend engineer"
@@ -14,29 +14,38 @@ screenshots: ["/projects/gallerai/home.webp", "/projects/gallerai/dashboard.webp
 
 ## Overview
 
-Galleria solves a problem every event photographer creates without meaning to: hundreds of photos get uploaded somewhere, and every attendee has to scroll through all of them to find the ten they're actually in. Galleria replaces that with a face scan. An organizer uploads photos in bulk, Galleria detects and embeds every face in them asynchronously, and an attendee holds their phone up to their face once to get back a filtered gallery of only the photos they appear in.
+GallerAI is for event organizers who want to hand attendees a link and let them find themselves in the photos. Organizers create an event, bulk-upload up to around 1000 photos and videos, and share the link. Attendees open it (entering a passcode if the event is private), browse the gallery under All / Photos / Videos tabs, and take a selfie to find their own shots. They can download single files or zips. Attendees never need an account. Only organizers log in.
 
-Under the hood, every photo goes through face detection, quality filtering, and embedding extraction as a background job, so uploading hundreds of photos doesn't block the API or the organizer's dashboard. When an attendee scans their face, that one embedding gets compared against every embedding stored for the event using cosine similarity, deduplicated down to one match per photo, and returned sorted by confidence, all in well under a second even at thousands of faces per event.
+The face search works like this. A selfie goes through RetinaFace to find the largest face, then ArcFace produces a 512-dimension embedding. That embedding runs a pgvector cosine search against every face in the event, with a 0.6 similarity threshold and a cap of 1000 results. Matches and the embedding are stored in Redis under a scan token that lasts two hours. The embedding never touches the users table, because attendees don't have rows there.
 
 ## Engineering Challenges
 
-### Searching thousands of face embeddings fast enough to feel instant
-A single event can hold thousands of stored face embeddings: 1,000 photos at 8 faces average is 8,000 512-dimensional vectors. Comparing a user's scan against each one individually, in a loop, would be slow enough to make the "scan and wait" experience feel broken. The fix was loading all of an event's embeddings into a single NumPy matrix, normalizing once, and running the comparison as one batched matrix multiplication instead of N separate calls. That gets the full search, all 8,000 comparisons, under 100ms on CPU, and it's also where deduplication happens: a photo with five faces produces five embedding matches for the same person, and only the highest score per photo is kept.
+### Ingesting 1000 files without melting the server
 
-### Keeping CPU-bound face detection off the request path
-RetinaFace and ArcFace running through DeepFace/TensorFlow are CPU-heavy, and running them inline in the FastAPI process, even as a background task, would compete with the web server for the same process's resources and risk losing a job entirely if the process restarted mid-run. Photo processing runs in a separate Celery worker pool instead, with `concurrency=2` since detection is CPU-bound, `prefetch_multiplier=1` so a worker isn't holding multiple jobs at once, and `acks_late=True` so a task isn't marked complete until it actually finishes. A worker crash mid-photo means the job gets retried, not silently dropped.
+A single request carrying 1000 files is slow to fail and hard to retry. Processing them one at a time through the face pipeline would also take far too long.
 
-### Tuning detection thresholds to avoid false matches
-RetinaFace will happily detect a face that's too small, too blurry, or too far in the background to ever match reliably. Storing a bad embedding just means a wasted comparison at best and a false match at worst. Detections are filtered before an embedding is ever extracted: confidence below 0.9 or a bounding box under 80×80 pixels gets discarded. On the matching side, the similarity threshold defaults to 0.6 rather than something looser. The tradeoff was deliberate, since returning someone else's photo in an attendee's gallery is a worse failure than occasionally missing a legitimate match.
+The frontend splits uploads into chunks of about 25 and POSTs 4 to 6 of them in parallel. On the backend, each file streams to temp storage and gets hashed while it is written, so the file is read only once. Each chunk then runs one dedupe query on `(event_id, file_hash)` and one bulk insert. If the insert hits a conflict, it falls back to row-by-row inserts, drops the race duplicates, and cleans up their temp files. Celery tasks are dispatched per chunk as soon as it lands, not after the whole batch finishes. Face detection is CPU-bound, so Celery concurrency is set to the number of CPU cores, and the models load once per worker through `worker_process_init`. Nested process pools were the other option. They would have fought Celery's own parallelism for the same cores, so I left them out.
 
-### Splitting relational data from embeddings across two databases
-Photos, users, and events are relational: foreign keys, joins, membership constraints. Face embeddings are a different shape of data entirely: a variable number of 512-float documents per photo, always queried scoped to one event, with metadata (bounding box, detection confidence, model version) attached to each one. PostgreSQL could technically store a float array, but it isn't built to scope high-volume vector queries by event or to make an eventual move to approximate nearest-neighbor search straightforward. Keeping embeddings in MongoDB, indexed on `(event_id, photo_id)`, kept both databases doing the kind of query they're actually good at.
+### Promoting files without losing them
 
-### Letting people search without creating an account or storing their face
-Not every attendee wants to register just to find their own photos. Anonymous users can scan their face and get a gallery back without an account. But that meant deciding what happens to a biometric embedding for someone who never opted into having it stored. The answer was: nothing persists. The embedding is used once to compute matches, the matched photo IDs are cached in Redis behind a `scan_token` with a 2-hour TTL, and the embedding itself is discarded. A registered user's embedding is saved to their profile so they don't have to rescan on a return visit; an anonymous user's isn't, on purpose.
+Writing directly to the final storage path means a crash partway through leaves a file that looks finished but isn't, and detection results can point at it before it's fully written.
+
+Every upload stages to a temp directory first. Detection runs against the temp copy. Promotion then copies the file to final storage through `save_from_path()`, and one code path deletes the temp copy. Temp and final live in separate directories on purpose. A `NULL` `storage_backend` means the file hasn't been promoted yet, so an interrupted upload is easy to find and clean up. Local storage counts as a real permanent backend, not scratch space, so the same call shape will work when Cloudflare R2 is added later.
+
+### Showing progress across concurrent uploaders
+
+Several uploaders can be pushing files into one event at the same time. Tracking progress per upload ID means a dropped connection loses its place, and the progress bar only reflects one client's share of the work.
+
+Progress is keyed by `event_id`, not by upload. Workers publish updates to a Redis `event:{id}:progress` channel, and the frontend reads them from one SSE stream at `GET /media/{id}/upload-progress`. That stream aggregates all concurrent uploaders, and a reconnect picks up the event's current state without any upload-specific bookkeeping.
+
+## Outcomes
+
+- Uploads of around 1000 files run as chunked, parallel POSTs with deduplication by SHA256 per event. Each response reports `accepted`, `skipped`, and `errors`.
+- Face search uses a single pgvector query with a MAX over each media item's faces, returning matches above the threshold with a `match_score`.
+- Attendee search state lives in Redis for two hours and never reaches the database.
 
 ## Lessons Learned
 
-Working with biometric data changes what "it works" means. It's not enough for the matching to be accurate. I had to think about what happens to the embedding after the match, who can see it, and how long it sticks around, for every path through the system, not just the happy one. The anonymous-scan design came out of that: storing nothing by default and making persistence something a user opts into, rather than something that happens automatically because it's convenient to build.
+The anonymous attendee model came from deleting code. Early drafts had `UserEventGallery` rows, a claim-into-account flow, and a `User.face_embedding` column. All of that went away in migration `3a1b2c4d5e6f`. Attendees are now anonymous, identified only by a passcode cookie and a scan token. Only organizers have `User` rows. I assumed attendees needed some persistent identity to make the face search useful. They didn't. The search result only has to last as long as the browsing session, so a short-lived token in Redis was enough.
 
-The Celery pipeline also changed how I think about "background task" as a default. It's easy to reach for a framework's built-in background task runner because it's already there. Once the job is CPU-bound and can't be allowed to silently fail, that convenience stops being worth it. Isolating the work in its own process pool with explicit retry and acknowledgment semantics is a decision I now make early, not something I retrofit after a job gets lost in production.
+The temp-then-promote split was a default I adopted after the first version wrote straight to final storage. A half-written file was indistinguishable from a complete one, and I had no clean way to find the broken ones. Staging everything first costs one extra copy. In exchange, a failed upload leaves a visible state rather than a silent corrupt file.
