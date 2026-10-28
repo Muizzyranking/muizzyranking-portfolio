@@ -1,54 +1,89 @@
 ---
 title: "Flint: Background Job Scheduler Built From Scratch"
-summary: "A priority-queue job scheduler with DAG workflows, retry backoff, a dead letter queue, and real-time updates, with no Celery and no external broker."
-stack: [Python 3.12, FastAPI, PostgreSQL 16, Redis 7, SQLAlchemy 2.x, asyncio, Next.js]
+summary: "A distributed job scheduler where PostgreSQL is the queue, with leases, retries, DAG workflows, priority aging, and a dead letter queue."
+stack: [Python, TypeScript, FastAPI, PostgreSQL, Redis, SQLAlchemy, asyncio Docker, Next.js, React]
 status: "complete"
-role: "Solo backend engineer"
 repo: "https://github.com/Muizzyranking/flint"
 featured: true
 year: "2026"
 datePublished: "2026-07-12"
-live: ""
-screenshots: []
+live: "https://flint.muizzyranking.me"
+screenshots:
+    - "/projects/flint/home.webp"
+    - "/projects/flint/docs.webp"
+    - "/projects/flint/dashboard-no-api.webp"
+    - "/projects/flint/dashboard-overview.webp"
+    - "/projects/flint/job-queue.webp"
 ---
+
 
 ## Overview
 
-Flint is a background job scheduler built from scratch: no Celery, no RQ, no managed queue. It takes jobs over a REST API, queues them in an in-memory min-heap by priority and schedule, runs them through async worker coroutines, and tracks every state transition in PostgreSQL. It's for engineers who want to see what's actually happening underneath a job queue abstraction, not use one blind.
+Flint is a standalone job scheduling service. Clients schedule work over a REST API, and any number of worker processes claim and run it. PostgreSQL is the entire queue: every job is a row, and there is no message broker in the path. It's for engineers who want durable scheduling with leases, retries, dependencies, and recurring jobs, and want to see exactly where each guarantee comes from.
 
-When a job comes in, the scheduler polls PostgreSQL every second for due jobs and pushes them into a shared heap. Worker coroutines pop from that heap, claim the job atomically in Postgres, and run it. Jobs can depend on other jobs, recur on an interval, retry with backoff, or land in a dead letter queue after exhausting retries. Redis handles exactly two things: SSE pub/sub and worker heartbeats. It is not the queue.
+When a job is posted, the API validates the payload against the target handler's Pydantic schema and inserts a row. If it's invalid, it never enters the queue. Workers poll for eligible rows, hold a small bounded heap as an ordering cache, then claim a job atomically in Postgres and run its handler. Jobs can depend on other jobs, recur on an interval, retry with backoff, or land in a dead letter queue (DLQ) with optional alert emails. Redis handles worker presence, stop/restart control, and the SSE stream, and dispatch never depends on it. A Next.js dashboard and docs site sit on top of the API, and a `flint` CLI covers `api`, `worker`, `migrate`, `schedule`, and `handlers`.
 
 ## Engineering Challenges
 
-### Preventing a job from being claimed twice
-Multiple worker coroutines pop from the same in-memory heap. If two coroutines grab the same job ID, that job runs twice: a webhook fires twice, an email sends twice.
+### Claiming a job without running it twice
 
-The fix is two layers. First, an `asyncio.Lock` inside the heap serializes all `pop()` calls, so two coroutines can't receive the same ID from the heap in the first place. Second, even if that somehow failed, the claim itself is an atomic Postgres update: `UPDATE jobs SET status = 'processing' WHERE id = :job_id AND status = 'pending' AND worker_id IS NULL RETURNING id`. Row-level locking guarantees exactly one update wins; the other gets zero rows back and drops the job. No Redis `SETNX`, no application-level semaphore. The database was already the source of truth for job state, so making it the arbiter of the claim is free. Reaching for a second locking system would just be another thing that can fail.
+Every worker polls the same rows. If two of them grab the same job, a webhook fires twice or an email sends twice.
+
+The poller only reads. It pulls 25 eligible candidates, copies their ordering values into a local heap, and releases the session. Nothing is handed over at that point. The claim is a separate step: re-fetch the one row with the same eligibility filter plus its ID, using `SELECT … FOR UPDATE SKIP LOCKED`, then write `status = processing`, `worker_id`, and a 60-second lease in the same transaction. If another worker holds the row, the second `SELECT` skips it without waiting and moves on. There's no coordinator and no distributed lock. Because the claim re-checks everything (cancelled, soft-deleted, dependency-blocked, rescheduled), the poller and heap can be stale and it doesn't matter. Correctness lives in one SQL statement, and the heap is only a hint about what looks urgent.
+
+### Surviving a worker that dies mid-job
+
+A worker that gets OOM-killed or loses its host leaves its job in `processing` forever unless something notices.
+
+Every claim carries a lease. Each worker extends the lease on its own `processing` rows every 15 seconds, guarded by `worker_id`, so a dead owner can never re-extend a job that was reaped. A maintenance loop requeues rows whose lease has expired. Every worker runs that loop, but only one does the work, because it has to win `pg_try_advisory_lock(911001)` first. That lock is session-level on purpose. A transaction-scoped lock would release at the first inner commit, and a session-level one frees itself if the connection dies, so the fleet can't get stuck behind a dead maintainer. The reaper requeues without consuming a retry attempt. A worker that was slow to heartbeat shouldn't be penalized as if its handler had failed.
+
+The tradeoff is at-least-once delivery. If a lease expires while a slow handler is still running, the job can execute twice. Exactly-once would need handlers to coordinate with Flint, and that's not something a scheduler can enforce from the outside. So handlers are expected to be idempotent, and the docs say so.
+
+### Late results overwriting cancel, requeue, or ownership
+
+A handler can finish after its job was cancelled, or after its lease expired and another worker took over. A blind `UPDATE jobs SET status = 'completed'` would overwrite both.
+
+Every outcome write is conditional: `WHERE id = :id AND status = 'processing' AND worker_id = :this_worker AND cancellation_requested = false`, with `RETURNING id`. If the row comes back, the outcome applies. If it comes back empty and the job was cancelled, it's marked cancelled. If it was cancelled while the handler ran, the handler's side effects still happened, and the job ends `cancelled` as the user asked. If it's empty and not cancelled, the lease was lost and Flint logs `job_completion_lost`. Retries and DLQ moves use the same three guards. Cancellation of a running job is cooperative, checked before the handler starts and again when the result is written. A handler that already made an HTTP call can't be un-called, and killing the coroutine wouldn't change that.
+
+### Recurring jobs without double-booking
+
+A recurring job inserts its next run when the current one completes. If that insert is a separate step, a crash between the two loses the chain. If two workers race it, the chain doubles.
+
+The next run is a new row inserted in the same transaction as the completion update. One commit covers both, so a crash can't separate them. Each row carries `recurrence_id` (stable for the whole chain) and `recurrence_run` (parent's run + 1), with a unique index on the pair and `ON CONFLICT DO NOTHING` on the insert. If two writers race, one insert wins and the other does nothing. The next run's `available_at` is `now + interval`, measured from completion, so slow runs don't stack up.
 
 ### Starving low-priority jobs
-A steady stream of high-priority jobs will starve low-priority ones indefinitely if priority is the only ordering signal. That's not a bug you notice until a low-priority job has been sitting for an hour.
 
-The fix is priority aging. A background task runs every 30 seconds and decrements `effective_priority` on jobs that have waited past a threshold: medium jobs after 2 minutes, low jobs after 5 minutes, 0.1 per cycle, floored at 1.0 (High). Any job is mathematically guaranteed to reach High priority within a bounded time window regardless of queue pressure. The heap doesn't get rebuilt for this: a job's old heap entry is marked removed in place and a new one is pushed, so re-scoring stays O(log n) instead of O(n).
+A steady stream of high-priority work starves everything below it if priority is the only ordering signal.
 
-### Cancelling a job that's already running
-A pending job is easy to cancel: just mark it cancelled before anyone picks it up. A job mid-execution is not: if a handler has already sent an HTTP request or written a file, you can't un-send it. Killing the coroutine outright would leave that external side effect in an inconsistent state.
+Priority aging runs inside the maintenance loop, under the same advisory lock. Medium jobs start aging after 2 minutes and low jobs after 5. Each pass decrements `effective_priority` by 0.1, floored at 1.0 (HIGH), so any job reaches HIGH in bounded time. Age is measured from `available_at`, not `created_at`. A job scheduled for next week shouldn't start aging today. The next poll sees the new values through `ORDER BY effective_priority` and re-scores the buffered entry. The local heap never mutates an entry in place, since changing a sort key corrupts heap invariants. The old entry is tombstoned and a new one inserted, and `pop()` skips tombstones. The buffer is bounded, and a push only evicts when the arrival is more urgent than the worst buffered job. The evicted job stays in Postgres and gets re-polled later.
 
-The fix is cooperative cancellation. The API sets a `cancellation_requested` flag in Postgres; the worker checks that flag at defined checkpoints: before calling the handler, after it returns, and at pause points inside long-running handlers. The cancellation takes effect at the next checkpoint, not instantly, and that's documented behavior, not a gap: side effects that already happened can't be rolled back regardless of how forcefully you kill the process.
+### Failing and replaying a workflow
 
-### Retrying a failed step in a multi-job workflow
-Jobs can depend on each other in a DAG. When a job fails permanently and goes to the DLQ, everything downstream gets cascade-cancelled via BFS. Otherwise those jobs wait forever for a dependency that will never complete. The obvious follow-up problem: once an engineer fixes the root cause and retries the failed root job, do they now have to manually re-trigger every job that got cancelled downstream?
+Jobs can depend on other jobs. If a parent dies permanently, its children would wait forever for a dependency that will never complete.
 
-The fix is cascade retry. Retrying a DLQ root job walks the same dependency graph via BFS and resets every downstream cancelled job back to pending automatically. The whole workflow re-runs from the fixed root with zero manual intervention on each downstream step. The alternative, leaving downstream jobs cancelled and making the engineer retry each one, defeats the point of declaring a dependency graph in the first place.
+Dispatch gating is a correlated `EXISTS` subquery inside the eligibility filter, shared by the poller and the claim. A child is invisible until every parent is `completed`, and nothing notifies it. The next poll just finds it eligible. When a job lands in the DLQ or resolves as cancelled, a BFS cancels every still-pending dependent, recursively, with a `last_error` naming the upstream cause. It only walks through branches it actually cancelled, and only touches `pending` jobs. A running dependent owns its own subtree and cascades when it resolves. At admission, a DFS cycle check refuses any edge that would make a job its own ancestor.
+
+Replay is the other half. Retrying a DLQ root resets it to `pending`, then BFS-resets the cancelled subtree. It only resets jobs whose `last_error` carries the `"dependency"` marker, so a job a user cancelled on purpose is never resurrected. Making the engineer re-trigger each downstream job by hand would defeat the point of declaring the graph.
+
+### Shutting down without leaving jobs leased
+
+On shutdown, a job mid-handler is stuck in `processing`. Waiting a full 60-second lease for the reaper to notice makes every deploy slow.
+
+Shutdown runs in a fixed order. First, cancel the poller so nothing new enters the heap. Then wait up to 30 seconds for handlers to finish. Anything still running is cancelled, and its `CancelledError` path calls `asyncio.shield(self._release(job.id))` before re-raising. The shield matters: without it, the release would be cancelled along with the task. The job goes back to `pending` with `available_at = now` in milliseconds. A last sweep releases anything still in the process's active set, using the same ownership-guarded update. If the process dies before any of this runs, the lease expiry and reaper from the earlier section still cover it.
 
 ## Outcomes
 
-- A job scheduler that runs without Celery, RQ, or any managed queue: one Postgres-backed heap and one async worker pool, nothing else in the critical path.
-- The database itself enforces claim deduplication, so a job can never run twice even under concurrency.
-- Priority aging guarantees no job starves: every job is mathematically certain to reach high priority within a bounded window.
-- Cascade retry re-runs a whole downstream DAG from a fixed root job with zero manual per-step re-triggers.
+- Worker capacity scales with one Compose flag (`--scale worker=N`) while dispatch stays durable in a single PostgreSQL instance, with no coordination service.
+- Jobs are claimed with `FOR UPDATE SKIP LOCKED`, so a job is owned by one lease holder at a time. A crashed worker's jobs are requeued by the reaper.
+- Every job is durable once the API responds. Payloads are validated against the handler's typed schema before insert, so invalid work never enters the queue.
+- At-least-once delivery, with jittered exponential backoff (`5^(attempt-1) × U(0.5, 1.5)` seconds) and a DLQ that keeps full error details for manual replay.
+- Handler exceptions and timeouts are contained, with a 300-second default timeout per execution. One bad job can't take down a worker process.
+- DAG dependencies with cycle detection, cascade-cancel on failure, and cascade-reset on replay.
+- Recurring jobs insert their next run transactionally with completion, so a chain can't drift or double-book.
+- Every response uses one error envelope, logs are structured JSON, and a live SSE feed streams job events to the dashboard.
 
 ## Lessons Learned
 
-The database claim was the moment this project stopped feeling like a toy. I went in assuming correctness under concurrency would require some kind of external lock: Redis, a semaphore, something explicit. It didn't. Postgres row-level locking on a plain `UPDATE ... WHERE` was already sufficient, and I was about to add a second distributed system to solve a problem the first one already solved. That's a default now: check what your source of truth can already guarantee before reaching for a new coordination layer.
+The claim was where this project got serious about correctness. I started out thinking of the queue as the hard part and the claim as a detail. It's the opposite. The poller and the heap can be wrong, stale, or full, and nothing breaks, because the claim re-checks everything. Once I stopped asking the poller to be right and put correctness in one place, the rest got simpler. The same pattern repeats in every outcome write: a conditional `UPDATE` on `(id, status, worker_id)` instead of trusting that I still own the job.
 
-Cooperative cancellation also changed how I think about "stopping" something. My first instinct was to just kill the task. Writing the checkpoint-based version forced me to actually enumerate what state a running job can leave behind and accept that some of it is permanent. Cancellation isn't a hard stop. It's a negotiation with whatever's already in flight.
+The other shift was treating a job's lifecycle as the real design object. Cancellation, retries, lease expiry, shutdown, and DAG cascades are all transitions in the same state machine, and each one has to be safe against a transition that happened while the handler was running. Aging taught me the same thing about scheduling in general. Ordering by priority looks complete until you ask what it does to the jobs at the bottom. Fairness has to be a bounded guarantee, not a hope.
