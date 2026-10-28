@@ -17,7 +17,7 @@ export type FlatProject = {
 };
 
 function readFlatYaml(filename: string): FlatProject[] {
-  const filepath = path.join(projectsDir, filename);
+  const filepath = path.join(process.cwd(), "content", filename);
   if (!fs.existsSync(filepath)) return [];
   const raw = fs.readFileSync(filepath, "utf8");
   const parsed = yaml.load(raw);
@@ -35,7 +35,7 @@ function readFlatYaml(filename: string): FlatProject[] {
 }
 
 export function getOtherProjects(): FlatProject[] {
-  return readFlatYaml("other.yml");
+  return readFlatYaml("other-projects.yml");
 }
 
 export function getContributions(): FlatProject[] {
